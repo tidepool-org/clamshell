@@ -1,0 +1,26 @@
+{
+  "name": "test-2",
+  "version": "0.0.1",
+  "description": "",
+  "repository": "",
+  "dependencies": {
+    "director": "1.2.2",
+    "envify": "0.2.0",
+    "react": "0.8.0",
+    "bows": "0.3.0",
+    "underscore": "1.5.2"
+  },
+  "devDependencies": {
+    "jsx-loader": "petehunt/jsx-loader",
+    "webpack": "0.11.0",
+    "url-loader": "0.5.1",
+    "css-loader": "0.6.2",
+    "style-loader": "0.6.0",
+    "chai": "1.8.1",
+    "mocha": "1.16.2"
+  },
+  "scripts": {
+    "start": "webpack --watch --debug src/main.js build/clamshell.js"
+  },
+  "author": ""
+}
