@@ -1,5 +1,5 @@
 {
-  "name": "test-2",
+  "name": "clamshell",
   "version": "0.0.1",
   "description": "",
   "repository": "",
@@ -20,7 +20,8 @@
     "mocha": "1.16.2"
   },
   "scripts": {
-    "start": "webpack --watch --debug src/main.js build/clamshell.js"
+    "start": "webpack --watch --debug src/main.js build/clamshell.js",
+    "test": "jsx src/ build/ ; browserify test/**/*.js -o build/browserified.js"
   },
-  "author": ""
+  "author": "Tidepool"
 }
