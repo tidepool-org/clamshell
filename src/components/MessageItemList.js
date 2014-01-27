@@ -1,8 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react');
 
-var MessageItem = require('./MessageItem');
-
 var MessageItemList = React.createClass({
 
 
