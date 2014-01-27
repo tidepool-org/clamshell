@@ -11,10 +11,12 @@ var ListNavBar = React.createClass({
     render: function() {
         return (
             /* jshint ignore:start */
-            <nav className="navbar navbar-default navbar-fixed-top" role="navigation">
-                <button type="button" ref='actionBtn' className="btn btn-default navbar-btn pull-left" onClick={this.handleAction}><span className={this.props.actionIcon}></span></button>
-                <p className="navbar-text text-center">{this.props.title}</p>
-                {this.props.children}
+            <nav className='navbar navbar-default navbar-fixed-top' role='navigation'>
+                <button type='button' ref='actionBtn' className='btn btn-default navbar-btn col-xs-1' onClick={this.handleAction}><span className={this.props.actionIcon}></span></button>
+                <p className='navbar-text text-center col-xs-8'>{this.props.title}</p>
+                <div className='col-xs-2 pull-right'>
+                    {this.props.children}
+                </div>
             </nav>
             /* jshint ignore:end */
         );

@@ -49,7 +49,7 @@ var MessageForm = React.createClass({
 
         return this.transferPropsTo(
             /* jshint ignore:start */
-            <div>
+            <div className='row'>
                 <form>
                     {groupsDropDown}
                     <div className="form-group">

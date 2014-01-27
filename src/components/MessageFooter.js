@@ -16,12 +16,12 @@ var MessageFooter = React.createClass({
         return this.transferPropsTo(
             /* jshint ignore:start */
             <nav className="navbar navbar-default navbar-fixed-bottom">
-                <form className="navbar-form navbar-left">
-                    <div className="form-group">
-                        <input type="text" className="form-control" ref='messageText' placeholder={this.props.messagePrompt} />
+                <form className="navbar-form">
+                    <div className="form-group col-xs-10">
+                        <input type="text" className="form-control " ref='messageText' placeholder={this.props.messagePrompt} />
                     </div>
             
-                    <button type="submit" ref='sendBtn' className="btn btn-default" onClick={this.handleSubmit}>{this.props.btnMessage}</button>
+                    <button type="submit" ref='sendBtn' className="btn btn-default col-xs-2" onClick={this.handleSubmit}>{this.props.btnMessage}</button>
                 </form>
             </nav>
             /* jshint ignore:end */ 
