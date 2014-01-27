@@ -29,4 +29,32 @@ describe('MessageItemList', function() {
         expect(component.props.messages).to.exist;
     });
 
+    it('should have a messageThread', function() {
+        expect(component.refs.messageThread).to.exist;
+    });
+
+    it('the messageThread will have has many items as there are messages', function() {
+
+        var numMessageThreadItems = component.refs.messageThread.props.children.length;
+        var numOfMessages = component.props.messages.length;
+
+        expect(numMessageThreadItems).to.equal(numOfMessages);
+    });
+
+    it('message will have an authorName', function() {
+        expect(component.refs.authorName).to.exist;
+    });
+
+    it('message will have an authorImage', function() {
+        expect(component.refs.authorImage).to.exist;
+    });
+
+    it('message will have when it was written', function() {
+        expect(component.refs.messageWhen).to.exist;
+    });
+
+    it('message will have what was written', function() {
+        expect(component.refs.messageText).to.exist;
+    });
+
 });
