@@ -34,7 +34,7 @@ describe('ConversationOverview', function() {
         expect(component.props.name).to.equal(testGroupName);
     });
 
-    it('should have property for the most recent note', function() {
+    it('should have property for the author', function() {
         expect(component.props.latestNoteSummary).to.equal(testLatestNoteSummary);
     });
 
@@ -43,15 +43,15 @@ describe('ConversationOverview', function() {
     });
 
     it('should have a when section', function() {
-        expect(component.refs.noteWhen).to.not.be.empty;
+        expect(component.refs.messageWhen).to.not.be.empty;
     });
 
-    it('should have a group name section', function() {
-        expect(component.refs.groupName).to.not.be.empty;
+    it('should have a message text section', function() {
+        expect(component.refs.messageText).to.not.be.empty;
     });
 
-    it('should have a note summary section', function() {
-        expect(component.refs.noteSummary).to.not.be.empty;
+    it('should have a show thread section', function() {
+        expect(component.refs.showMessageThread).to.not.be.empty;
     });
 
 });
