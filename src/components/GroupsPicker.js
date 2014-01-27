@@ -16,7 +16,7 @@ var GroupsPicker = React.createClass({
             return (
                 /* jshint ignore:start */
                 <li key={i}>
-                    <a className='row' href='#' onClick={this.handleSelection.bind(null, group.id)}>
+                    <a ref='groupSelect' className='row' href='#' onClick={this.handleSelection.bind(null, group.id)}>
                         <div className='row'>
                             <p ref='groupName'>{group.name}</p>
                             <p ref='lastGroupActivity'>Last note Dec 25th</p>
@@ -29,11 +29,11 @@ var GroupsPicker = React.createClass({
 
         return this.transferPropsTo(
             /* jshint ignore:start */
-            <div className='btn-group' ref='groupsDropDown'>
+            <div ref='groupsDropDown' className='btn-group'>
                 <button type='button' className='btn navbar-btn pull-left dropdown-toggle' data-toggle='dropdown'>
                     <span className='caret'></span>
                 </button>
-                <ul className='dropdown-menu' ref='groupsList' role='menu'>
+                <ul ref='groupsList' className='dropdown-menu' role='menu'>
                     {groups}
                 </ul>
             </div>

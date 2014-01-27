@@ -40,7 +40,7 @@ describe('GroupsPicker', function() {
     });
 
     it('should fire the handler with the id of the choosen group', function() {
-        component.refs.groupsList.props.children[0].onClick();
+        component.refs.groupSelect.props.onClick();
         expect(selectedGroupId).to.exist;
     });
 
