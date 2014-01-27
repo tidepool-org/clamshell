@@ -5,7 +5,7 @@ var React = require('react');
 var ListNavBar = React.createClass({
 
     handleAction:function(){
-        this.props.onActionHandled();
+        this.props.onNavBarAction();
     },
 
     render: function() {

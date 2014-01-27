@@ -132,6 +132,10 @@ var ClamShellApp = React.createClass({
         this.handleShowConversationThread(e.group);
     },
 
+    handleAddingToConversation:function(){
+        console.log('add to existing converstaion');
+    },
+
     handleGroupChanged:function(){
         console.log('change the selected group');
     },
@@ -152,11 +156,11 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onActionHandled={this.handleLogout}>
+                <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
                     <MyGroupsPicker groups={this.state.groups} onGroupPicked={this.handleGroupChanged} />
                 </ListNavBar>
                 <GroupConversations groups={this.state.groups} onThreadSelected={this.handleShowConversationThread} />
-                <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post'/>
+                <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
             </Layout>
             /* jshint ignore:end */
         );
@@ -166,9 +170,9 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title='Note in <group> team' actionIcon='glyphicon glyphicon-arrow-left' onActionHandled={this.handleBack} />
+                <ListNavBar title='Note in <group> team' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
                 <MessageItemList messages={this.state.messages} />
-                <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Post'/>
+                <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Post' onFooterAction={this.handleAddingToConversation}/>
             </Layout>
             /* jshint ignore:end */
         );
@@ -178,7 +182,7 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title='New note for <group>' actionIcon='glyphicon glyphicon-arrow-left' onActionHandled={this.handleBack}/>
+                <ListNavBar title='New note for <group>' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}/>
                 <MessageForm groups={this.state.groups} onMessageSend={this.handleStartConversation}/>
             </Layout>
             /* jshint ignore:end */
