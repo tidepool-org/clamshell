@@ -55,6 +55,13 @@ var app = {
     auth:auth
 };
 
+var routes = {
+    messagesForAllTeams:'allGroupsConversations',
+    messagesForSelectedTeam:'groupConversations',
+    messageThread: 'conversationThread',
+    startMessageThread:'newConversation'
+};
+
 require('./ClamShellApp.css');
 
 var ClamShellApp = React.createClass({
@@ -70,6 +77,7 @@ var ClamShellApp = React.createClass({
             authenticated: app.auth.isAuthenticated(),
             user: null,
             groups: null,
+            selectedGroup: null,
             loggingOut: false
         };
     },
@@ -80,15 +88,15 @@ var ClamShellApp = React.createClass({
         if (this.state.authenticated) {
             console.log('authenticated ...');
             this.fetchUserData();
-            this.setState({routeName:'allGroupsConversations'});
+            this.setState({routeName: routes.messagesForAllTeams});
         }
         //router
         var router = Router({
             '/': this.setState.bind(this, {routeName: 'login'}),
-            '/allGroupsConversations': this.setState.bind(this, {routeName: 'allGroupsConversations'}),
-            '/groupConversations': this.setState.bind(this, {routeName: 'groupConversations'}),
-            '/conversationThread': this.setState.bind(this, {routeName: 'conversationThread'}),
-            '/newConversation': this.setState.bind(this, {routeName: 'newConversation'})
+            '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
+            '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
+            '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
+            '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
         });
         router.init();
     },
@@ -116,13 +124,13 @@ var ClamShellApp = React.createClass({
     },
 
     handleBack:function(){
-        this.setState({routeName:'allGroupsConversations'});
+        this.setState({routeName:routes.messagesForAllTeams});
     },
 
     handleLoginSuccess:function(){
         this.setState({authenticated: true});
         this.fetchUserData();
-        this.setState({routeName:'allGroupsConversations'});
+        this.setState({routeName:routes.messagesForAllTeams});
     },
 
     handleShowConversationThread:function(mostRecentMessageInThread){    
@@ -131,12 +139,11 @@ var ClamShellApp = React.createClass({
         //console.log('root message: ',mostRecentMessageInThread.rootmessageid);
 
         var messages = this.messagesForThread(mostRecentMessageInThread.groupid,mostRecentMessageInThread.rootmessageid);
-
-        this.setState({messages: messages,routeName:'conversationThread'});
+        this.setState({messages: messages,routeName:routes.messageThread});
     },
 
     handleStartingNewConversation:function(){
-        this.setState({routeName:'newConversation'});
+        this.setState({routeName:routes.startMessageThread});
     },
 
     handleStartConversation:function(e){
@@ -156,9 +163,8 @@ var ClamShellApp = React.createClass({
     },
 
     handleGroupChanged:function(e){
-
-        console.log('group seleted ['+e.groupId+']');
-        this.setState({routeName:'groupConversations'});
+        var group = _.find(this.state.groups, function(group){ return e.groupId == group.id });
+        this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group]});
     },
 
     //---------- Rendering Layouts ----------
@@ -177,8 +183,8 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title={this.state.groups[0].name} actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
-                    <MyGroupsPicker groups={this.state.groups} onGroupPicked={this.handleGroupChanged} />
+                <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
+                    <MyGroupsPicker groups={this.state.selectedGroup} onGroupPicked={this.handleGroupChanged} />
                 </ListNavBar>
                 <GroupConversations groups={this.state.groups} onThreadSelected={this.handleShowConversationThread} />
                 <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
@@ -238,19 +244,19 @@ var ClamShellApp = React.createClass({
     renderContent:function(){
         var routeName = this.state.routeName;
 
-        if (this.state.authenticated && routeName === 'allGroupsConversations') {
+        if (this.state.authenticated && routeName === routes.messagesForAllTeams) {
             
             return this.renderAllGroupsConversationsLayout();
         }
-        if (this.state.authenticated && routeName === 'groupConversations') {
+        if (this.state.authenticated && routeName === routes.messagesForSelectedTeam) {
             
             return this.renderGroupConversationsLayout();
         }
-        else if(this.state.authenticated && routeName === 'conversationThread'){
+        else if(this.state.authenticated && routeName === routes.messageThread){
             
             return this.renderConversationThreadLayout();
         }
-        else if(this.state.authenticated && routeName === 'newConversation'){
+        else if(this.state.authenticated && routeName === routes.startMessageThread){
 
             return this.renderNewConversationLayout();
         }
