@@ -66,7 +66,7 @@ var GroupConversations = React.createClass({
                     onClick={this.props.onThreadSelected.bind(null, message)}
                     key={message.rootmessageid} 
                     name={group.name}
-                    latestNoteSummary={this.summaryForMessage(message.messagetext)}
+                    latestNoteSummary={message.messagetext}
                     when={this.niceTime(message.timestamp)}/>
                 /* jshint ignore:end */    
             );
