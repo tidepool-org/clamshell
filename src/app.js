@@ -242,6 +242,7 @@ var ClamShellApp = React.createClass({
         );
     },
 
+    //render based on route
     renderContent:function(){
         var routeName = this.state.routeName;
 
@@ -267,16 +268,13 @@ var ClamShellApp = React.createClass({
         }
     },
 
+    //load the user and then thier groups and those groups messages
     fetchUserData: function() {
         var self = this;
-        console.log('getting user');
         app.api.user.get(function(err, user) {
             self.setState({user: user});
-
             app.api.groups.get(user,function(err, userGroupsMessages) {
-                console.log('getting user groups and hacking messages');
                 self.setState({userGroupsMessages:userGroupsMessages});
-                //self.setState({groups: groups, messages:groups[0].messages});
             });
         });
     }
