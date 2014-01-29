@@ -21,6 +21,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+//require('./GroupsPicker.css');
+
 //Groups chooser
 var GroupsPicker = React.createClass({
 
@@ -35,11 +37,9 @@ var GroupsPicker = React.createClass({
             return (
                 /* jshint ignore:start */
                 <li key={i}>
-                    <a ref='groupSelect' className='row' href='#' onClick={this.handleSelection.bind(null, group.id)}>
-                        <div className='row'>
-                            <p ref='groupName'>{group.name}</p>
-                            <p ref='lastGroupActivity'>Last note Dec 25th</p>
-                        </div>
+                    <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
+                        <p ref='groupName'>{group.name}</p>
+                        <p ref='lastGroupActivity'>Last note Dec 25th</p>
                     </a>
                 </li>
                 /* jshint ignore:end */    
@@ -52,7 +52,7 @@ var GroupsPicker = React.createClass({
                 <button type='button' className='btn navbar-btn pull-left dropdown-toggle' data-toggle='dropdown'>
                     <span className='caret'></span>
                 </button>
-                <ul ref='groupsList' className='dropdown-menu' role='menu'>
+                <ul ref='groupsList' className='dropdown-menu GroupsPicker-dropdown' role='menu'>
                     {groups}
                 </ul>
             </div>

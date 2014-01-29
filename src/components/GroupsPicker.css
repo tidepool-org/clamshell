@@ -1,0 +1,9 @@
+.GroupsPicker-dropdown {
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: -200px;
+    z-index: 1000;
+    display: none;
+    float: left;
+}
