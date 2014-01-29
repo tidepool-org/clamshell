@@ -31,19 +31,18 @@ var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
 
+//app components 
 var Layout = require('./layout/Layout');
-
 var ListNavBar = require('./components/ListNavBar');
 var FooterBar = require('./components/FooterBar');
 var MessageFooter = require('./components/MessageFooter');
 var Login = require('./components/Login');
-
 var MyGroupsPicker = require('./components/GroupsPicker');
-
 var GroupConversations = require('./components/GroupConversations');
 var MessageItemList = require('./components/MessageItemList');
 var MessageForm = require('./components/MessageForm');
 
+//core functionality
 var auth = require('./core/auth');
 var api = require('./core/api');
 var user = require('./core/user');
@@ -56,6 +55,7 @@ var app = {
 };
 
 var routes = {
+    login:'login',
     messagesForAllTeams:'allGroupsConversations',
     messagesForSelectedTeam:'groupConversations',
     messageThread: 'conversationThread',
@@ -73,10 +73,10 @@ var ClamShellApp = React.createClass({
     initializeAppState : function(){
         return {
             messages: null,
-            routeName: 'login',
+            routeName: routes.login,
             authenticated: app.auth.isAuthenticated(),
             user: null,
-            groups: null,
+            userGroupsMessages:null,
             selectedGroup: null,
             loggingOut: false
         };
@@ -92,7 +92,7 @@ var ClamShellApp = React.createClass({
         }
         //router
         var router = Router({
-            '/': this.setState.bind(this, {routeName: 'login'}),
+            '/': this.setState.bind(this, {routeName: routes.login}),
             '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
             '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
             '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
@@ -104,7 +104,8 @@ var ClamShellApp = React.createClass({
     // ---------- Utility Methods ----------
     messagesForThread:function(groupId,rootMessageId){
 
-        var messageGroup = _.find(this.state.groups, function(group){ return groupId == group.id });
+        //var messageGroup = _.find(this.state.groups, function(group){ return groupId == group.id });
+        var messageGroup = _.find(this.state.userGroupsMessages, function(group){ return groupId == group.id });
 
         var messagesInThread = _.where(messageGroup.messages, {rootmessageid: rootMessageId});
 
@@ -163,7 +164,7 @@ var ClamShellApp = React.createClass({
     },
 
     handleGroupChanged:function(e){
-        var group = _.find(this.state.groups, function(group){ return e.groupId == group.id });
+        var group = _.find(this.state.userGroupsMessages, function(group){ return e.groupId == group.id });
         this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group]});
     },
 
@@ -186,7 +187,7 @@ var ClamShellApp = React.createClass({
                 <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
                     <MyGroupsPicker groups={this.state.selectedGroup} onGroupPicked={this.handleGroupChanged} />
                 </ListNavBar>
-                <GroupConversations groups={this.state.groups} onThreadSelected={this.handleShowConversationThread} />
+                <GroupConversations groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
                 <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
             </Layout>
             /* jshint ignore:end */
@@ -198,9 +199,9 @@ var ClamShellApp = React.createClass({
             /* jshint ignore:start */
             <Layout>
                 <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
-                    <MyGroupsPicker groups={this.state.groups} onGroupPicked={this.handleGroupChanged} />
+                    <MyGroupsPicker groups={this.state.userGroupsMessages} onGroupPicked={this.handleGroupChanged} />
                 </ListNavBar>
-                <GroupConversations groups={this.state.groups} onThreadSelected={this.handleShowConversationThread} />
+                <GroupConversations groups={this.state.userGroupsMessages} onThreadSelected={this.handleShowConversationThread} />
                 <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
             </Layout>
             /* jshint ignore:end */
@@ -272,9 +273,10 @@ var ClamShellApp = React.createClass({
         app.api.user.get(function(err, user) {
             self.setState({user: user});
 
-            app.api.groups.get(user,function(err, groups) {
+            app.api.groups.get(user,function(err, userGroupsMessages) {
                 console.log('getting user groups and hacking messages');
-                self.setState({groups: groups, messages:groups[0].messages});
+                self.setState({userGroupsMessages:userGroupsMessages});
+                //self.setState({groups: groups, messages:groups[0].messages});
             });
         });
     }
