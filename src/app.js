@@ -80,11 +80,12 @@ var ClamShellApp = React.createClass({
         if (this.state.authenticated) {
             console.log('authenticated ...');
             this.fetchUserData();
-            this.setState({routeName:'groupConversations'});
+            this.setState({routeName:'allGroupsConversations'});
         }
         //router
         var router = Router({
             '/': this.setState.bind(this, {routeName: 'login'}),
+            '/allGroupsConversations': this.setState.bind(this, {routeName: 'allGroupsConversations'}),
             '/groupConversations': this.setState.bind(this, {routeName: 'groupConversations'}),
             '/conversationThread': this.setState.bind(this, {routeName: 'conversationThread'}),
             '/newConversation': this.setState.bind(this, {routeName: 'newConversation'})
@@ -115,19 +116,19 @@ var ClamShellApp = React.createClass({
     },
 
     handleBack:function(){
-        this.setState({routeName:'groupConversations'});
+        this.setState({routeName:'allGroupsConversations'});
     },
 
     handleLoginSuccess:function(){
         this.setState({authenticated: true});
         this.fetchUserData();
-        this.setState({routeName:'groupConversations'});
+        this.setState({routeName:'allGroupsConversations'});
     },
 
     handleShowConversationThread:function(mostRecentMessageInThread){    
 
-        console.log('group: ',mostRecentMessageInThread.groupid);
-        console.log('root message: ',mostRecentMessageInThread.rootmessageid);
+        //console.log('group: ',mostRecentMessageInThread.groupid);
+        //console.log('root message: ',mostRecentMessageInThread.rootmessageid);
 
         var messages = this.messagesForThread(mostRecentMessageInThread.groupid,mostRecentMessageInThread.rootmessageid);
 
@@ -154,8 +155,10 @@ var ClamShellApp = React.createClass({
         console.log('add to existing converstaion');
     },
 
-    handleGroupChanged:function(){
-        console.log('change the selected group');
+    handleGroupChanged:function(e){
+
+        console.log('group seleted ['+e.groupId+']');
+        this.setState({routeName:'groupConversations'});
     },
 
     //---------- Rendering Layouts ----------
@@ -171,6 +174,20 @@ var ClamShellApp = React.createClass({
     },
 
     renderGroupConversationsLayout:function(){
+        return (
+            /* jshint ignore:start */
+            <Layout>
+                <ListNavBar title={this.state.groups[0].name} actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
+                    <MyGroupsPicker groups={this.state.groups} onGroupPicked={this.handleGroupChanged} />
+                </ListNavBar>
+                <GroupConversations groups={this.state.groups} onThreadSelected={this.handleShowConversationThread} />
+                <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
+            </Layout>
+            /* jshint ignore:end */
+        );
+    },
+
+    renderAllGroupsConversationsLayout:function(){
         return (
             /* jshint ignore:start */
             <Layout>
@@ -190,7 +207,7 @@ var ClamShellApp = React.createClass({
             <Layout>
                 <ListNavBar title='Note in <group> team' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
                 <MessageItemList messages={this.state.messages} />
-                <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Post' onFooterAction={this.handleAddingToConversation}/>
+                <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation}/>
             </Layout>
             /* jshint ignore:end */
         );
@@ -201,7 +218,8 @@ var ClamShellApp = React.createClass({
             /* jshint ignore:start */
             <Layout>
                 <ListNavBar title='New note for <group>' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}/>
-                <MessageForm groups={this.state.groups} onMessageSend={this.handleStartConversation}/>
+                //<MessageForm groups={this.state.groups} onMessageSend={this.handleStartConversation}/>
+                <MessageFooter messagePrompt='' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
             </Layout>
             /* jshint ignore:end */
         );
@@ -220,6 +238,10 @@ var ClamShellApp = React.createClass({
     renderContent:function(){
         var routeName = this.state.routeName;
 
+        if (this.state.authenticated && routeName === 'allGroupsConversations') {
+            
+            return this.renderAllGroupsConversationsLayout();
+        }
         if (this.state.authenticated && routeName === 'groupConversations') {
             
             return this.renderGroupConversationsLayout();

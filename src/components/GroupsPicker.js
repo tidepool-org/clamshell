@@ -28,7 +28,8 @@ var GroupsPicker = React.createClass({
 
     handleSelection: function(e) {
         console.log('selected group is: ',e);
-        this.props.onGroupPicked({groupId:1});
+        this.props.onGroupPicked({groupId:e});
+        return false;
     },
 
     render: function() {
@@ -39,7 +40,7 @@ var GroupsPicker = React.createClass({
                 <li key={i}>
                     <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
                         <p ref='groupName'>{group.name}</p>
-                        <p ref='lastGroupActivity'>Last note Dec 25th</p>
+                        <p ref='lastGroupActivity'>TODO:</p>
                     </a>
                 </li>
                 /* jshint ignore:end */    
