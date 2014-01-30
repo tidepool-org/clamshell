@@ -116,6 +116,17 @@ var ClamShellApp = React.createClass({
 
     },
 
+    //load the user and then thier groups and those groups messages
+    fetchUserData: function() {
+        var self = this;
+        app.api.user.get(function(err, user) {
+            self.setState({user: user});
+            app.api.groups.get(user,function(err, userGroupsWithMessages) {
+                self.setState({userGroupsWithMessages:userGroupsWithMessages});
+            });
+        });
+    },
+
     //---------- App Handlers ----------
 
     handleLogout:function(){
@@ -232,7 +243,9 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title='New note for ....' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}/>
+                <ListNavBar title='New note for ....' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
+                    <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
+                </ListNavBar>
                 <MessageFooter messagePrompt='' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
             </Layout>
             /* jshint ignore:end */
@@ -273,17 +286,6 @@ var ClamShellApp = React.createClass({
 
             return this.renderLoginLayout();
         }
-    },
-
-    //load the user and then thier groups and those groups messages
-    fetchUserData: function() {
-        var self = this;
-        app.api.user.get(function(err, user) {
-            self.setState({user: user});
-            app.api.groups.get(user,function(err, userGroupsWithMessages) {
-                self.setState({userGroupsWithMessages:userGroupsWithMessages});
-            });
-        });
     }
 
 });
