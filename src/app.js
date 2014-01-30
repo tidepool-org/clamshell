@@ -72,12 +72,11 @@ var ClamShellApp = React.createClass({
     //starting state for the app when first used or after logout
     initializeAppState : function(){
         return {
-            messages: null,
             routeName: routes.login,
             previousRoute: null,
             authenticated: app.auth.isAuthenticated(),
             user: null,
-            userGroupsMessages:null,
+            userGroupsWithMessages:null,
             selectedGroup: null,
             loggingOut: false
         };
@@ -108,7 +107,7 @@ var ClamShellApp = React.createClass({
     messagesForThread:function(groupId,rootMessageId){
 
         //var messageGroup = _.find(this.state.groups, function(group){ return groupId == group.id });
-        var messageGroup = _.find(this.state.userGroupsMessages, function(group){ return groupId == group.id });
+        var messageGroup = _.find(this.state.userGroupsWithMessages, function(group){ return groupId == group.id });
 
         var messagesInThread = _.where(messageGroup.messages, {rootmessageid: rootMessageId});
 
@@ -173,7 +172,7 @@ var ClamShellApp = React.createClass({
     },
 
     handleGroupChanged:function(e){
-        var group = _.find(this.state.userGroupsMessages, function(group){ return e.groupId == group.id });
+        var group = _.find(this.state.userGroupsWithMessages, function(group){ return e.groupId == group.id });
         var currentRoute = this.state.routeName;
         this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group],previousRoute : currentRoute});
     },
@@ -209,9 +208,9 @@ var ClamShellApp = React.createClass({
             /* jshint ignore:start */
             <Layout>
                 <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
-                    <MyGroupsPicker groups={this.state.userGroupsMessages} onGroupPicked={this.handleGroupChanged} />
+                    <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
                 </ListNavBar>
-                <GroupConversations groups={this.state.userGroupsMessages} onThreadSelected={this.handleShowConversationThread} />
+                <GroupConversations groups={this.state.userGroupsWithMessages} onThreadSelected={this.handleShowConversationThread} />
                 <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
             </Layout>
             /* jshint ignore:end */
@@ -222,7 +221,7 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title='Note in <group> team' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
+                <ListNavBar title='Note in {<group>} team' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
                 <MessageItemList messages={this.state.messages} />
                 <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation}/>
             </Layout>
@@ -235,7 +234,6 @@ var ClamShellApp = React.createClass({
             /* jshint ignore:start */
             <Layout>
                 <ListNavBar title='New note for <group>' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}/>
-                //<MessageForm groups={this.state.groups} onMessageSend={this.handleStartConversation}/>
                 <MessageFooter messagePrompt='' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
             </Layout>
             /* jshint ignore:end */
@@ -283,8 +281,8 @@ var ClamShellApp = React.createClass({
         var self = this;
         app.api.user.get(function(err, user) {
             self.setState({user: user});
-            app.api.groups.get(user,function(err, userGroupsMessages) {
-                self.setState({userGroupsMessages:userGroupsMessages});
+            app.api.groups.get(user,function(err, userGroupsWithMessages) {
+                self.setState({userGroupsWithMessages:userGroupsWithMessages});
             });
         });
     }
