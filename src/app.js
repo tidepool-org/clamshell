@@ -18,7 +18,7 @@ You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
- 
+
 /*jshint quotmark:false */
 /*jshint white:false */
 /*jshint trailing:false */
@@ -31,7 +31,7 @@ var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
 
-//app components 
+//app components
 var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/ListNavBar');
 var FooterBar = require('./components/FooterBar');
@@ -74,6 +74,7 @@ var ClamShellApp = React.createClass({
         return {
             messages: null,
             routeName: routes.login,
+            previousRoute: null,
             authenticated: app.auth.isAuthenticated(),
             user: null,
             userGroupsMessages:null,
@@ -88,9 +89,10 @@ var ClamShellApp = React.createClass({
         if (this.state.authenticated) {
             console.log('authenticated ...');
             this.fetchUserData();
-            this.setState({routeName: routes.messagesForAllTeams});
+            var currentRoute = this.state.routeName;
+            this.setState({routeName: routes.messagesForAllTeams, previousRoute : currentRoute});
         }
-        //router
+
         var router = Router({
             '/': this.setState.bind(this, {routeName: routes.login}),
             '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
@@ -102,6 +104,7 @@ var ClamShellApp = React.createClass({
     },
 
     // ---------- Utility Methods ----------
+
     messagesForThread:function(groupId,rootMessageId){
 
         //var messageGroup = _.find(this.state.groups, function(group){ return groupId == group.id });
@@ -125,26 +128,32 @@ var ClamShellApp = React.createClass({
     },
 
     handleBack:function(){
-        this.setState({routeName:routes.messagesForAllTeams});
+        var previousRoute = this.state.previousRoute;
+        this.setState({routeName:previousRoute});
     },
 
     handleLoginSuccess:function(){
         this.setState({authenticated: true});
         this.fetchUserData();
-        this.setState({routeName:routes.messagesForAllTeams});
+
+        var currentRoute = this.state.routeName;
+        this.setState({routeName: routes.messagesForAllTeams, previousRoute : currentRoute});
     },
 
-    handleShowConversationThread:function(mostRecentMessageInThread){    
+    handleShowConversationThread:function(mostRecentMessageInThread){
 
         //console.log('group: ',mostRecentMessageInThread.groupid);
         //console.log('root message: ',mostRecentMessageInThread.rootmessageid);
 
         var messages = this.messagesForThread(mostRecentMessageInThread.groupid,mostRecentMessageInThread.rootmessageid);
-        this.setState({messages: messages,routeName:routes.messageThread});
+
+        var currentRoute = this.state.routeName;
+        this.setState({messages: messages,routeName:routes.messageThread, previousRoute : currentRoute});
     },
 
     handleStartingNewConversation:function(){
-        this.setState({routeName:routes.startMessageThread});
+        var currentRoute = this.state.routeName;
+        this.setState({routeName:routes.startMessageThread,previousRoute : currentRoute});
     },
 
     handleStartConversation:function(e){
@@ -165,7 +174,8 @@ var ClamShellApp = React.createClass({
 
     handleGroupChanged:function(e){
         var group = _.find(this.state.userGroupsMessages, function(group){ return e.groupId == group.id });
-        this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group]});
+        var currentRoute = this.state.routeName;
+        this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group],previousRoute : currentRoute});
     },
 
     //---------- Rendering Layouts ----------
@@ -233,12 +243,12 @@ var ClamShellApp = React.createClass({
     },
 
     renderLoginLayout:function(){
-        return (  
-            /* jshint ignore:start */    
+        return (
+            /* jshint ignore:start */
             <Layout>
                 <Login onLoginSuccess={this.handleLoginSuccess} login={app.auth.login.bind(app.auth)}/>
             </Layout>
-            /* jshint ignore:end */    
+            /* jshint ignore:end */
         );
     },
 
@@ -247,15 +257,15 @@ var ClamShellApp = React.createClass({
         var routeName = this.state.routeName;
 
         if (this.state.authenticated && routeName === routes.messagesForAllTeams) {
-            
+
             return this.renderAllGroupsConversationsLayout();
         }
         if (this.state.authenticated && routeName === routes.messagesForSelectedTeam) {
-            
+
             return this.renderGroupConversationsLayout();
         }
         else if(this.state.authenticated && routeName === routes.messageThread){
-            
+
             return this.renderConversationThreadLayout();
         }
         else if(this.state.authenticated && routeName === routes.startMessageThread){
@@ -263,7 +273,7 @@ var ClamShellApp = React.createClass({
             return this.renderNewConversationLayout();
         }
         else{
-            
+
             return this.renderLoginLayout();
         }
     },
