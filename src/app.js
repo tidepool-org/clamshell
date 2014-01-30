@@ -34,7 +34,6 @@ var _ = require('underscore');
 //app components
 var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/ListNavBar');
-var FooterBar = require('./components/FooterBar');
 var MessageFooter = require('./components/MessageFooter');
 var Login = require('./components/Login');
 var MyGroupsPicker = require('./components/GroupsPicker');
