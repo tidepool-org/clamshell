@@ -18,6 +18,8 @@ You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
+'use strict';
+
 var React = require('react');
 
 var MessageItemList = React.createClass({
