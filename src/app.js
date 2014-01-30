@@ -188,7 +188,7 @@ var ClamShellApp = React.createClass({
         );
     },
 
-    renderGroupConversationsLayout:function(){
+    renderMessagesForSelectedTeam:function(){
         return (
             /* jshint ignore:start */
             <Layout>
@@ -202,7 +202,7 @@ var ClamShellApp = React.createClass({
         );
     },
 
-    renderAllGroupsConversationsLayout:function(){
+    renderMessagesForAllTeams:function(){
         return (
             /* jshint ignore:start */
             <Layout>
@@ -216,7 +216,7 @@ var ClamShellApp = React.createClass({
         );
     },
 
-    renderConversationThreadLayout:function(){
+    renderMessageThread:function(){
         return (
             /* jshint ignore:start */
             <Layout>
@@ -228,7 +228,7 @@ var ClamShellApp = React.createClass({
         );
     },
 
-    renderNewConversationLayout:function(){
+    renderStartMessageThread:function(){
         return (
             /* jshint ignore:start */
             <Layout>
@@ -255,19 +255,19 @@ var ClamShellApp = React.createClass({
 
         if (this.state.authenticated && routeName === routes.messagesForAllTeams) {
 
-            return this.renderAllGroupsConversationsLayout();
+            return this.renderMessagesForAllTeams();
         }
         if (this.state.authenticated && routeName === routes.messagesForSelectedTeam) {
 
-            return this.renderGroupConversationsLayout();
+            return this.renderMessagesForSelectedTeam();
         }
         else if(this.state.authenticated && routeName === routes.messageThread){
 
-            return this.renderConversationThreadLayout();
+            return this.renderMessageThread();
         }
         else if(this.state.authenticated && routeName === routes.startMessageThread){
 
-            return this.renderNewConversationLayout();
+            return this.renderStartMessageThread();
         }
         else{
 
