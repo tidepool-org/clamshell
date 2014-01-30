@@ -232,7 +232,7 @@ var ClamShellApp = React.createClass({
         return (
             /* jshint ignore:start */
             <Layout>
-                <ListNavBar title='New note for <group>' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}/>
+                <ListNavBar title='New note for ....' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}/>
                 <MessageFooter messagePrompt='' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
             </Layout>
             /* jshint ignore:end */
