@@ -246,7 +246,7 @@ var ClamShellApp = React.createClass({
                 <ListNavBar title='New note for ....' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
                     <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
                 </ListNavBar>
-                <MessageFooter messagePrompt='' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
+                <MessageFooter btnMessage='Post' onFooterAction={this.handleStartConversation}/>
             </Layout>
             /* jshint ignore:end */
         );

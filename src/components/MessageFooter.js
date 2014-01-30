@@ -41,7 +41,7 @@ var MessageFooter = React.createClass({
       <nav className='navbar navbar-default navbar-fixed-bottom'>
       <form className='navbar-form'>
         <div className='form-group col-xs-10'>
-          <input type='text' className='form-control' ref='messageText' onFocus={this.handleMessage} placeholder={this.props.messagePrompt} />
+          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onFocus={this.handleMessage} placeholder={this.props.messagePrompt} />
         </div>
 
         <button type='submit' ref='sendBtn' className='btn btn-default col-xs-2' onClick={this.handleMessage}>{this.props.btnMessage}</button>
