@@ -19,20 +19,22 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+'use strict';
+
 var React = require('react');
 
 var Layout = React.createClass({
 
-	render: function() {
+  render: function() {
 
-        return this.transferPropsTo(
-        	/* jshint ignore:start */
-            <div className='content'>
-                {this.props.children}
-            </div>
-        	/* jshint ignore:end */
-        );
-    }
+    return this.transferPropsTo(
+      /* jshint ignore:start */
+      <div className='content'>
+      {this.props.children}
+      </div>
+      /* jshint ignore:end */
+      );
+  }
 });
 
 module.exports = Layout;

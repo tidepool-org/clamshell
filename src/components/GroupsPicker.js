@@ -19,6 +19,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+'use strict';
+
 var React = require('react');
 
 //require('./GroupsPicker.css');
@@ -26,40 +28,40 @@ var React = require('react');
 //Groups chooser
 var GroupsPicker = React.createClass({
 
-    handleSelection: function(e) {
-        console.log('selected group is: ',e);
-        this.props.onGroupPicked({groupId:e});
-        return false;
-    },
+  handleSelection: function(e) {
+    console.log('selected group is: ',e);
+    this.props.onGroupPicked({groupId:e});
+    return false;
+  },
 
-    render: function() {
+  render: function() {
 
-        var groups = this.props.groups.map(function(group,i) {    
-            return (
-                /* jshint ignore:start */
-                <li key={i}>
-                    <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
-                        <p ref='groupName'>{group.name}</p>
-                        <p ref='lastGroupActivity'>TODO:</p>
-                    </a>
-                </li>
-                /* jshint ignore:end */    
-            );
-        }.bind(this));
-
-        return this.transferPropsTo(
-            /* jshint ignore:start */
-            <div ref='groupsDropDown' className='btn-group'>
-                <button type='button' className='btn navbar-btn pull-left dropdown-toggle' data-toggle='dropdown'>
-                    <span className='caret'></span>
-                </button>
-                <ul ref='groupsList' className='dropdown-menu GroupsPicker-dropdown' role='menu'>
-                    {groups}
-                </ul>
-            </div>
-            /* jshint ignore:end */ 
+    var groups = this.props.groups.map(function(group,i) {
+      return (
+        /* jshint ignore:start */
+        <li key={i}>
+        <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
+        <p ref='groupName'>{group.name}</p>
+        <p ref='lastGroupActivity'>TODO:</p>
+        </a>
+        </li>
+        /* jshint ignore:end */
         );
-    }
+    }.bind(this));
+
+    return this.transferPropsTo(
+      /* jshint ignore:start */
+      <div ref='groupsDropDown' className='btn-group'>
+      <button type='button' className='btn navbar-btn pull-left dropdown-toggle' data-toggle='dropdown'>
+      <span className='caret'></span>
+      </button>
+      <ul ref='groupsList' className='dropdown-menu GroupsPicker-dropdown' role='menu'>
+      {groups}
+      </ul>
+      </div>
+      /* jshint ignore:end */
+      );
+  }
 });
 
 module.exports = GroupsPicker;
