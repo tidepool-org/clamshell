@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var MessageForm = require('../../build/components/MessageForm');
+var MessageFooter = require('../../build/components/MessageFooter');
 var submittedMessage;
 
 var getSubmittedMessage = function(content){
@@ -27,12 +27,12 @@ var getSubmittedMessage = function(content){
     console.log('added: ',submittedMessage)
 };
 
-describe('MessageForm', function() {
+describe('MessageFooter', function() {
     var component, container;
 
     beforeEach(function() {
         //we add our component to test into a div and then render it
-        component = MessageForm({onMessageSend:getSubmittedMessage});
+        component = MessageFooter({onMessageSend:getSubmittedMessage});
         container = document.createElement('div');
         document.documentElement.appendChild(container);
         React.renderComponent(component, container);

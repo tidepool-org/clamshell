@@ -34,6 +34,14 @@ var MessageFooter = React.createClass({
     return false;
   },
 
+  handleFocus: function() {
+
+    if(this.props.onFocusAction){
+      this.props.onFocusAction();
+    }
+    return false;
+  },
+
   render: function() {
 
     return this.transferPropsTo(
@@ -41,9 +49,8 @@ var MessageFooter = React.createClass({
       <nav className='navbar navbar-default navbar-fixed-bottom'>
       <form className='navbar-form'>
         <div className='form-group col-xs-10'>
-          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onFocus={this.handleMessage} placeholder={this.props.messagePrompt} />
+          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onFocus={this.handleFocus} placeholder={this.props.messagePrompt} />
         </div>
-
         <button type='submit' ref='sendBtn' className='btn btn-default col-xs-2' onClick={this.handleMessage}>{this.props.btnMessage}</button>
       </form>
       </nav>
