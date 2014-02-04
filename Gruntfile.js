@@ -1,81 +1,84 @@
 // == BSD2 LICENSE ==
 // Copyright (c) 2014, Tidepool Project
-// 
+//
 // This program is free software; you can redistribute it and/or modify it under
 // the terms of the associated License, which is identical to the BSD 2-Clause
 // License as published by the Open Source Initiative at opensource.org.
-// 
+//
 // This program is distributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE. See the License for more details.
-// 
+//
 // You should have received a copy of the License along with this program; if
 // not, you can obtain one from Tidepool Project at tidepool.org.
 // == BSD2 LICENSE ==
 
 module.exports = function(grunt) {
-    'use strict';
+  'use strict';
 
-    // Project configuration.
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        uglify: {
-            options: {
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-            },
-            build: {
-                src: 'src/<%= pkg.name %>.js',
-                dest: 'build/<%= pkg.name %>.min.js'
-            }
+  // Project configuration.
+  grunt.initConfig({
+      pkg: grunt.file.readJSON('package.json'),
+      uglify: {
+        options: {
+          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
         },
-        jshint: {
-            options: {
-                jshintrc: '.jshintrc'
-            },
-            all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
-        },
-        docco: {
-            docs: {
-                src: ['lib/**/*.js', './*.md'],
-                dest: ['docs'],
-                options: {
-                    layout: 'linear',
-                    output: 'docs'
-                }
-            }
-        },
-        shell: {
-            buildApp: {
-                // load config and start app at same time
-                command: [
-                    'webpack --debug src/main.js build/clamshell.js'
-                ]
-            },
-            testApp: {
-                // load config and start app at same time
-                command: [
-                    'jsx src/ build/',
-                    'browserify test/**/*.js -o build/browserified.js',
-                    'testem'
-                ].join(';'),
-                options: {
-                    async: false
-                }
-            }
+        build: {
+          src: 'src/<%= pkg.name %>.js',
+          dest: 'build/<%= pkg.name %>.min.js'
         }
+      },
+      jshint: {
+        options: {
+          jshintrc: '.jshintrc'
+        },
+        all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
+      },
+      docco: {
+        docs: {
+          src: ['lib/**/*.js', './*.md'],
+          dest: ['docs'],
+          options: {
+            layout: 'linear',
+            output: 'docs'
+          }
+        }
+      },
+      shell: {
+        buildApp: {
+          // load config and start app at same time
+          command: [
+            'webpack --debug src/main.js build/clamshell.js'
+          ]
+        },
+        testBuild: {
+          command: [
+            'jsx src/ build/',
+            'browserify test/**/*.js -o build/browserified.js'
+          ].join('&&'),
+          options: {
+            async: false
+          }
+        },
+        testRun: {
+          command: [
+            'testem'
+          ]
+        }
+      }
     });
 
-    // Load the plugins
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-docco2');
-    grunt.loadNpmTasks('grunt-shell-spawn');
-    grunt.loadNpmTasks('grunt-mocha-test');
+  // Load the plugins
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-docco2');
+  grunt.loadNpmTasks('grunt-shell-spawn');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
-    // Default task(s).
-    grunt.registerTask('default', ['unit-test']);
-    // Standard tasks
-    grunt.registerTask('build', ['shell:buildApp']);
-    grunt.registerTask('test', ['shell:testApp']);
+  // Default task(s).
+  grunt.registerTask('default', ['unit-test']);
+  // Standard tasks
+  grunt.registerTask('build', ['shell:buildApp']);
+  grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
 
 };
