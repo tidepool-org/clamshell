@@ -31,9 +31,11 @@ var ListNavBar = React.createClass({
         return (
             /* jshint ignore:start */
             <nav className='navbar navbar-default navbar-fixed-top' role='navigation'>
-                <button type='button' ref='actionBtn' className='btn btn-default navbar-btn col-xs-1 pull-left' onClick={this.handleAction}><span className={this.props.actionIcon}></span></button>
-                <h4 className='navbar-text text-center col-xs-8'>{this.props.title}</h4>
-                <div className='col-xs-1 pull-right'>
+                <div className='col-xs-1'>
+                    <button type='button' ref='actionBtn' className='btn btn-default navbar-btn' onClick={this.handleAction}><span className={this.props.actionIcon}></span></button>
+                </div>
+                <h4 className='navbar-text text-center col-xs-10'>{this.props.title}</h4>
+                <div>
                     {this.props.children}
                 </div>
             </nav>
