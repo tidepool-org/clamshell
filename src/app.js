@@ -147,6 +147,11 @@ var ClamShellApp = React.createClass({
 
     //console.log('group: ',mostRecentMessageInThread.groupid);
     //console.log('root message: ',mostRecentMessageInThread.rootmessageid);
+    var messagesId = mostRecentMessageInThread.id;
+
+    if(mostRecentMessageInThread.rootmessageid){
+      messagesId = mostRecentMessageInThread.rootmessageid;
+    }
 
     var messages = this.messagesForThread(mostRecentMessageInThread.groupid,mostRecentMessageInThread.rootmessageid);
 
@@ -163,12 +168,21 @@ var ClamShellApp = React.createClass({
     //optimistically add to the existing messages
     console.log('send ['+e.text+'] ');
 
-    var updatedMessages = this.state.messages;
+    var newConversation = {
+      id:'2222aca5-b0f0-4ae1-8888-8314350ac1fb',
+      rootmessageid : '',
+      userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
+      groupid : this.state.selectedGroup[0].id,
+      timestamp : Date('MM-DD-YYYY HH:mm:ss'),
+      messagetext : e.text
+    };
 
-    this.setState({messages:updatedMessages});
+    this.state.selectedGroup[0].messages.push(newConversation);
+
+    //this.setState({messages:updatedMessages});
     //show the thread
     console.log('show new conversation thread');
-    this.handleShowConversationThread(e.group);
+    this.handleShowConversationThread(_.last(this.state.selectedGroup[0].messages));
   },
 
   handleAddingToConversation:function(e){
@@ -204,7 +218,7 @@ var ClamShellApp = React.createClass({
       <MyGroupsPicker groups={this.state.selectedGroup} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <GroupConversations groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
-      <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartingNewConversation}/>
+      <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
       </Layout>
       /* jshint ignore:end */
       );
@@ -235,9 +249,9 @@ var ClamShellApp = React.createClass({
       );
   },
 
-  renderStartMessageThread:function(){
+  /*renderStartMessageThread:function(){
     return (
-      /* jshint ignore:start */
+      // jshint ignore:start 
       <Layout>
       <ListNavBar title='New note for ....' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
       <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
@@ -252,9 +266,9 @@ var ClamShellApp = React.createClass({
       </div>
       <MessageFooter btnMessage='Post' onFooterAction={this.handleStartConversation}/>
       </Layout>
-      /* jshint ignore:end */
+      // jshint ignore:end 
       );
-  },
+  },*/
 
   renderLoginLayout:function(){
     return (
@@ -266,7 +280,7 @@ var ClamShellApp = React.createClass({
       );
   },
 
-  //render based on route
+  //render layout based on route
   renderContent:function(){
     var routeName = this.state.routeName;
 
@@ -281,9 +295,9 @@ var ClamShellApp = React.createClass({
       else if(routes.messageThread === routeName){
         return this.renderMessageThread();
       }
-      else if(routes.startMessageThread === routeName){
-        return this.renderStartMessageThread();
-      }
+      //else if(routes.startMessageThread === routeName){
+      //  return this.renderStartMessageThread();
+      //}
 
     } else {
       return this.renderLoginLayout();
