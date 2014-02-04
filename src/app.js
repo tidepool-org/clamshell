@@ -270,24 +270,22 @@ var ClamShellApp = React.createClass({
   renderContent:function(){
     var routeName = this.state.routeName;
 
-    if (this.state.authenticated && routeName === routes.messagesForAllTeams) {
+    if(this.state.authenticated){
 
-      return this.renderMessagesForAllTeams();
-    }
-    if (this.state.authenticated && routeName === routes.messagesForSelectedTeam) {
+      if (routes.messagesForAllTeams === routeName) {
+        return this.renderMessagesForAllTeams();
+      }
+      else if (routes.messagesForSelectedTeam === routeName) {
+        return this.renderMessagesForSelectedTeam();
+      }
+      else if(routes.messageThread === routeName){
+        return this.renderMessageThread();
+      }
+      else if(routes.startMessageThread === routeName){
+        return this.renderStartMessageThread();
+      }
 
-      return this.renderMessagesForSelectedTeam();
-    }
-    else if(this.state.authenticated && routeName === routes.messageThread){
-
-      return this.renderMessageThread();
-    }
-    else if(this.state.authenticated && routeName === routes.startMessageThread){
-
-      return this.renderStartMessageThread();
-    }
-    else{
-
+    } else {
       return this.renderLoginLayout();
     }
   }
