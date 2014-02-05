@@ -20,7 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 var React = require('react');
 
-var ConversationOverview = React.createClass({
+var Note = React.createClass({
     render: function() {
         return this.transferPropsTo(
             <div className="list-group-item row">
@@ -30,7 +30,7 @@ var ConversationOverview = React.createClass({
                 <div className="col-xs-10">
                     <h4 ref='messageAuthorAndGroup' className="list-group-item-heading">{this.props.author} User Name > <a href='#' ref='careTeam'>{this.props.name}</a></h4>
                     <span ref='messageWhen' className=''>{this.props.when}</span>
-                    <p ref='messageText' className="list-group-item-text">{this.props.latestNoteSummary}</p>
+                    <p ref='messageText' className="list-group-item-text">{this.props.note}</p>
                     <a ref='showMessageThread' href='#' >Comment stuff</a>
                 </div>
             </div>
@@ -38,5 +38,5 @@ var ConversationOverview = React.createClass({
     }
 });
 
-module.exports = ConversationOverview;
+module.exports = Note;
 

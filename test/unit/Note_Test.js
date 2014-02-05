@@ -19,20 +19,22 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var ConversationOverview = require('../../build/components/ConversationOverview');
+var Note = require('../../build/components/Note');
 
 var testGroupName = 'My Test Group';
-var testLatestNoteSummary = 'A summary of the latest note to my care group conversation thread';
+var testAuthor = 'Jamie';
+var testNote = 'A summary of the latest note to my care group conversation thread';
 var testWhenTheLatestNoteOccured = 'Dec 24';
 
-describe('ConversationOverview', function() {
+describe('Note', function() {
     var component, container;
 
     beforeEach(function() {
         //we add our component to test into a div and then render it
-        component = ConversationOverview({
+        component = Note({
             name : testGroupName,
-            latestNoteSummary : testLatestNoteSummary,
+            author : testAuthor,
+            note : testNote,
             when : testWhenTheLatestNoteOccured
         });
 
@@ -51,8 +53,12 @@ describe('ConversationOverview', function() {
         expect(component.props.name).to.equal(testGroupName);
     });
 
+    it('should have property for the note', function() {
+        expect(component.props.note).to.equal(testNote);
+    });
+
     it('should have property for the author', function() {
-        expect(component.props.latestNoteSummary).to.equal(testLatestNoteSummary);
+        expect(component.props.author).to.equal(testAuthor);
     });
 
     it('should have property for when the most recent note occured', function() {

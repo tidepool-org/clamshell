@@ -23,9 +23,9 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var _ = require('underscore');
 
-var ConversationOverview = require('./ConversationOverview');
+var Note = require('./Note');
 
-var GroupConversations = React.createClass({
+var GroupNotes = React.createClass({
 
   niceTime: function(time){
     return time;
@@ -33,29 +33,19 @@ var GroupConversations = React.createClass({
 
   conversationsForGroup:function(group){
 
-    var mostRecentForConversation = [];
-
-    var convsersations = _.groupBy(group.messages, 'rootmessageid');
-
-    _.each(convsersations, function(conversationMessages){
-
-      var latest =  _.sortBy(conversationMessages, function (message) {
-        return message.timestamp;
-      });
-
-      mostRecentForConversation.push(latest[0]);
-
+    var convsersations = _.filter(group.messages, function(message){
+      return message.rootmessageid === ''; 
     });
 
-    var items = mostRecentForConversation.map(function(message, i) {
-
+    var items =  _.map(convsersations, function(message){ 
         return (
           /* jshint ignore:start */
-          <ConversationOverview
+          <Note
+              ref='groupNote'
               onClick={this.props.onThreadSelected.bind(null, message)}
-              key={message.rootmessageid}
+              key={message.id}
               name={group.name}
-              latestNoteSummary={message.messagetext}
+              note={message.messagetext}
               when={this.niceTime(message.timestamp)}/>
           /* jshint ignore:end */
         );
@@ -80,5 +70,5 @@ var GroupConversations = React.createClass({
   }
 });
 
-module.exports = GroupConversations;
+module.exports = GroupNotes;
 
