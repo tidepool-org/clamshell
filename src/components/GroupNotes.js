@@ -31,22 +31,22 @@ var GroupNotes = React.createClass({
     return time;
   },
 
-  conversationsForGroup:function(group){
+  notesForGroup:function(group){
 
-    var convsersations = _.filter(group.messages, function(message){
-      return message.rootmessageid === ''; 
+    var notes = _.filter(group.messages, function(note){
+      return note.rootmessageid === ''; 
     });
 
-    var items =  _.map(convsersations, function(message){ 
+    var items =  _.map(notes, function(note){ 
         return (
           /* jshint ignore:start */
           <Note
               ref='groupNote'
-              onClick={this.props.onThreadSelected.bind(null, message)}
-              key={message.id}
+              onClick={this.props.onThreadSelected.bind(null, note)}
+              key={note.id}
               name={group.name}
-              note={message.messagetext}
-              when={this.niceTime(message.timestamp)}/>
+              note={note.messagetext}
+              when={this.niceTime(note.timestamp)}/>
           /* jshint ignore:end */
         );
       }.bind(this));
@@ -57,7 +57,7 @@ var GroupNotes = React.createClass({
   render: function() {
 
     var items = this.props.groups.map(function(group,i){
-      return this.conversationsForGroup(group);
+      return this.notesForGroup(group);
     }.bind(this));
 
     return (

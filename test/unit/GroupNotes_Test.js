@@ -79,24 +79,24 @@ describe('GroupNotes', function() {
     expect(propsGiven).to.have.timestamp;
   });
 
-  it('should return two converstaion threads', function() {
-    //call the onClick of first groupitem that is a child of our component
+  it('should return two notes', function() {
+    //two notes but also replies/comments to those notes
     var group = groups[0];
-    var converstions = component.conversationsForGroup(group);
+    var converstions = component.notesForGroup(group);
     expect(converstions.length).to.equal(2);
   });
 
-  it('should return all threads when there are no replies', function() {
-    //call the onClick of first groupitem that is a child of our component
+  it('should return all messages when there are no replies', function() {
+    //added test as all messages are root 'notes' with no replies
     var group = groups[1];
-    var converstions = component.conversationsForGroup(group);
+    var converstions = component.notesForGroup(group);
     expect(converstions.length).to.equal(3);
   });
 
   it('should have two notes where the key is the id for the root message of each thread', function() {
     //call the onClick of first groupitem that is a child of our component
     var group = groups[0];
-    var converstions = component.conversationsForGroup(group);
+    var converstions = component.notesForGroup(group);
 
     expect(converstions[0].props.key).to.equal('9233c2ae-7bad-41f5-9295-e73f0437295b');
     expect(converstions[1].props.key).to.equal('070159bf-bd33-4998-b874-6b9c2bafe7fb');
