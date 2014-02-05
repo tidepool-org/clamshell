@@ -73,6 +73,13 @@ describe('GroupConversations', function() {
     expect(converstions.length).to.equal(2);
   });
 
+  it('should return all threads when there are no replies', function() {
+    //call the onClick of first groupitem that is a child of our component
+    var group = groups[1];
+    var converstions = component.conversationsForGroup(group);
+    expect(converstions.length).to.equal(3);
+  });
+
   it('should have two converstaion overviews where the key is the id for the root message of each thread', function() {
     //call the onClick of first groupitem that is a child of our component
     var group = groups[0];

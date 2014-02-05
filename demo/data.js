@@ -48,7 +48,7 @@ data.groups = [
 		messages : [
 			{
 				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				rootmessageid : '9233c2ae-7bad-41f5-9295-e73f0437295b',
+				rootmessageid : '',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2013-12-22T23:07:40+00:00',
@@ -81,7 +81,7 @@ data.groups = [
 			{
 				id : '070159bf-bd33-4998-b874-6b9c2bafe7fb',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
-				rootmessageid : '070159bf-bd33-4998-b874-6b9c2bafe7fb',
+				rootmessageid : '',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2014-01-05T23:07:40+00:00',
 				messagetext : 'Big hypo yesterday. I went for a longer than normal ride. I ate well during but didn\'t have lunch until late after the ride. Maybe a good snack just after???'

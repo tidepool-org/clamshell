@@ -81,7 +81,6 @@ var ClamShellApp = React.createClass({
 
     console.log('setup ...');
     if (this.state.authenticated) {
-      console.log('authenticated ...');
       this.fetchUserData();
       var currentRoute = this.state.routeName;
       this.setState({routeName: routes.messagesForAllTeams, previousRoute : currentRoute});
@@ -99,14 +98,21 @@ var ClamShellApp = React.createClass({
 
   // ---------- Utility Methods ----------
 
+  //TODO: move this out and test it
   messagesForThread:function(groupId,rootMessageId){
 
-    //var messageGroup = _.find(this.state.groups, function(group){ return groupId == group.id });
     var messageGroup = _.find(this.state.userGroupsWithMessages, function(group){ return groupId == group.id; });
     var messagesInThread = _.where(messageGroup.messages, {rootmessageid: rootMessageId});
-    var messagesOrderedByDate = _.sortBy(messagesInThread, function(message){ return message.timestamp; });
 
-    return messagesOrderedByDate;
+    var messages;
+
+    if(messagesInThread.length > 0){
+      messages = _.sortBy(messagesInThread, function(message){ return message.timestamp; });
+    }else{
+      messages = _.where(messageGroup.messages, {id: rootMessageId});
+    }
+
+    return messages;
 
   },
 
@@ -145,15 +151,13 @@ var ClamShellApp = React.createClass({
 
   handleShowConversationThread:function(mostRecentMessageInThread){
 
-    //console.log('group: ',mostRecentMessageInThread.groupid);
-    //console.log('root message: ',mostRecentMessageInThread.rootmessageid);
     var messagesId = mostRecentMessageInThread.id;
 
     if(mostRecentMessageInThread.rootmessageid){
       messagesId = mostRecentMessageInThread.rootmessageid;
     }
 
-    var messages = this.messagesForThread(mostRecentMessageInThread.groupid,mostRecentMessageInThread.rootmessageid);
+    var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
 
     var currentRoute = this.state.routeName;
     this.setState({messages: messages,routeName:routes.messageThread, previousRoute : currentRoute});
@@ -167,7 +171,7 @@ var ClamShellApp = React.createClass({
   handleStartConversation:function(e){
     //optimistically add to the existing messages
     console.log('send ['+e.text+'] ');
-
+//TODO: sort this out
     var newConversation = {
       id:'2222aca5-b0f0-4ae1-8888-8314350ac1fb',
       rootmessageid : '',
@@ -179,10 +183,7 @@ var ClamShellApp = React.createClass({
 
     this.state.selectedGroup[0].messages.push(newConversation);
 
-    //this.setState({messages:updatedMessages});
-    //show the thread
-    console.log('show new conversation thread');
-    this.handleShowConversationThread(_.last(this.state.selectedGroup[0].messages));
+    this.handleShowConversationThread(newConversation);
   },
 
   handleAddingToConversation:function(e){
@@ -248,27 +249,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
       );
   },
-
-  /*renderStartMessageThread:function(){
-    return (
-      // jshint ignore:start 
-      <Layout>
-      <ListNavBar title='New note for ....' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
-      <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
-      </ListNavBar>
-      <div ref='' className="list-group-item row">
-      <div className="col-xs-3">
-      <img ref='authorImage' className="media-object img-circle" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMCAYAAACuwEE+AAAFiElEQVR4Xu3XSUtcaxCH8XLAWRRFxIWKE7gRx6Cigl/deQRxQBQcl6JpJXEeQ73QYlyIdS373q77nFVMquuk/vXzPacLMpnMi3CRwCcTKADMJ5OiLCUAGCCYEgCMKS6KAYMBUwKAMcVFMWAwYEoAMKa4KAYMBkwJAMYUF8WAwYApAcCY4qIYMBgwJQAYU1wUAwYDpgQAY4qLYsBgwJQAYExxUQwYDJgSAIwpLooBgwFTAoAxxUUxYDBgSgAwprgoBgwGTAkAxhQXxYDBgCkBwJjiohgwGDAlABhTXBQDBgOmBABjiotiwGDAlABgTHFRDBgMmBIAjCkuigGDAVMCgDHFRTFgMGBKADCmuCgGDAZMCQDGFBfFgMGAKQHAmOKiGDAYMCUAGFNcFAMGA6YEAGOKi2LAYMCUAGBMcVEMGAyYEgCMKS6KAYMBUwKAMcVFMWAwYEoAMKa4KAYMBkwJAMYUF8WAwYApAcCY4qIYMBgwJQAYU1wUAwYDpgQAY4qLYsBgwJRA3oM5PDyU4+NjGRkZkbKysr+Gz2Qysr29LRUVFdLf3y8FBQXy8vIiW1tbcnZ2ln5ub2+XlpaWT4eW6/t9+j+Wo8K8BXNxcSEK4uDgIEU1NjYm5eXlr7EpjKmpKXl8fJSSkhIZHx+XwsJCWV9fl9PTUyktLZX7+/sEqKenRxobGz+MPNf3y9H+zbfJWzDT09Np4dlLQbw9Yfb29uTo6Cj9s/69gnp6ehL9nMKZmJhI4BRQbW2tdHd3y8bGhhQVFcnAwIBcXl7Kzs5OgtXX1yezs7Ou9xsaGjIv67/wgbwFoyeHPlIWFxfl5uYmnSBZMPrz3NxcetT8+vVLrq+vE5CHh4e0+OLi4vRzFpD+rJ9fW1uT8/Nzqaurk9vb2/S5rq4uaW1tTSeV9/0Ubr5deQsmG7SC0dPgLZiVlZX0d5OTk7K8vCx3d3evJ4qiqK+vT+80ikBPHH1k6QmUBfX8/Jza19TUyI8fP/7aqef9FGC+XeHA6LvG6uqqVFZWSnNzs+zv74sC6OzslIaGhnTy6GPm7SMqe8Lob7y+1Opn9BoeHpbq6uoPwXz1foDJcQLvf+N//vyZHi3vL8Wgp1D2kaR/1lNITyD9FjU6OppgzczMpJNHLwXW29v7IZiv3I8TJsdY9HYLCwtydXX1+kjSpWdfhhWJPp4UgJ4W+o4zPz+f3k2amprk9+/fCU1HR4e0tbXJ5uamnJycSFVVVarRXu+/QXne71+I68u3zPtHkp4Q+mL7/lvS23ccBaOPIP2NVlxLS0sJQ/Y9ZXBwMOFRXFqjL8QKZ3d39/UFWb896eV1v3x84dX58x7MP/mVUSx6guilp8l3X7m+33fO878E852BRu8NmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm8HmOgbdp4PMM6BRm/3B89OPbW5/bE0AAAAAElFTkSuQmCC"/>
-      </div>
-      <div className="col-xs-9">
-      <h4 ref='authorName' className="list-group-item-heading">{this.state.user.name} > TODO</h4>
-      </div>
-      </div>
-      <MessageFooter btnMessage='Post' onFooterAction={this.handleStartConversation}/>
-      </Layout>
-      // jshint ignore:end 
-      );
-  },*/
 
   renderLoginLayout:function(){
     return (
