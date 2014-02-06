@@ -28,12 +28,37 @@ var api = {
     if (config.DEMO) {
       addDemoOverrides(this);
     }
+    addProductionOverrides(this);
   },
 
   user: {},
   groups: {},
   notes: {}
 };
+
+// ---------- BEGIN PRODUCTION OVERRIDES ----------
+
+function addProductionOverrides(api) {
+
+  // ----- User -----
+  api.user.get = function(callback) {
+    callback(null, demoUsers[0]);
+  };
+
+  // ----- Groups -----
+  api.groups.get = function(userId,callback) {
+    callback(null, groups);
+  };
+
+  // ----- Messages -----
+  api.notes.get = function(groupId,callback) {
+    callback(null, groups);
+  };
+
+  return api;
+}
+// ---------- END PRODUCTION OVERRIDES ----------
+
 
 // ---------- BEGIN DEMO OVERRIDES ----------
 function addDemoOverrides(api) {
