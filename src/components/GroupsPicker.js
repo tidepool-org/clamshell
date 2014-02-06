@@ -28,9 +28,8 @@ var React = require('react');
 //Groups chooser
 var GroupsPicker = React.createClass({
 
-  handleSelection: function(e) {
-    console.log('selected group is: ',e);
-    this.props.onGroupPicked({groupId:e});
+  handleSelection: function(selectedGroup) {
+    this.props.onGroupPicked({groupId:selectedGroup});
     return false;
   },
 
