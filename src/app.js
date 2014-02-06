@@ -73,6 +73,7 @@ var ClamShellApp = React.createClass({
       user: null,
       userGroupsWithMessages:null,
       selectedGroup: null,
+      messagesToShow : null,
       loggingOut: false
     };
   },
@@ -160,7 +161,7 @@ var ClamShellApp = React.createClass({
     var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
 
     var currentRoute = this.state.routeName;
-    this.setState({messages: messages,routeName:routes.messageThread, previousRoute : currentRoute});
+    this.setState({messagesToShow: messages,routeName:routes.messageThread, previousRoute : currentRoute});
   },
 
   handleStartingNewConversation:function(){
@@ -168,9 +169,7 @@ var ClamShellApp = React.createClass({
     this.setState({routeName:routes.startMessageThread,previousRoute : currentRoute});
   },
 
-  handleStartConversation:function(e){
-    //optimistically add to the existing messages
-    console.log('send ['+e.text+'] ');
+  handleStartConversation:function(note){
 //TODO: sort this out
     var newConversation = {
       id:'2222aca5-b0f0-4ae1-8888-8314350ac1fb',
@@ -178,12 +177,13 @@ var ClamShellApp = React.createClass({
       userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
       groupid : this.state.selectedGroup[0].id,
       timestamp : Date('MM-DD-YYYY HH:mm:ss'),
-      messagetext : e.text
+      messagetext : note.text
     };
 
-    this.state.selectedGroup[0].messages.push(newConversation);
+//TODO: sort this out
 
-    this.handleShowConversationThread(newConversation);
+    var currentRoute = this.state.routeName;
+    this.setState({routeName:routes.messageThread, messagesToShow: [newConversation], previousRoute : currentRoute});
   },
 
   handleAddingToConversation:function(e){
@@ -216,7 +216,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <Layout>
       <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
-      <MyGroupsPicker groups={this.state.selectedGroup} onGroupPicked={this.handleGroupChanged} />
+      <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <GroupNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
       <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
@@ -242,9 +242,9 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title='Note in {<group>} team' actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
-      <MessageItemList messages={this.state.messages} />
-      <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation}/>
+      <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
+      <MessageItemList messages={this.state.messagesToShow} />
+      <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation} />
       </Layout>
       /* jshint ignore:end */
       );
