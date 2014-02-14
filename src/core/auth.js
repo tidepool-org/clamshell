@@ -33,6 +33,10 @@ var auth = {
     if (config.DEMO) {
       addDemoOverrides(this);
       return this.demoInit(callback);
+    }else{
+      addProductionOverrides(this);
+      return this.productionInit(callback);
+
     }
     callback();
   },
@@ -41,6 +45,75 @@ var auth = {
     return Boolean(this.token);
   }
 };
+
+// ---------- BEGIN PRODUCTION OVERRIDES ----------
+
+function addProductionOverrides(auth) {
+
+  var platform = require('platform-client');
+
+  _.extend(auth, {
+
+    // Required method
+    productionInit: function(callback) {
+      var self = this;
+
+      this.loadSession(function() {
+        self.log('[demo] Auth initialized');
+        callback();
+      });
+    },
+
+    loadSession: function(callback) {
+      var token;
+      var localStorage = window.localStorage;
+      if (localStorage && localStorage.getItem) {
+        token = localStorage.getItem('demoAuthToken');
+        if (token) {
+          this.saveSession(token);
+        }
+        callback();
+      }
+      else {
+        callback();
+      }
+      this.log('[demo] Session loaded');
+    },
+
+    login: function(username, password, callback) {
+      var self = this;
+      var user = {
+
+      };
+      platform.login({username:username,password:password},function(error, userId){
+
+        this.log('[production] Login success');
+        callback();
+      });
+    }
+
+
+  });
+
+
+  // ----- User -----
+  api.user.get = function(callback) {
+    callback(null, []);
+  };
+
+  // ----- Groups -----
+  api.groups.get = function(userId,callback) {
+    callback(null, []);
+  };
+
+  // ----- Messages -----
+  api.notes.get = function(groupId,callback) {
+    callback(null, []);
+  };
+
+  return api;
+}
+// ---------- END PRODUCTION OVERRIDES ----------
 
 // ---------- BEGIN DEMO OVERRIDES ----------
 function addDemoOverrides(auth) {

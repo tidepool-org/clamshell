@@ -25,7 +25,6 @@ var React = require('react');
 var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
-var platform = require('platform-client');
 
 //app components
 /*jshint unused:true */

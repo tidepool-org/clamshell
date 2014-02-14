@@ -44,6 +44,8 @@ var api = {
 
 function addProductionOverrides(api) {
 
+  var platform = require('platform-client');
+
 
   // ----- User -----
   api.user.get = function(callback) {
