@@ -25,6 +25,7 @@ var React = require('react');
 var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
+var platform = require('platform-client');
 
 //app components
 /*jshint unused:true */
@@ -40,13 +41,11 @@ var MessageItemList = require('./components/MessageItemList');
 //core functionality
 var auth = require('./core/auth');
 var api = require('./core/api');
-var user = require('./core/user');
 
 var app = {
   log: bows('App'),
-  user:user,
-  api:api,
-  auth:auth
+  auth:auth,
+  api:api
 };
 
 var routes = {

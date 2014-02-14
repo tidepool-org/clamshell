@@ -2,6 +2,7 @@
   "name": "clamshell",
   "version": "0.0.1",
   "description": "",
+  "private":true,
   "repository": "",
   "dependencies": {
     "director": "1.2.2",
@@ -9,10 +10,7 @@
     "react": "0.8.0",
     "bows": "0.3.0",
     "underscore": "1.5.2",
-    "seagull-client": "0.0.1",
-    "messages-client": "tidepool-org/message-api-client",
-    "hakken": "0.1.0",
-    "user-api-client": "0.1.2"
+    "platform-client": "jh-bate/platform-client"
   },
   "devDependencies": {
     "jsx-loader": "petehunt/jsx-loader",

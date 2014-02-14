@@ -15,11 +15,14 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+'use strict';
+
 var bows = require('bows');
 
 var config = {
   DEMO : true
 };
+
 
 var api = {
   log: bows('Api'),
@@ -27,8 +30,9 @@ var api = {
   init: function() {
     if (config.DEMO) {
       addDemoOverrides(this);
+    }else{
+      addProductionOverrides(this);
     }
-    addProductionOverrides(this);
   },
 
   user: {},
@@ -40,19 +44,20 @@ var api = {
 
 function addProductionOverrides(api) {
 
+
   // ----- User -----
   api.user.get = function(callback) {
-    callback(null, demoUsers[0]);
+    callback(null, []);
   };
 
   // ----- Groups -----
   api.groups.get = function(userId,callback) {
-    callback(null, groups);
+    callback(null, []);
   };
 
   // ----- Messages -----
   api.notes.get = function(groupId,callback) {
-    callback(null, groups);
+    callback(null, []);
   };
 
   return api;
