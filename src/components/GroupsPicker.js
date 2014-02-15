@@ -23,7 +23,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-//require('./GroupsPicker.css');
+require('./GroupsPicker.css');
 
 //Groups chooser
 var GroupsPicker = React.createClass({
@@ -50,11 +50,11 @@ var GroupsPicker = React.createClass({
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <div ref='groupsDropDown' className='btn-group'>
+      <div ref='groupsDropDown' className='groupspicker btn-group'>
       <button type='button' className='btn navbar-btn pull-left dropdown-toggle' data-toggle='dropdown'>
       <span className='caret'></span>
       </button>
-      <ul ref='groupsList' className='dropdown-menu GroupsPicker-dropdown' role='menu'>
+      <ul ref='groupsList' className='groupspicker-dropdown dropdown-menu' role='menu'>
       {groups}
       </ul>
       </div>

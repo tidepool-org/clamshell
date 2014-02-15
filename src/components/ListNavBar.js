@@ -21,6 +21,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./ListNavBar.css');
+
 var ListNavBar = React.createClass({
 
     handleAction:function(){
@@ -30,7 +32,7 @@ var ListNavBar = React.createClass({
     render: function() {
         return (
             /* jshint ignore:start */
-            <nav className='navbar navbar-default navbar-fixed-top' role='navigation'>
+            <nav className='listnavbar navbar navbar-default navbar-fixed-top' role='navigation'>
                 <div className='col-xs-1'>
                     <button type='button' ref='actionBtn' className='btn btn-default navbar-btn' onClick={this.handleAction}><span className={this.props.actionIcon}></span></button>
                 </div>

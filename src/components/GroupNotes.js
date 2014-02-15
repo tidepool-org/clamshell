@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var _ = require('underscore');
 
+require('./GroupNotes.css');
+
 var Note = require('./Note');
 
 var GroupNotes = React.createClass({
@@ -62,7 +64,7 @@ var GroupNotes = React.createClass({
 
     return (
         /* jshint ignore:start */
-        <div className="list-group">
+        <div className="groupnotes list-group">
             {items}
         </div>
         /* jshint ignore:end */

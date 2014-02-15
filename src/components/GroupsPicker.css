@@ -1,4 +1,6 @@
-.GroupsPicker-dropdown {
+.groupspicker{}
+
+.groupspicker-dropdown {
     position: absolute;
     width: 100%;
     top: 100%;

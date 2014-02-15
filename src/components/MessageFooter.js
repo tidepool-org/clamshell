@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./MessageFooter.css');
+
 //Form for adding Comments
 var MessageFooter = React.createClass({
 
@@ -46,8 +48,8 @@ var MessageFooter = React.createClass({
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <nav className='navbar navbar-default navbar-fixed-bottom'>
-      <form className='navbar-form'>
+      <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
+      <form className='messagefooter-form navbar-form'>
         <div className='form-group col-xs-10'>
           <textarea type='textarea' rows='1' className='form-control' ref='messageText' /*onFocus={this.handleFocus}*/ placeholder={this.props.messagePrompt} />
         </div>
