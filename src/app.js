@@ -26,6 +26,7 @@ var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
 
+
 //app components
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
@@ -38,12 +39,19 @@ var MessageItemList = require('./components/MessageItemList');
 /*jshint unused:false */
 
 //core functionality
-var auth = require('./core/auth');
+//var auth = require('./core/auth');
 var api = require('./core/api');
+
+if(false){
+  console.log('mock setup');
+  require('./core/mock')(api);
+} else {
+  console.log('production setup');
+  require('./core/platform')(api,'http://localhost:8009',window.superagent);
+}
 
 var app = {
   log: bows('App'),
-  auth:auth,
   api:api
 };
 
@@ -67,7 +75,7 @@ var ClamShellApp = React.createClass({
     return {
       routeName: routes.login,
       previousRoute: null,
-      authenticated: app.auth.isAuthenticated(),
+      authenticated: app.api.user.isAuthenticated(),
       user: null,
       userGroupsWithMessages:null,
       selectedGroup: null,
@@ -118,10 +126,12 @@ var ClamShellApp = React.createClass({
   //load the user and then thier groups and those groups messages
   fetchUserData: function() {
     var self = this;
-    app.api.user.get(function(err, user) {
-      self.setState({user: user});
-      app.api.groups.get(user,function(err, userGroupsWithMessages) {
-        self.setState({userGroupsWithMessages:userGroupsWithMessages});
+    var userid = 'dummy';
+
+    app.api.groups.getTeam(userid,function(err, userTeam) {
+      app.api.notes.get(userTeam.id,function(err,messages){
+        userTeam.messages = messages;
+        self.setState({userGroupsWithMessages:[userTeam]});
       });
     });
   },
@@ -130,9 +140,12 @@ var ClamShellApp = React.createClass({
 
   handleLogout:function(){
     var self = this;
+    console.log('## TODO ##');
+    /*
     app.auth.logout(function(){
       self.setState(self.initializeAppState());
     });
+*/
   },
 
   handleBack:function(){
@@ -252,7 +265,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <Login onLoginSuccess={this.handleLoginSuccess} login={app.auth.login.bind(app.auth)}/>
+      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.api.user)}/>
       </Layout>
       /* jshint ignore:end */
       );
@@ -273,10 +286,6 @@ var ClamShellApp = React.createClass({
       else if(routes.messageThread === routeName){
         return this.renderMessageThread();
       }
-      //else if(routes.startMessageThread === routeName){
-      //  return this.renderStartMessageThread();
-      //}
-
     } else {
       return this.renderLoginLayout();
     }
@@ -303,6 +312,8 @@ app.start = function() {
 };
 
 app.init = function(callback) {
+  callback();
+  /*
   var self = this;
 
   function initApi() {
@@ -312,11 +323,11 @@ app.init = function(callback) {
 
   function initAuth() {
     //console.log('authenticating ...');
-    self.auth.init(callback);
+    self.api.user.isAuthenticated(callback);
     callback();
   }
 
-  initApi();
+  initApi();*/
 };
 
 module.exports = app;
