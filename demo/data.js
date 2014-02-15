@@ -17,7 +17,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var data = {
 	users : {},
-	groups : {}
+	team : {},
+	patients : {}
 };
 
 /* our logged in primary user and the doc*/
@@ -37,14 +38,12 @@ data.users = [
 	}
 ];
 
-/* the two groups this primamry user belongs to. His careteam and his daughters careteam (who is also a type 1)*/
-data.groups = [
+/* The users careteam*/
+data.team = 
 	{
 		id : "f32d0dce-8f2f-4d2c-a03b-692cc9586965",
 		name: "Jamie's Care Team",
-		owners : ["4505aca5-b0f0-4ae1-9443-8314350ac1fb"],
 		members : ["4505aca5-b0f0-4ae1-9443-8314350ac1fb","6f9d5f0d-5313-4782-b708-d9ae002222e9"],
-		patient : "4505aca5-b0f0-4ae1-9443-8314350ac1fb",
 		messages : [
 			{
 				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
@@ -87,13 +86,14 @@ data.groups = [
 				messagetext : 'Big hypo yesterday. I went for a longer than normal ride. I ate well during but didn\'t have lunch until late after the ride. Maybe a good snack just after???'
 			}
 		]
-	},
+	};
+
+/* The users daughters careteam (who is also a type 1)*/
+data.patients = [
 	{
 		id : "07abb942-5c77-4c87-aa94-12c08b805d7f",
 		name: "Lucca's Care Team",
-		owners : ["4505aca5-b0f0-4ae1-9443-8314350ac1fb"],
 		members : ["4505aca5-b0f0-4ae1-9443-8314350ac1fb","2a81bf1b-b274-4203-8c30-980401b1918f","6f9d5f0d-5313-4782-b708-d9ae002222e9"],
-		patient : "2a81bf1b-b274-4203-8c30-980401b1918f",
 		messages : [
 			{
 				id : '676e2573-286f-4a7f-bc1e-030aa93110ff',
