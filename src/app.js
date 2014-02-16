@@ -79,11 +79,9 @@ var ClamShellApp = React.createClass({
       routeName: routes.login,
       previousRoute: null,
       authenticated: app.api.user.isAuthenticated(),
-      user: null,
-      patients: null,
       userGroupsWithMessages:null,
       selectedGroup: null,
-      messagesToShow : null,
+      threadToShow : null,
       loggingOut: false
     };
   },
@@ -197,7 +195,7 @@ var ClamShellApp = React.createClass({
     var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
 
     this.setState(
-      {messagesToShow: messages,
+      {threadToShow: messages,
       routeName:routes.messageThread,
       previousRoute : this.state.routeName}
     );
@@ -221,7 +219,7 @@ var ClamShellApp = React.createClass({
 //TODO: sort this out
     this.setState(
       {routeName:routes.messageThread,
-      messagesToShow: [newConversation],
+      threadToShow: [newConversation],
       previousRoute : this.state.routeName}
     );
   },
@@ -283,7 +281,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <Layout>
       <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
-      <MessageItemList messages={this.state.messagesToShow} />
+      <MessageItemList messages={this.state.threadToShow} />
       <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation} />
       </Layout>
       /* jshint ignore:end */
