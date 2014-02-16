@@ -25,7 +25,6 @@ module.exports = function(api) {
   var token = null;
   var demoToken = '123456789';
 
-
   function saveSession(newToken) {
     token = newToken;
     var localStorage = window.localStorage;

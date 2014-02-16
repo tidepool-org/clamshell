@@ -26,7 +26,6 @@ module.exports = function(api, host, superagent) {
   var user;
 
   function saveSession(newUserid, newToken) {
-    console.log('save session');
     token = newToken;
     userid = newUserid;
     if (newToken != null) {
@@ -36,7 +35,7 @@ module.exports = function(api, host, superagent) {
             return;
           }
           platform.refreshUserToken(token,newUserid,function(error,sessionData){
-            console.log('token refresh ');
+            console.log('token refreshed');
             saveSession(sessionData.userid,sessionData.token);
           });
         },
@@ -60,7 +59,6 @@ module.exports = function(api, host, superagent) {
     platform.login({username:username,password:password},function(error, loginData){
       if(loginData){
         console.log('[production] Login success');
-        console.log('[production] data: ',loginData);
         user = loginData.user;
         saveSession(loginData.userid,loginData.token);
       }
@@ -69,18 +67,16 @@ module.exports = function(api, host, superagent) {
   };
 
   api.user.team.get = function(callback) {
-    console.log('[production] token: ',token);
     platform.getGroupForUser(userid,'team',token,function(error,team){
       if(error){
         callback(error,null);
       }
-console.log('[production] the team: ',team);
       api.notes.get(team.id,function(notesError,notes){
         if(notesError){
           return callback(notesError,null);
         }
-        console.log('[production] the notes: ',notes);
         team.notes = notes;
+    console.log('[production] the team and notes: ',team);
         return callback(null,team);
       });
     });
@@ -94,9 +90,8 @@ console.log('[production] the team: ',team);
 
   // ----- Messages API -----
   api.notes.get = function(groupId,callback) {
-
-    console.log('[production] token: ',token);
     //TODO  set as three weeks ago
+    console.log('Fix TODO');
     var start = new Date();
     start.setDate(start.getDate()-21);
 
