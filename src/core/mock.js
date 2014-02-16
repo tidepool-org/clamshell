@@ -34,7 +34,7 @@ module.exports = function(api) {
     }
   }
 
-  // ----- User API -----
+  // ----- User -----
 
   api.user.isAuthenticated = function() {
     return Boolean(token);
@@ -46,16 +46,15 @@ module.exports = function(api) {
     callback();
   };
 
-  // ----- Groups API -----
-  api.groups.getTeam = function(userId,callback) {
-    return callback(null,team);
+  api.user.team.get = function(callback) {
+    callback(null,team);
   };
 
-  api.groups.getPatients = function(userId,callback) {
+  api.user.patients.get = function(userId,callback) {
     return callback(null,patients);
   };
 
-  // ----- Messages API -----
+  // ----- Messages -----
   api.notes.get = function(groupId,callback) {
     return callback(null,team.messages);
   };
@@ -75,4 +74,5 @@ module.exports = function(api) {
     console.log('note id ',id);
     return callback(null,id);
   };
+
 };

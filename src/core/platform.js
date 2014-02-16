@@ -23,6 +23,7 @@ module.exports = function(api, host, superagent) {
 
   var token;
   var userid;
+  var user;
 
   function saveSession(newUserid, newToken) {
     console.log('save session');
@@ -34,7 +35,7 @@ module.exports = function(api, host, superagent) {
           if (token == null || newUserid !== userid) {
             return;
           }
-          platform.refreshToken(token,newUserid,function(error,sessionData){
+          platform.refreshUserToken(token,newUserid,function(error,sessionData){
             console.log('token refresh ');
             saveSession(sessionData.userid,sessionData.token);
           });
@@ -44,10 +45,14 @@ module.exports = function(api, host, superagent) {
     }
   }
 
-  // ----- User API -----
+  // ----- User -----
 
   api.user.isAuthenticated = function() {
     return Boolean(token);
+  };
+
+  api.user.get = function() {
+    return user;
   };
 
   api.user.login = function(username, password,callback) {
@@ -55,23 +60,33 @@ module.exports = function(api, host, superagent) {
     platform.login({username:username,password:password},function(error, loginData){
       if(loginData){
         console.log('[production] Login success');
+        console.log('[production] data: ',loginData);
+        user = loginData.user;
         saveSession(loginData.userid,loginData.token);
       }
       callback();
     });
   };
 
-  // ----- Groups API -----
-  api.groups.getTeam = function(userId,callback) {
-    platform.getGroupForUser(userId,'team',token,function(error,group){
-      callback(error, [group]);
+  api.user.team.get = function(callback) {
+    platform.getGroupForUser(userid,'team',token,function(error,team){
+      if(error){
+        callback(error,null);
+      }
+      api.notes.get(team.id,function(notesError,notes){
+        if(notesError){
+          return callback(notesError,null);
+        }
+        team.notes = notes;
+        return callback(null,team);
+      });
     });
   };
 
-  api.groups.getPatients = function(userId,callback) {
-    platform.getGroupForUser(userId,'patient',token,function(error,group){
-      callback(error, [group]);
-    });
+  api.user.patients.get = function(callback) {
+
+    return callback(null,[]);
+
   };
 
   // ----- Messages API -----

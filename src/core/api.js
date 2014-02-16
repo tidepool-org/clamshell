@@ -16,9 +16,11 @@
 var bows = window.bows;
 
 var api = {
-  user: {},
-  groups: {},
-  notes: {}
+  user: {
+  	team:{},
+  	patients:{}
+  },
+  notes:{}
 };
 
 module.exports = api;
