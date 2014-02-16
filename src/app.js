@@ -26,7 +26,6 @@ var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
 
-
 //app components
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
@@ -36,6 +35,7 @@ var Login = require('./components/Login');
 var MyGroupsPicker = require('./components/GroupsPicker');
 var GroupNotes = require('./components/GroupNotes');
 var MessageItemList = require('./components/MessageItemList');
+var UserMessage = require('./components/UserMessage');
 /*jshint unused:false */
 
 //core functionality
@@ -43,12 +43,13 @@ var MessageItemList = require('./components/MessageItemList');
 var user = require('./core/user');
 var api = require('./core/api');
 
-if(true){
+if(false){
   console.log('mock setup');
   require('./core/mock')(api);
 } else {
   console.log('production setup');
-  require('./core/platform')(api,'https://devel-api.tidepool.io',window.superagent);
+  //require('./core/platform')(api,'https://devel-api.tidepool.io',window.superagent);
+  require('./core/platform')(api,'http://localhost:8009',window.superagent);
 }
 
 var app = {
@@ -65,7 +66,7 @@ var routes = {
   startMessageThread:'newConversation'
 };
 
-require('./ClamShellApp.css');
+require('./app.css');
 
 var ClamShellApp = React.createClass({
   getInitialState: function () {
@@ -92,9 +93,12 @@ var ClamShellApp = React.createClass({
     console.log('setup ...');
     if (this.state.authenticated) {
       console.log('authenticated ...');
-      this.fetchUserData();
-      var currentRoute = this.state.routeName;
-      this.setState({routeName: routes.messagesForAllTeams, previousRoute : currentRoute});
+      this.fetchUserData(function(){
+        this.setState(
+          {routeName: routes.messagesForAllTeams,
+           previousRoute : this.state.routeName}
+        );
+      }.bind(this));
     }
 
     var router = new Router({
@@ -128,7 +132,7 @@ var ClamShellApp = React.createClass({
   },
 
   //load the user and then thier groups and those groups messages
-  fetchUserData: function() {
+  fetchUserData: function(callback) {
     var self = this;
 
     api.user.team.get(function(err, team) {
@@ -137,10 +141,11 @@ var ClamShellApp = React.createClass({
         return;
       }
       self.setState({userGroupsWithMessages:[team]});
+      callback();
     });
   },
 
-  fetchPatientsData: function() {
+  fetchPatientsData: function(callback) {
     var self = this;
     api.user.patients.get(function(err, patients) {
       if(err){
@@ -149,6 +154,7 @@ var ClamShellApp = React.createClass({
       }
       var all = self.state.userGroupsWithMessages.concat(patients);
       self.setState({userGroupsWithMessages:all});
+      callback();
     });
   },
 
@@ -171,10 +177,13 @@ var ClamShellApp = React.createClass({
 
   handleLoginSuccess:function(){
     this.setState({authenticated: true});
-    this.fetchUserData();
+    this.fetchUserData(function(){
+      this.setState(
+        {routeName: routes.messagesForAllTeams,
+          previousRoute : this.state.routeName}
+      );
+    }.bind(this));
 
-    var currentRoute = this.state.routeName;
-    this.setState({routeName: routes.messagesForAllTeams, previousRoute : currentRoute});
   },
 
   handleShowConversationThread:function(mostRecentMessageInThread){
@@ -187,13 +196,15 @@ var ClamShellApp = React.createClass({
 
     var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
 
-    var currentRoute = this.state.routeName;
-    this.setState({messagesToShow: messages,routeName:routes.messageThread, previousRoute : currentRoute});
+    this.setState(
+      {messagesToShow: messages,
+      routeName:routes.messageThread,
+      previousRoute : this.state.routeName}
+    );
   },
 
   handleStartingNewConversation:function(){
-    var currentRoute = this.state.routeName;
-    this.setState({routeName:routes.startMessageThread,previousRoute : currentRoute});
+    this.setState({routeName:routes.startMessageThread,previousRoute : this.state.routeName});
   },
 
   handleStartConversation:function(note){
@@ -203,14 +214,16 @@ var ClamShellApp = React.createClass({
       rootmessageid : '',
       userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
       groupid : this.state.selectedGroup[0].id,
-      timestamp : Date('MM-DD-YYYY HH:mm:ss'),
+      timestamp : new Date(),
       messagetext : note.text
     };
 
 //TODO: sort this out
-
-    var currentRoute = this.state.routeName;
-    this.setState({routeName:routes.messageThread, messagesToShow: [newConversation], previousRoute : currentRoute});
+    this.setState(
+      {routeName:routes.messageThread,
+      messagesToShow: [newConversation],
+      previousRoute : this.state.routeName}
+    );
   },
 
   handleAddingToConversation:function(e){
@@ -220,8 +233,8 @@ var ClamShellApp = React.createClass({
 
   handleGroupChanged:function(e){
     var group = _.find(this.state.userGroupsWithMessages, function(group){ return e.groupId == group.id; });
-    var currentRoute = this.state.routeName;
-    this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group],previousRoute : currentRoute});
+
+    this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group],previousRoute : this.state.routeName});
   },
 
   //---------- Rendering Layouts ----------
@@ -282,6 +295,16 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <Layout>
       <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.user)}/>
+      </Layout>
+      /* jshint ignore:end */
+      );
+  },
+
+  renderErrorLayout:function(){
+    return (
+      /* jshint ignore:start */
+      <Layout>
+      <UserMessage login={this.state.userMessage}/>
       </Layout>
       /* jshint ignore:end */
       );
