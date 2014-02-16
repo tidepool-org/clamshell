@@ -69,14 +69,17 @@ module.exports = function(api, host, superagent) {
   };
 
   api.user.team.get = function(callback) {
+    console.log('[production] token: ',token);
     platform.getGroupForUser(userid,'team',token,function(error,team){
       if(error){
         callback(error,null);
       }
+console.log('[production] the team: ',team);
       api.notes.get(team.id,function(notesError,notes){
         if(notesError){
           return callback(notesError,null);
         }
+        console.log('[production] the notes: ',notes);
         team.notes = notes;
         return callback(null,team);
       });
@@ -91,7 +94,14 @@ module.exports = function(api, host, superagent) {
 
   // ----- Messages API -----
   api.notes.get = function(groupId,callback) {
-    platform.getAllMessagesForTeam(groupId,token,function(error,messages){
+
+    console.log('[production] token: ',token);
+    //TODO  set as three weeks ago
+    var start = new Date();
+    start.setDate(start.getDate()-21);
+
+    var end = new Date();
+    platform.getAllMessagesForTeam(groupId,start,end,token,function(error,messages){
       callback(error, [messages]);
     });
   };
