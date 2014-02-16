@@ -39,20 +39,22 @@ var MessageItemList = require('./components/MessageItemList');
 /*jshint unused:false */
 
 //core functionality
-//var auth = require('./core/auth');
+
+var user = require('./core/user');
 var api = require('./core/api');
 
-if(false){
+if(true){
   console.log('mock setup');
   require('./core/mock')(api);
 } else {
   console.log('production setup');
-  require('./core/platform')(api,'http://localhost:8009',window.superagent);
+  require('./core/platform')(api,'https://devel-api.tidepool.io',window.superagent);
 }
 
 var app = {
   log: bows('App'),
-  api:api
+  api:api,
+  user:user
 };
 
 var routes = {
@@ -77,6 +79,7 @@ var ClamShellApp = React.createClass({
       previousRoute: null,
       authenticated: app.api.user.isAuthenticated(),
       user: null,
+      patients: null,
       userGroupsWithMessages:null,
       selectedGroup: null,
       messagesToShow : null,
@@ -88,6 +91,7 @@ var ClamShellApp = React.createClass({
 
     console.log('setup ...');
     if (this.state.authenticated) {
+      console.log('authenticated ...');
       this.fetchUserData();
       var currentRoute = this.state.routeName;
       this.setState({routeName: routes.messagesForAllTeams, previousRoute : currentRoute});
@@ -126,13 +130,25 @@ var ClamShellApp = React.createClass({
   //load the user and then thier groups and those groups messages
   fetchUserData: function() {
     var self = this;
-    var userid = 'dummy';
 
-    app.api.groups.getTeam(userid,function(err, userTeam) {
-      app.api.notes.get(userTeam.id,function(err,messages){
-        userTeam.messages = messages;
-        self.setState({userGroupsWithMessages:[userTeam]});
-      });
+    api.user.team.get(function(err, team) {
+      if(err){
+        console.log(err);
+        return;
+      }
+      self.setState({userGroupsWithMessages:[team]});
+    });
+  },
+
+  fetchPatientsData: function() {
+    var self = this;
+    api.user.patients.get(function(err, patients) {
+      if(err){
+        console.log(err);
+        return;
+      }
+      var all = self.state.userGroupsWithMessages.concat(patients);
+      self.setState({userGroupsWithMessages:all});
     });
   },
 
@@ -140,7 +156,7 @@ var ClamShellApp = React.createClass({
 
   handleLogout:function(){
     var self = this;
-    console.log('## TODO ##');
+    console.log('## TODO - handleLogout ##');
     /*
     app.auth.logout(function(){
       self.setState(self.initializeAppState());
@@ -215,7 +231,7 @@ var ClamShellApp = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className="app">
+      <div className='app'>
       {content}
       </div>
       /* jshint ignore:end */
@@ -265,7 +281,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.api.user)}/>
+      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.user)}/>
       </Layout>
       /* jshint ignore:end */
       );
@@ -286,6 +302,7 @@ var ClamShellApp = React.createClass({
       else if(routes.messageThread === routeName){
         return this.renderMessageThread();
       }
+
     } else {
       return this.renderLoginLayout();
     }
