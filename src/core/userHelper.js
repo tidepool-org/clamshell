@@ -18,7 +18,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var _ = require('underscore');
 
-var user = {
+var userHelper = {
   validate: function(attributes, options) {
     options = options || {};
     var ignoreMissingAttributes = true;
@@ -58,4 +58,4 @@ var user = {
   }
 };
 
-module.exports = user;
+module.exports = userHelper;

@@ -39,7 +39,7 @@ data.users = [
 ];
 
 /* The users careteam*/
-data.team = 
+data.team =
 	{
 		id : "f32d0dce-8f2f-4d2c-a03b-692cc9586965",
 		name: "Jamie's Care Team",
@@ -47,7 +47,7 @@ data.team =
 		notes : [
 			{
 				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				parentmessage : '',
+				parentmessage : null,
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2013-12-22T23:07:40+00:00',
@@ -80,7 +80,7 @@ data.team =
 			{
 				id : '070159bf-bd33-4998-b874-6b9c2bafe7fb',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
-				parentmessage : '',
+				parentmessage : null,
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2014-01-05T23:07:40+00:00',
 				messagetext : 'Big hypo yesterday. I went for a longer than normal ride. I ate well during but didn\'t have lunch until late after the ride. Maybe a good snack just after???'
@@ -97,7 +97,7 @@ data.patients = [
 		notes : [
 			{
 				id : '676e2573-286f-4a7f-bc1e-030aa93110ff',
-				parentmessage : '',
+				parentmessage : null,
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : '07abb942-5c77-4c87-aa94-12c08b805d7f',
 				timestamp : '2014-01-02T23:07:40+00:00',
@@ -105,7 +105,7 @@ data.patients = [
 			},
 			{
 				id : '74d53833-fad7-44fb-b5ee-4a3772c2857b',
-				parentmessage : '',
+				parentmessage : null,
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : '07abb942-5c77-4c87-aa94-12c08b805d7f',
 				timestamp : '2014-01-03T23:07:40+00:00',
@@ -113,7 +113,7 @@ data.patients = [
 			},
 			{
 				id : '7a4d1d3e-379d-4882-ad2e-51ea7188db71',
-				parentmessage : '',
+				parentmessage : null,
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : '07abb942-5c77-4c87-aa94-12c08b805d7f',
 				timestamp : '2014-01-03T23:07:40+00:00',

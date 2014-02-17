@@ -18,7 +18,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var _ = require('underscore');
 
-var team = {
+var teamHelper = {
   getThread: function(team, parentmessageId) {
 
     var notesInThread = _.where(team.notes, {parentmessage: parentmessageId});
@@ -37,4 +37,4 @@ var team = {
   }
 };
 
-module.exports = team;
+module.exports = teamHelper;

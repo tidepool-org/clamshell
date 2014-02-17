@@ -14,21 +14,15 @@ You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
+'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
+var _ = require('underscore');
 
-var teamHelper = require('../../src/core/teamHelper');
-var teamData = require('../../demo/data').team;
+var notesHelper = {
+  getParentMessageId: function(thread) {
+    var parentNote = _.findWhere(thread, { parentmessage : null });
+    return parentNote.id;
+  }
+};
 
-describe('teamHelper', function() {
-
-    it('getThread returns notes in a thread', function() {
-
-        var thread = teamHelper.getThread(teamData,'9233c2ae-7bad-41f5-9295-e73f0437295b');
-        expect(thread).to.exist;
-        expect(thread).to.be.a('array');
-        expect(thread.length).to.equal(4);
-    });
-
-});
+module.exports = notesHelper;

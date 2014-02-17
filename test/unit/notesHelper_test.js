@@ -18,17 +18,22 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var teamHelper = require('../../src/core/teamHelper');
+var notesHelper = require('../../src/core/notesHelper');
 var teamData = require('../../demo/data').team;
 
-describe('teamHelper', function() {
+describe('notesHelper', function() {
 
-    it('getThread returns notes in a thread', function() {
+	var thread;
+	var parentId = '9233c2ae-7bad-41f5-9295-e73f0437295b';
 
-        var thread = teamHelper.getThread(teamData,'9233c2ae-7bad-41f5-9295-e73f0437295b');
-        expect(thread).to.exist;
-        expect(thread).to.be.a('array');
-        expect(thread.length).to.equal(4);
+	before(function(){
+		var teamHelper = require('../../src/core/teamHelper');
+		thread = teamHelper.getThread(teamData,parentId);
+	});
+
+    it('getParentMessageId returns id of the parent message', function() {
+        var foundParentId = notesHelper.getParentMessageId(thread);
+        expect(foundParentId).to.equal(parentId);
     });
 
 });

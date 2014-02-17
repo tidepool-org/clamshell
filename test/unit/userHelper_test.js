@@ -18,27 +18,27 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var user = require('../../src/core/user');
+var userHelper = require('../../src/core/userHelper');
 
-describe('user', function() {
+describe('userHelper', function() {
 
     it('returns two errors when no user name or password given', function() {
 
-        var errors = user.validate({username:'',password:''});
+        var errors = userHelper.validate({username:'',password:''});
         expect(errors).to.exist;
         expect(errors.username).to.exist;
         expect(errors.password).to.exist;
     });
 
     it('returns one error when user name missing', function() {
-        var errors = user.validate({username:'',password:'xxjamiexx'});
+        var errors = userHelper.validate({username:'',password:'xxjamiexx'});
         expect(errors).to.exist;
         expect(errors.username).to.exist;
         expect(errors.password).to.not.exist;
     });
 
     it('returns no errors when user name or password given', function() {
-        var errors = user.validate({username:'jamie',password:'xxjamiexx'});
+        var errors = userHelper.validate({username:'jamie',password:'xxjamiexx'});
         expect(errors.username).to.not.exist;
         expect(errors.password).to.not.exist;
     });
