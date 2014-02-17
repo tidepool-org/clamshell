@@ -107,14 +107,14 @@ module.exports = function(api, host, superagent) {
     });
   };
 
-  api.notes.reply = function(messageId,comment,callback) {
-    platform.replyToMessageThread(messageId,comment,token,function(error,id){
+  api.notes.reply = function(comment,callback) {
+    platform.replyToMessageThread(comment.parentmessage,comment,token,function(error,id){
       callback(error);
     });
   };
 
-  api.notes.add = function(groupId,message,callback) {
-    platform.startMessageThread(groupId,message,token,function(error,id){
+  api.notes.add = function(message,callback) {
+    platform.startMessageThread(message.groupid,message,token,function(error,id){
       if(id){
         message.id = id;
       }

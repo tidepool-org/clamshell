@@ -210,13 +210,15 @@ var ClamShellApp = React.createClass({
       selectedThread: [startThread],
       previousRoute : this.state.routeName}
     );
+
   },
 
   handleAddingToConversation:function(note){
     console.log('reply ['+note.text+']');
 
     //TODO: sort this out
-    var parentId = app.notesHelper.getParentMessageId(this.state.selectedThread);
+    var thread = this.state.selectedThread;
+    var parentId = app.notesHelper.getParentMessageId(thread);
 
     var comment = {
       parentmessage : parentId,
@@ -227,6 +229,13 @@ var ClamShellApp = React.createClass({
     };
 
     console.log('reply: ',comment);
+    app.api.notes.reply(comment,function(error){
+      console.log('reply added ');
+    });
+
+    thread.push(comment);
+
+    this.setState({selectedThread: thread});
 
   },
 
