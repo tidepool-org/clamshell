@@ -109,10 +109,7 @@ module.exports = function(api, host, superagent) {
 
   api.notes.reply = function(messageId,comment,callback) {
     platform.replyToMessageThread(messageId,comment,token,function(error,id){
-      if(id){
-        comment.id = id;
-      }
-      callback(error, comment);
+      callback(error);
     });
   };
 

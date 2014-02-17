@@ -30,6 +30,7 @@ var MessageFooter = React.createClass({
     var messageText = this.refs.messageText.getDOMNode().value.trim();
     this.props.onFooterAction({text: messageText});
     this.refs.messageText.getDOMNode().value = '';
+    return false;
   },
 
   render: function() {

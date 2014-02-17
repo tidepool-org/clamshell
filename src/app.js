@@ -199,7 +199,6 @@ var ClamShellApp = React.createClass({
       timestamp : new Date(),
       messagetext : note.text
     };
-
 //TODO: sort this out
     this.setState(
       {routeName:routes.messageThread,
@@ -208,9 +207,28 @@ var ClamShellApp = React.createClass({
     );
   },
 
-  handleAddingToConversation:function(e){
-    console.log('send ['+e.text+']');
-    console.log('add to existing converstaion');
+  handleAddingToConversation:function(note){
+    console.log('reply ['+note.text+']');
+
+    //TODO: sort this out
+    var comment = {
+      userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
+      groupid : this.state.selectedGroup.id,
+      timestamp : new Date(),
+      messagetext : note.text
+    };
+
+    app.api.notes.reply(messageId,comment,function(err){
+
+    });
+//TODO: sort this out
+    this.setState(
+      {routeName:routes.messageThread,
+      selectedThread: [newConversation],
+      previousRoute : this.state.routeName}
+    );
+
+
   },
 
   handleGroupChanged:function(e){
