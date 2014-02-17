@@ -53,8 +53,9 @@ if(false){
 var app = {
   log : bows('App'),
   api : api,
-  user : require('./core/user'),
-  teamHelper : require('./core/team')
+  userHelper : require('./core/userHelper'),
+  teamHelper : require('./core/teamHelper'),
+  notesHelper : require('./core/notesHelper')
 };
 
 var routes = {
@@ -75,13 +76,14 @@ var ClamShellApp = React.createClass({
   //starting state for the app when first used or after logout
   initializeAppState : function(){
     return {
-      routeName: routes.login,
-      previousRoute: null,
-      authenticated: app.api.user.isAuthenticated(),
-      userGroupsData:null,
-      selectedGroup: null,
+      routeName : routes.login,
+      previousRoute : null,
+      authenticated : app.api.user.isAuthenticated(),
+      loggedInUser : null,
+      userGroupsData : null,
+      selectedGroup : null,
       selectedThread : null,
-      loggingOut: false
+      loggingOut : false
     };
   },
 
@@ -155,10 +157,11 @@ var ClamShellApp = React.createClass({
   handleLoginSuccess:function(){
     this.setState({authenticated: true});
     this.fetchUserData(function(){
-      this.setState(
-        {routeName: routes.messagesForAllTeams,
-          previousRoute : this.state.routeName}
-      );
+      this.setState({
+        routeName: routes.messagesForAllTeams,
+        previousRoute : this.state.routeName,
+        loggedInUser : app.api.user.get()
+      });
     }.bind(this));
 
   },
@@ -193,16 +196,18 @@ var ClamShellApp = React.createClass({
 
   handleStartConversation:function(note){
 //TODO: sort this out
-    var newConversation = {
-      userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
+    var startThread = {
+      userid : this.state.loggedInUser.userid,
       groupid : this.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
+
+    console.log('new thread: ',startThread);
 //TODO: sort this out
     this.setState(
       {routeName:routes.messageThread,
-      selectedThread: [newConversation],
+      selectedThread: [startThread],
       previousRoute : this.state.routeName}
     );
   },
@@ -211,23 +216,17 @@ var ClamShellApp = React.createClass({
     console.log('reply ['+note.text+']');
 
     //TODO: sort this out
+    var parentId = app.notesHelper.getParentMessageId(this.state.selectedThread);
+
     var comment = {
-      userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
+      parentmessage : parentId,
+      userid : this.state.loggedInUser.userid,
       groupid : this.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
 
-    app.api.notes.reply(messageId,comment,function(err){
-
-    });
-//TODO: sort this out
-    this.setState(
-      {routeName:routes.messageThread,
-      selectedThread: [newConversation],
-      previousRoute : this.state.routeName}
-    );
-
+    console.log('reply: ',comment);
 
   },
 
@@ -266,7 +265,10 @@ var ClamShellApp = React.createClass({
       <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <TeamNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
-      <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
+      <MessageFooter
+        messagePrompt='Type a new note here ...'
+        btnMessage='Post'
+        onFooterAction={this.handleStartConversation}/>
       </Layout>
       /* jshint ignore:end */
       );
@@ -291,7 +293,10 @@ var ClamShellApp = React.createClass({
       <Layout>
       <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
       <NoteThread messages={this.state.selectedThread} />
-      <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation} />
+      <MessageFooter
+        messagePrompt='Type a comment here ...'
+        btnMessage='Comment'
+        onFooterAction={this.handleAddingToConversation} />
       </Layout>
       /* jshint ignore:end */
       );
@@ -301,7 +306,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.user)}/>
+      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.userHelper)}/>
       </Layout>
       /* jshint ignore:end */
       );
