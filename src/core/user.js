@@ -41,12 +41,12 @@ var user = {
       errors.password = this.validateRequired(attributes.password);
     }
 
-    // Filter "empty" errors
-    errors = _.transform(errors, function(result, value, key) {
-      if (value) {
+    errors = _.reduce(errors, function(result, value, key) {
+      if(value){
         result[key] = value;
       }
-    });
+      return result;
+    }, {});
 
     return errors;
   },
