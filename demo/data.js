@@ -44,7 +44,7 @@ data.team =
 		id : "f32d0dce-8f2f-4d2c-a03b-692cc9586965",
 		name: "Jamie's Care Team",
 		members : ["4505aca5-b0f0-4ae1-9443-8314350ac1fb","6f9d5f0d-5313-4782-b708-d9ae002222e9"],
-		messages : [
+		notes : [
 			{
 				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				parentmessage : '',
@@ -94,7 +94,7 @@ data.patients = [
 		id : "07abb942-5c77-4c87-aa94-12c08b805d7f",
 		name: "Lucca's Care Team",
 		members : ["4505aca5-b0f0-4ae1-9443-8314350ac1fb","2a81bf1b-b274-4203-8c30-980401b1918f","6f9d5f0d-5313-4782-b708-d9ae002222e9"],
-		messages : [
+		notes : [
 			{
 				id : '676e2573-286f-4a7f-bc1e-030aa93110ff',
 				parentmessage : '',
