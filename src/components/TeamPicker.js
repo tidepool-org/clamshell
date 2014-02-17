@@ -23,8 +23,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-//Groups chooser
-var GroupsPicker = React.createClass({
+var TeamPicker = React.createClass({
 
   handleSelection: function(selectedGroup) {
     this.props.onGroupPicked({groupId:selectedGroup});
@@ -61,4 +60,4 @@ var GroupsPicker = React.createClass({
   }
 });
 
-module.exports = GroupsPicker;
+module.exports = TeamPicker;

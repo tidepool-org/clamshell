@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var GroupsPicker = require('../../build/components/GroupsPicker');
+var TeamPicker = require('../../build/components/TeamPicker');
 
 var team = require('../../demo/data').team;
 
@@ -30,12 +30,12 @@ var handleGroupPicked = function(content){
     console.log('added: ',selectedGroupId)
 };
 
-describe('GroupsPicker', function() {
+describe('TeamPicker', function() {
     var component, container;
 
     beforeEach(function() {
         //we add our component to test into a div and then render it
-        component = GroupsPicker({groups:[team], onGroupPicked:handleGroupPicked});
+        component = TeamPicker({groups:[team], onGroupPicked:handleGroupPicked});
         container = document.createElement('div');
         document.documentElement.appendChild(container);
         React.renderComponent(component, container);
