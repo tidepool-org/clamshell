@@ -79,9 +79,9 @@ var ClamShellApp = React.createClass({
       routeName: routes.login,
       previousRoute: null,
       authenticated: app.api.user.isAuthenticated(),
-      userGroupsWithMessages:null,
+      userGroupsData:null,
       selectedGroup: null,
-      threadToShow : null,
+      selectedThread : null,
       loggingOut: false
     };
   },
@@ -114,7 +114,7 @@ var ClamShellApp = React.createClass({
   //TODO: move this out and test it
   messagesForThread:function(groupId,rootMessageId){
 
-    var messageGroup = _.find(this.state.userGroupsWithMessages, function(group){ return groupId == group.id; });
+    var messageGroup = _.find(this.state.userGroupsData, function(group){ return groupId == group.id; });
     var messagesInThread = _.where(messageGroup.messages, {rootmessageid: rootMessageId});
 
     var messages;
@@ -138,7 +138,7 @@ var ClamShellApp = React.createClass({
         console.log(err);
         return;
       }
-      self.setState({userGroupsWithMessages:[team]});
+      self.setState({userGroupsData:[team]});
       callback();
     });
   },
@@ -150,8 +150,8 @@ var ClamShellApp = React.createClass({
         console.log(err);
         return;
       }
-      var all = self.state.userGroupsWithMessages.concat(patients);
-      self.setState({userGroupsWithMessages:all});
+      var all = self.state.userGroupsData.concat(patients);
+      self.setState({userGroupsData:all});
       callback();
     });
   },
@@ -195,7 +195,7 @@ var ClamShellApp = React.createClass({
     var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
 
     this.setState(
-      {threadToShow: messages,
+      {selectedThread: messages,
       routeName:routes.messageThread,
       previousRoute : this.state.routeName}
     );
@@ -219,7 +219,7 @@ var ClamShellApp = React.createClass({
 //TODO: sort this out
     this.setState(
       {routeName:routes.messageThread,
-      threadToShow: [newConversation],
+      selectedThread: [newConversation],
       previousRoute : this.state.routeName}
     );
   },
@@ -230,7 +230,7 @@ var ClamShellApp = React.createClass({
   },
 
   handleGroupChanged:function(e){
-    var group = _.find(this.state.userGroupsWithMessages, function(group){ return e.groupId == group.id; });
+    var group = _.find(this.state.userGroupsData, function(group){ return e.groupId == group.id; });
 
     this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group],previousRoute : this.state.routeName});
   },
@@ -254,7 +254,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <Layout>
       <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
-      <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
+      <MyGroupsPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <GroupNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
       <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
@@ -268,9 +268,9 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <Layout>
       <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
-      <MyGroupsPicker groups={this.state.userGroupsWithMessages} onGroupPicked={this.handleGroupChanged} />
+      <MyGroupsPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
-      <GroupNotes groups={this.state.userGroupsWithMessages} onThreadSelected={this.handleShowConversationThread} />
+      <GroupNotes groups={this.state.userGroupsData} onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       /* jshint ignore:end */
       );
@@ -280,8 +280,8 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
-      <MessageItemList messages={this.state.threadToShow} />
+      <ListNavBar title={this.state.selectedGroup[0].id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
+      <MessageItemList messages={this.state.selectedThread} />
       <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation} />
       </Layout>
       /* jshint ignore:end */

@@ -35,8 +35,8 @@ var GroupNotes = React.createClass({
 
   notesForGroup:function(group){
 
-    var notes = _.filter(group.messages, function(note){
-      return note.rootmessageid === '';
+    var notes = _.filter(group.notes, function(note){
+      return (!note.parentmessage);
     });
 
     var items =  _.map(notes, function(note){

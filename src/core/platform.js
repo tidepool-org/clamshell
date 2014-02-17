@@ -97,7 +97,7 @@ module.exports = function(api, host, superagent) {
 
     var end = new Date();
     platform.getAllMessagesForTeam(groupId,start,end,token,function(error,messages){
-      callback(error, [messages]);
+      callback(error, messages);
     });
   };
 
