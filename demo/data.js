@@ -47,7 +47,7 @@ data.team =
 		messages : [
 			{
 				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				rootmessageid : '',
+				parentmessage : '',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2013-12-22T23:07:40+00:00',
@@ -55,7 +55,7 @@ data.team =
 			},
 			{
 				id : '72428a86-b1c8-41cd-8d62-31b57128d590',
-				rootmessageid : '9233c2ae-7bad-41f5-9295-e73f0437295b',
+				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2013-12-24T23:07:40+00:00',
@@ -63,7 +63,7 @@ data.team =
 			},
 			{
 				id : '1a4a8a93-cc02-43ba-acd6-4edb6c5eadf9',
-				rootmessageid : '9233c2ae-7bad-41f5-9295-e73f0437295b',
+				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2013-12-25T23:07:40+00:00',
@@ -72,7 +72,7 @@ data.team =
 			{
 				id : 'bd3de6e4-d805-4ca7-a3b9-2e0eb4e221ca',
 				userid : '6f9d5f0d-5313-4782-b708-d9ae002222e9', //Doc
-				rootmessageid : '9233c2ae-7bad-41f5-9295-e73f0437295b',
+				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2014-01-04T23:07:40+00:00',
 				messagetext : 'It sounds like you coped well over the Christmas / New Years period given the temptations'
@@ -80,7 +80,7 @@ data.team =
 			{
 				id : '070159bf-bd33-4998-b874-6b9c2bafe7fb',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
-				rootmessageid : '',
+				parentmessage : '',
 				groupid : 'f32d0dce-8f2f-4d2c-a03b-692cc9586965',
 				timestamp : '2014-01-05T23:07:40+00:00',
 				messagetext : 'Big hypo yesterday. I went for a longer than normal ride. I ate well during but didn\'t have lunch until late after the ride. Maybe a good snack just after???'
@@ -97,7 +97,7 @@ data.patients = [
 		messages : [
 			{
 				id : '676e2573-286f-4a7f-bc1e-030aa93110ff',
-				rootmessageid : '',
+				parentmessage : '',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : '07abb942-5c77-4c87-aa94-12c08b805d7f',
 				timestamp : '2014-01-02T23:07:40+00:00',
@@ -105,7 +105,7 @@ data.patients = [
 			},
 			{
 				id : '74d53833-fad7-44fb-b5ee-4a3772c2857b',
-				rootmessageid : '',
+				parentmessage : '',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : '07abb942-5c77-4c87-aa94-12c08b805d7f',
 				timestamp : '2014-01-03T23:07:40+00:00',
@@ -113,7 +113,7 @@ data.patients = [
 			},
 			{
 				id : '7a4d1d3e-379d-4882-ad2e-51ea7188db71',
-				rootmessageid : '',
+				parentmessage : '',
 				userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
 				groupid : '07abb942-5c77-4c87-aa94-12c08b805d7f',
 				timestamp : '2014-01-03T23:07:40+00:00',

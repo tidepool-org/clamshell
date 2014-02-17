@@ -112,10 +112,10 @@ var ClamShellApp = React.createClass({
   // ---------- Utility Methods ----------
 
   //TODO: move this out and test it
-  messagesForThread:function(groupId,rootMessageId){
+  messagesForThread:function(groupId,parentmessageId){
 
     var messageGroup = _.find(this.state.userGroupsData, function(group){ return groupId == group.id; });
-    var messagesInThread = _.where(messageGroup.messages, {rootmessageid: rootMessageId});
+    var messagesInThread = _.where(messageGroup.messages, {parentmessage: parentmessageId});
 
     var messages;
 
@@ -188,8 +188,8 @@ var ClamShellApp = React.createClass({
 
     var messagesId = mostRecentMessageInThread.id;
 
-    if(mostRecentMessageInThread.rootmessageid){
-      messagesId = mostRecentMessageInThread.rootmessageid;
+    if(mostRecentMessageInThread.parentmessage){
+      messagesId = mostRecentMessageInThread.parentmessage;
     }
 
     var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
@@ -230,9 +230,16 @@ var ClamShellApp = React.createClass({
   },
 
   handleGroupChanged:function(e){
-    var group = _.find(this.state.userGroupsData, function(group){ return e.groupId == group.id; });
+    var group = _.find(
+      this.state.userGroupsData, function(group){
+        return e.groupId == group.id;
+      });
 
-    this.setState({routeName:routes.messagesForSelectedTeam,selectedGroup:[group],previousRoute : this.state.routeName});
+    this.setState(
+      {routeName:routes.messagesForSelectedTeam,
+      selectedGroup:[group],
+      previousRoute : this.state.routeName}
+    );
   },
 
   //---------- Rendering Layouts ----------
@@ -253,7 +260,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup[0].name} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
+      <ListNavBar title={this.state.selectedGroup[0].id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
       <MyGroupsPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <GroupNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
