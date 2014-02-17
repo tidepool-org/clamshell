@@ -21,7 +21,7 @@ var React = require('react');
 
 var GroupsPicker = require('../../build/components/GroupsPicker');
 
-var groups = require('../../demo/data').groups;
+var team = require('../../demo/data').team;
 
 var selectedGroupId;
 
@@ -35,7 +35,7 @@ describe('GroupsPicker', function() {
 
     beforeEach(function() {
         //we add our component to test into a div and then render it
-        component = GroupsPicker({groups:groups, onGroupPicked:handleGroupPicked});
+        component = GroupsPicker({groups:[team], onGroupPicked:handleGroupPicked});
         container = document.createElement('div');
         document.documentElement.appendChild(container);
         React.renderComponent(component, container);

@@ -39,7 +39,7 @@ describe('ListNavBar', function() {
         //onLogoutSuccess={this.handleLogoutSuccess} logout={app.auth.logout.bind(app.auth)
         component = ListNavBar({
             title : testTitle,
-            onActionHandled : actionHandeled
+            onNavBarAction : actionHandeled
         });
 
         container = document.createElement('div');
@@ -64,7 +64,8 @@ describe('ListNavBar', function() {
     });
 
     it('should call actionHandeled action button clicked', function() {
-        component._renderedComponent.props.children[0].props.onClick();
+
+        component.refs.actionBtn.props.onClick();
         expect(handled).to.be.true;
     });
 

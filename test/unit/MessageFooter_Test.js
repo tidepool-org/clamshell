@@ -32,7 +32,7 @@ describe('MessageFooter', function() {
 
     beforeEach(function() {
         //we add our component to test into a div and then render it
-        component = MessageFooter({onMessageSend:getSubmittedMessage});
+        component = MessageFooter({onFooterAction:getSubmittedMessage});
         container = document.createElement('div');
         document.documentElement.appendChild(container);
         React.renderComponent(component, container);
@@ -62,7 +62,7 @@ describe('MessageFooter', function() {
 
         var myTestMessage = 'should be this message text I see';
         component.refs.messageText.getDOMNode().value = myTestMessage;
-        component.handleSubmit();
+        component.handleMessage();
 
         expect(submittedMessage).to.equal(myTestMessage);
     });

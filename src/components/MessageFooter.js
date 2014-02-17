@@ -23,25 +23,13 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-require('./MessageFooter.css');
-
 //Form for adding Comments
 var MessageFooter = React.createClass({
 
   handleMessage: function() {
     var messageText = this.refs.messageText.getDOMNode().value.trim();
-    //may not be any text
-    console.log('new messages',messageText);
     this.props.onFooterAction({text: messageText});
     this.refs.messageText.getDOMNode().value = '';
-  },
-
-  handleFocus: function() {
-
-    if(this.props.onFocusAction){
-      this.props.onFocusAction();
-    }
-    return false;
   },
 
   render: function() {
@@ -51,7 +39,7 @@ var MessageFooter = React.createClass({
       <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
       <form className='messagefooter-form navbar-form'>
         <div className='form-group col-xs-10'>
-          <textarea type='textarea' rows='1' className='form-control' ref='messageText' /*onFocus={this.handleFocus}*/ placeholder={this.props.messagePrompt} />
+          <textarea type='textarea' rows='1' className='form-control' ref='messageText' placeholder={this.props.messagePrompt} />
         </div>
         <button type='submit' ref='sendBtn' className='btn btn-default col-xs-2' onClick={this.handleMessage}>{this.props.btnMessage}</button>
       </form>
