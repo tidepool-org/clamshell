@@ -22,16 +22,13 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var _ = require('underscore');
+var sundial = require('moment');
 
 require('./GroupNotes.css');
 
 var Note = require('./Note');
 
 var GroupNotes = React.createClass({
-
-  niceTime: function(time){
-    return time;
-  },
 
   notesForGroup:function(group){
 
@@ -44,11 +41,13 @@ var GroupNotes = React.createClass({
           /* jshint ignore:start */
           <Note
               ref='groupNote'
+              imgColumns='col-xs-2'
+              detailColumns='col-xs-10'
               onClick={this.props.onThreadSelected.bind(null, note)}
               key={note.id}
               name={group.name}
               note={note.messagetext}
-              when={this.niceTime(note.timestamp)}/>
+              when={note.timestamp}/>
           /* jshint ignore:end */
         );
       }.bind(this));
