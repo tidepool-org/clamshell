@@ -23,8 +23,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-require('./UserMessage.css');
-
 var UserMessage = React.createClass({
 
   render: function() {

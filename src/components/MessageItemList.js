@@ -24,8 +24,6 @@ var React = require('react');
 
 var Note = require('./Note');
 
-require('./MessageItemList.css');
-
 var MessageItemList = React.createClass({
 
     renderNote: function(message){
