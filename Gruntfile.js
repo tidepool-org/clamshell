@@ -19,30 +19,11 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
       pkg: grunt.file.readJSON('package.json'),
-      uglify: {
-        options: {
-          banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-        },
-        build: {
-          src: 'src/<%= pkg.name %>.js',
-          dest: 'build/<%= pkg.name %>.min.js'
-        }
-      },
       jshint: {
         options: {
           jshintrc: '.jshintrc'
         },
         all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
-      },
-      docco: {
-        docs: {
-          src: ['lib/**/*.js', './*.md'],
-          dest: ['docs'],
-          options: {
-            layout: 'linear',
-            output: 'docs'
-          }
-        }
       },
       shell: {
         buildApp: {
@@ -76,7 +57,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
 
   // Default task(s).
-  grunt.registerTask('default', ['unit-test']);
+  grunt.registerTask('default', ['test']);
   // Standard tasks
   grunt.registerTask('build', ['shell:buildApp']);
   grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
