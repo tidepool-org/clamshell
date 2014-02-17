@@ -93,10 +93,11 @@ var ClamShellApp = React.createClass({
     if (this.state.authenticated) {
       console.log('authenticated ...');
       this.fetchUserData(function(){
-        this.setState(
-          {routeName: routes.messagesForAllTeams,
-           previousRoute : this.state.routeName}
-        );
+        this.setState({
+          routeName: routes.messagesForAllTeams,
+          previousRoute : this.state.routeName,
+          loggedInUser : app.api.user.get()
+        });
       }.bind(this));
     }
 
@@ -173,10 +174,10 @@ var ClamShellApp = React.createClass({
     if(mostRecentMessageInThread.parentmessage){
       messagesId = mostRecentMessageInThread.parentmessage;
     }
-    
-    var team = _.find(this.state.userGroupsData, 
-      function(group){ 
-        return mostRecentMessageInThread.groupid === group.id; 
+
+    var team = _.find(this.state.userGroupsData,
+      function(group){
+        return mostRecentMessageInThread.groupid === group.id;
       }
     );
 
@@ -195,28 +196,30 @@ var ClamShellApp = React.createClass({
   },
 
   handleStartConversation:function(note){
-//TODO: sort this out
-    var startThread = {
+
+console.log('TODO something odd here');
+
+    var thread = {
       userid : this.state.loggedInUser.userid,
       groupid : this.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
 
-    console.log('new thread: ',startThread);
-//TODO: sort this out
-    this.setState(
-      {routeName:routes.messageThread,
-      selectedThread: [startThread],
-      previousRoute : this.state.routeName}
-    );
+    app.api.notes.add(thread,function(error){
+      console.log('thread started ');
+    });
+
+    var updatedTeamNotes = this.state.selectedGroup;
+
+    updatedTeamNotes.notes.push(thread);
+
+    this.setState({selectedGroup : updatedTeamNotes});
 
   },
 
   handleAddingToConversation:function(note){
-    console.log('reply ['+note.text+']');
 
-    //TODO: sort this out
     var thread = this.state.selectedThread;
     var parentId = app.notesHelper.getParentMessageId(thread);
 
@@ -228,7 +231,6 @@ var ClamShellApp = React.createClass({
       messagetext : note.text
     };
 
-    console.log('reply: ',comment);
     app.api.notes.reply(comment,function(error){
       console.log('reply added ');
     });
@@ -247,7 +249,7 @@ var ClamShellApp = React.createClass({
 
     this.setState(
       {routeName:routes.messagesForSelectedTeam,
-      selectedGroup:[group],
+      selectedGroup:group,
       previousRoute : this.state.routeName}
     );
   },
@@ -273,7 +275,7 @@ var ClamShellApp = React.createClass({
       <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
       <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
-      <TeamNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
+      <TeamNotes groups={[this.state.selectedGroup]} onThreadSelected={this.handleShowConversationThread} />
       <MessageFooter
         messagePrompt='Type a new note here ...'
         btnMessage='Post'
@@ -373,6 +375,8 @@ app.start = function() {
 };
 
 app.init = function(callback) {
+
+  this.api.user.loadSession(callback);
   callback();
   /*
   var self = this;

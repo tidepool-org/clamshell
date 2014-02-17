@@ -28,6 +28,13 @@ module.exports = function(api, host, superagent) {
   function saveSession(newUserid, newToken) {
     token = newToken;
     userid = newUserid;
+
+    var localStorage = window.localStorage;
+    if (localStorage && localStorage.setItem) {
+      localStorage.setItem('auth_token', token);
+      localStorage.setItem('auth_id', userid);
+    }
+
     if (newToken != null) {
       setTimeout(
         function(){
@@ -50,7 +57,32 @@ module.exports = function(api, host, superagent) {
     return Boolean(token);
   };
 
+  api.user.loadSession = function(callback) {
+    var localStorage = window.localStorage;
+    if (localStorage && localStorage.getItem) {
+      token = localStorage.getItem('auth_token');
+      userid = localStorage.getItem('auth_id');
+      if (token && userid) {
+        saveSession(userid,token);
+      }
+      callback();
+    }
+    else {
+      callback();
+    }
+    console.log('[production] Session loaded');
+  };
+
   api.user.get = function() {
+
+    if(user){
+      return user;
+    }
+
+    user = {
+      userid : userid
+    };
+
     return user;
   };
 
@@ -76,7 +108,7 @@ module.exports = function(api, host, superagent) {
           return callback(notesError,null);
         }
         team.notes = notes;
-    console.log('[production] the team and notes: ',team);
+  console.log('[production] the team and notes: ',team);
         return callback(null,team);
       });
     });
@@ -103,7 +135,7 @@ module.exports = function(api, host, superagent) {
 
   api.notes.getThread = function(groupId,callback) {
     platform.getAllMessagesForTeam(groupId,token,function(error,messages){
-      callback(error, [messages]);
+      callback(error, messages);
     });
   };
 
@@ -115,10 +147,7 @@ module.exports = function(api, host, superagent) {
 
   api.notes.add = function(message,callback) {
     platform.startMessageThread(message.groupid,message,token,function(error,id){
-      if(id){
-        message.id = id;
-      }
-      callback(error, message);
+      callback(error);
     });
   };
 };
