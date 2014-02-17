@@ -20,16 +20,16 @@ var expect = chai.expect;
 var React = require('react');
 
 var MessageItemList = require('../../build/components/MessageItemList');
-var groups = require('../../demo/data').groups;
+var team = require('../../demo/data').team;
 
 describe('MessageItemList', function() {
     var component, container;
 
     beforeEach(function() {
 
-        var messages = groups[0].messages;
+        var notes = team.notes;
         //we add our component to test into a div and then render it
-        component = MessageItemList({messages:messages});
+        component = MessageItemList({messages:notes});
 
         container = document.createElement('div');
         document.documentElement.appendChild(container);
@@ -58,20 +58,12 @@ describe('MessageItemList', function() {
         expect(numMessageThreadItems).to.equal(numOfMessages);
     });
 
-    it('message will have an authorName', function() {
-        expect(component.refs.authorName).to.exist;
+    it('message will have a rootNote', function() {
+        expect(component.refs.rootNote).to.exist;
     });
 
-    it('message will have an authorImage', function() {
-        expect(component.refs.authorImage).to.exist;
-    });
-
-    it('message will have when it was written', function() {
-        expect(component.refs.messageWhen).to.exist;
-    });
-
-    it('message will have what was written', function() {
-        expect(component.refs.messageText).to.exist;
+    it('message will have a commentNote', function() {
+        expect(component.refs.commentNote).to.exist;
     });
 
 });
