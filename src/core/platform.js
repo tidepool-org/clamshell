@@ -33,6 +33,7 @@ module.exports = function(api, host, superagent) {
     if (localStorage && localStorage.setItem) {
       localStorage.setItem('auth_token', token);
       localStorage.setItem('auth_id', userid);
+      console.log('[production] session saved');
     }
 
     if (newToken != null) {
@@ -42,7 +43,7 @@ module.exports = function(api, host, superagent) {
             return;
           }
           platform.refreshUserToken(token,newUserid,function(error,sessionData){
-            console.log('token refreshed');
+            console.log('[production] token refreshed');
             saveSession(sessionData.userid,sessionData.token);
           });
         },
@@ -55,6 +56,18 @@ module.exports = function(api, host, superagent) {
 
   api.user.isAuthenticated = function() {
     return Boolean(token);
+  };
+
+  api.user.deleteSession = function() {
+    token = null;
+    userid = null;
+    var localStorage = window.localStorage;
+    if (localStorage && localStorage.getItem) {
+
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_id');
+    }
+    console.log('[production] Session removed');
   };
 
   api.user.loadSession = function(callback) {
@@ -108,7 +121,7 @@ module.exports = function(api, host, superagent) {
           return callback(notesError,null);
         }
         team.notes = notes;
-  console.log('[production] the team and notes: ',team);
+        console.log('[production] got the team and notes');
         return callback(null,team);
       });
     });
