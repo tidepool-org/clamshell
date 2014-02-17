@@ -2,15 +2,17 @@
   "name": "clamshell",
   "version": "0.0.1",
   "description": "",
-  "private":true,
+  "private": true,
   "repository": "",
   "dependencies": {
+    "bows": "0.3.0",
     "director": "1.2.2",
     "envify": "0.2.0",
+    "platform-client": "jh-bate/platform-client",
     "react": "0.8.0",
-    "bows": "0.3.0",
+    "sundial": "0.0.3",
     "underscore": "1.5.2",
-    "platform-client": "jh-bate/platform-client"
+    "moment": "~2.5.1"
   },
   "devDependencies": {
     "jsx-loader": "petehunt/jsx-loader",
