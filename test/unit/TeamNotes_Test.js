@@ -21,8 +21,8 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var GroupNotes = require('../../build/components/GroupNotes');
-var groups = require('../../demo/data').groups;
+var TeamNotes = require('../../build/components/TeamNotes');
+var team = require('../../demo/data').team;
 
 var handlerCalled = false;
 var propsGiven;
@@ -34,12 +34,12 @@ var handleThreadSelected = function(props, key){
   handlerCalled = true;
 };
 
-describe('GroupNotes', function() {
+describe('TeamNotes component', function() {
   var component, container;
 
   beforeEach(function() {
     //we add our component to test into a div and then render it
-    component = new GroupNotes({groups:groups,onThreadSelected:handleThreadSelected});
+    component = new TeamNotes({groups:[team],onThreadSelected:handleThreadSelected});
 
     container = document.createElement('div');
     document.documentElement.appendChild(container);

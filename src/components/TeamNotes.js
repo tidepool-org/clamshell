@@ -24,11 +24,9 @@ var React = require('react');
 var _ = require('underscore');
 var sundial = require('moment');
 
-require('./GroupNotes.css');
-
 var Note = require('./Note');
 
-var GroupNotes = React.createClass({
+var TeamNotes = React.createClass({
 
   notesForGroup:function(group){
 
@@ -40,7 +38,7 @@ var GroupNotes = React.createClass({
         return (
           /* jshint ignore:start */
           <Note
-              ref='groupNote'
+              ref='teamNote'
               imgColumns='col-xs-2'
               detailColumns='col-xs-10'
               onClick={this.props.onThreadSelected.bind(null, note)}
@@ -63,7 +61,7 @@ var GroupNotes = React.createClass({
 
     return (
         /* jshint ignore:start */
-        <div className="groupnotes list-group">
+        <div className="teamnotes list-group">
             {items}
         </div>
         /* jshint ignore:end */
@@ -71,5 +69,5 @@ var GroupNotes = React.createClass({
   }
 });
 
-module.exports = GroupNotes;
+module.exports = TeamNotes;
 

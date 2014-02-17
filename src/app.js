@@ -33,7 +33,7 @@ var ListNavBar = require('./components/ListNavBar');
 var MessageFooter = require('./components/MessageFooter');
 var Login = require('./components/Login');
 var MyGroupsPicker = require('./components/GroupsPicker');
-var GroupNotes = require('./components/GroupNotes');
+var TeamNotes = require('./components/TeamNotes');
 var MessageItemList = require('./components/MessageItemList');
 var UserMessage = require('./components/UserMessage');
 /*jshint unused:false */
@@ -247,7 +247,7 @@ var ClamShellApp = React.createClass({
       <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
       <MyGroupsPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
-      <GroupNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
+      <TeamNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
       <MessageFooter messagePrompt='Type a new note here ...' btnMessage='Post' onFooterAction={this.handleStartConversation}/>
       </Layout>
       /* jshint ignore:end */
@@ -261,7 +261,7 @@ var ClamShellApp = React.createClass({
       <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
       <MyGroupsPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
-      <GroupNotes groups={this.state.userGroupsData} onThreadSelected={this.handleShowConversationThread} />
+      <TeamNotes groups={this.state.userGroupsData} onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       /* jshint ignore:end */
       );
