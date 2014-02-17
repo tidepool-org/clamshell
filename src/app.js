@@ -39,8 +39,6 @@ var UserMessage = require('./components/UserMessage');
 /*jshint unused:false */
 
 //core functionality
-
-var user = require('./core/user');
 var api = require('./core/api');
 
 if(false){
@@ -53,9 +51,10 @@ if(false){
 }
 
 var app = {
-  log: bows('App'),
-  api:api,
-  user:user
+  log : bows('App'),
+  api : api,
+  user : require('./core/user'),
+  teamHelper : require('./core/team')
 };
 
 var routes = {
@@ -107,26 +106,6 @@ var ClamShellApp = React.createClass({
       '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
     });
     router.init();
-  },
-
-  // ---------- Utility Methods ----------
-
-  //TODO: move this out and test it
-  messagesForThread:function(groupId,parentmessageId){
-
-    var messageGroup = _.find(this.state.userGroupsData, function(group){ return groupId == group.id; });
-    var messagesInThread = _.where(messageGroup.messages, {parentmessage: parentmessageId});
-
-    var messages;
-
-    if(messagesInThread.length > 0){
-      messages = _.sortBy(messagesInThread, function(message){ return message.timestamp; });
-    }else{
-      messages = _.where(messageGroup.messages, {id: rootMessageId});
-    }
-
-    return messages;
-
   },
 
   //load the user and then thier groups and those groups messages
@@ -191,12 +170,19 @@ var ClamShellApp = React.createClass({
     if(mostRecentMessageInThread.parentmessage){
       messagesId = mostRecentMessageInThread.parentmessage;
     }
+    
+    var team = _.find(this.state.userGroupsData, 
+      function(group){ 
+        return mostRecentMessageInThread.groupid === group.id; 
+      }
+    );
 
-    var messages = this.messagesForThread(mostRecentMessageInThread.groupid,messagesId);
+    var thread = app.teamHelper.getThread(team,messagesId);
 
     this.setState(
-      {selectedThread: messages,
-      routeName:routes.messageThread,
+      {selectedThread : thread,
+       selectedGroup : team,
+      routeName : routes.messageThread,
       previousRoute : this.state.routeName}
     );
   },
@@ -208,10 +194,8 @@ var ClamShellApp = React.createClass({
   handleStartConversation:function(note){
 //TODO: sort this out
     var newConversation = {
-      id:'2222aca5-b0f0-4ae1-8888-8314350ac1fb',
-      rootmessageid : '',
       userid : '4505aca5-b0f0-4ae1-9443-8314350ac1fb',
-      groupid : this.state.selectedGroup[0].id,
+      groupid : this.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
@@ -260,7 +244,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup[0].id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
+      <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
       <MyGroupsPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <GroupNotes groups={this.state.selectedGroup} onThreadSelected={this.handleShowConversationThread} />
@@ -287,7 +271,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup[0].id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
+      <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
       <MessageItemList messages={this.state.selectedThread} />
       <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation} />
       </Layout>
