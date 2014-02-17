@@ -19,17 +19,17 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var MessageItemList = require('../../build/components/MessageItemList');
+var NoteThread = require('../../build/components/NoteThread');
 var team = require('../../demo/data').team;
 
-describe('MessageItemList', function() {
+describe('NoteThread component', function() {
     var component, container;
 
     beforeEach(function() {
 
         var notes = team.notes;
         //we add our component to test into a div and then render it
-        component = MessageItemList({messages:notes});
+        component = NoteThread({messages:notes});
 
         container = document.createElement('div');
         document.documentElement.appendChild(container);

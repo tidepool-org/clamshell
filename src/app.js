@@ -34,7 +34,7 @@ var MessageFooter = require('./components/MessageFooter');
 var Login = require('./components/Login');
 var TeamPicker = require('./components/TeamPicker');
 var TeamNotes = require('./components/TeamNotes');
-var MessageItemList = require('./components/MessageItemList');
+var NoteThread = require('./components/NoteThread');
 var UserMessage = require('./components/UserMessage');
 /*jshint unused:false */
 
@@ -272,7 +272,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <Layout>
       <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
-      <MessageItemList messages={this.state.selectedThread} />
+      <NoteThread messages={this.state.selectedThread} />
       <MessageFooter messagePrompt='Type a comment here ...' btnMessage='Comment' onFooterAction={this.handleAddingToConversation} />
       </Layout>
       /* jshint ignore:end */

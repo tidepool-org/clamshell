@@ -24,7 +24,7 @@ var React = require('react');
 
 var Note = require('./Note');
 
-var MessageItemList = React.createClass({
+var NoteThread = React.createClass({
 
     renderNote: function(message){
       return (
@@ -74,5 +74,5 @@ var MessageItemList = React.createClass({
     }
 });
 
-module.exports = MessageItemList;
+module.exports = NoteThread;
 
