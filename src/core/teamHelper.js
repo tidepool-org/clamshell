@@ -34,6 +34,13 @@ var teamHelper = {
     }
 
     return thread;
+  },
+  getTeam: function(userTeams, groupId) {
+    return _.find(userTeams,
+      function(team){
+        return groupId === team.id;
+      }
+    );
   }
 };
 

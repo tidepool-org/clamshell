@@ -19,16 +19,28 @@ var chai = require('chai');
 var expect = chai.expect;
 
 var teamHelper = require('../../src/core/teamHelper');
-var teamData = require('../../demo/data').team;
+var teamData = require('../../demo/data');
 
 describe('teamHelper', function() {
 
     it('getThread returns notes in a thread', function() {
 
-        var thread = teamHelper.getThread(teamData,'9233c2ae-7bad-41f5-9295-e73f0437295b');
+        var thread = teamHelper.getThread(teamData.team,'9233c2ae-7bad-41f5-9295-e73f0437295b');
         expect(thread).to.exist;
         expect(thread).to.be.a('array');
         expect(thread.length).to.equal(4);
+    });
+
+    it('getTeam returns team with the given id', function() {
+
+    	var groupToFind = '07abb942-5c77-4c87-aa94-12c08b805d7f';
+
+    	var groups = teamData.patients;
+    	groups.push(teamData.team);
+
+        var team = teamHelper.getTeam(groups,groupToFind);
+        expect(team).to.exist;
+        expect(team.id).to.equal(groupToFind);
     });
 
 });

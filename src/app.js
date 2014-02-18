@@ -175,12 +175,7 @@ var ClamShellApp = React.createClass({
       messagesId = mostRecentMessageInThread.parentmessage;
     }
 
-    var team = _.find(this.state.userGroupsData,
-      function(group){
-        return mostRecentMessageInThread.groupid === group.id;
-      }
-    );
-
+    var team = app.teamHelper.getTeam(this.state.userGroupsData,mostRecentMessageInThread.groupid);
     var thread = app.teamHelper.getThread(team,messagesId);
 
     this.setState(
@@ -196,8 +191,6 @@ var ClamShellApp = React.createClass({
   },
 
   handleStartConversation:function(note){
-
-console.log('TODO something odd here');
 
     var thread = {
       userid : this.state.loggedInUser.userid,
