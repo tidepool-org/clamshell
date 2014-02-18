@@ -35,7 +35,7 @@ var Note = React.createClass({
     var commentLink;
 
     if(this.props.showCommentLink){
-      commentLink = (<a ref='showMessageThread' className='note-link'>Comment stuff</a>);
+      commentLink = (<div><a ref='showMessageThread' className='pull-left note-link'>x Comments</a><a ref='showMessageThread' className='pull-right note-link'>Comment</a></div>);
     }
 
     return this.transferPropsTo(
