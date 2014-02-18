@@ -35,7 +35,8 @@ var NoteThread = React.createClass({
             detailColumns='col-xs-10'
             key={message.id}
             note={message.messagetext}
-            when={message.timestamp}/>
+            when={message.timestamp}
+            showCommentLink={false}/>
         /* jshint ignore:end */
       );
     },
@@ -48,7 +49,8 @@ var NoteThread = React.createClass({
             detailColumns='col-xs-8'
             key={message.id}
             note={message.messagetext}
-            when={message.timestamp}/>
+            when={message.timestamp}
+            showCommentLink={false}/>
         /* jshint ignore:end */
       );
     },

@@ -45,7 +45,8 @@ var TeamNotes = React.createClass({
               key={note.id}
               name={group.name}
               note={note.messagetext}
-              when={note.timestamp}/>
+              when={note.timestamp}
+              showCommentLink={true}/>
           /* jshint ignore:end */
         );
       }.bind(this));
