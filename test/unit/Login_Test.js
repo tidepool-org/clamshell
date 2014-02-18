@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var Login = require('../../build/components/Login');
+var Login = require('../../build/components/login/Login');
 
 var loggedIn = false;
 

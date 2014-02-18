@@ -29,12 +29,12 @@ var _ = require('underscore');
 //app components
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
-var ListNavBar = require('./components/ListNavBar');
-var MessageFooter = require('./components/MessageFooter');
-var Login = require('./components/Login');
-var TeamPicker = require('./components/TeamPicker');
-var TeamNotes = require('./components/TeamNotes');
-var NoteThread = require('./components/NoteThread');
+var ListNavBar = require('./components/header/ListNavBar');
+var MessageFooter = require('./components/footer/MessageFooter');
+var Login = require('./components/login/Login');
+var TeamPicker = require('./components/teampicker/TeamPicker');
+var TeamNotes = require('./components/notes/TeamNotes');
+var NoteThread = require('./components/notes/NoteThread');
 var UserMessage = require('./components/UserMessage');
 /*jshint unused:false */
 

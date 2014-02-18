@@ -21,7 +21,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var TeamNotes = require('../../build/components/TeamNotes');
+var TeamNotes = require('../../build/components/noets/TeamNotes');
 var team = require('../../demo/data').team;
 
 var handlerCalled = false;

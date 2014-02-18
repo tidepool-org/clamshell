@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var ListNavBar = require('../../build/components/ListNavBar');
+var ListNavBar = require('../../build/components/header/ListNavBar');
 
 
 var handled = false;

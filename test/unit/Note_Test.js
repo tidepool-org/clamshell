@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var Note = require('../../build/components/Note');
+var Note = require('../../build/components/notes/Note');
 
 var testGroupName = 'My Test Group';
 var testAuthor = 'Jamie';

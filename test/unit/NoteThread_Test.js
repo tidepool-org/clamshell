@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var NoteThread = require('../../build/components/NoteThread');
+var NoteThread = require('../../build/components/notes/NoteThread');
 var team = require('../../demo/data').team;
 
 describe('NoteThread component', function() {

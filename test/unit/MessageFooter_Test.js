@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var MessageFooter = require('../../build/components/MessageFooter');
+var MessageFooter = require('../../build/components/footer/MessageFooter');
 var submittedMessage;
 
 var getSubmittedMessage = function(content){
