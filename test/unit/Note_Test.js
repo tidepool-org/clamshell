@@ -114,8 +114,26 @@ describe('Note', function() {
         expect(component.refs.messageText).to.not.be.empty;
     });
 
-    it('should have a show thread section', function() {
-        expect(component.refs.showMessageThread).to.not.be.empty;
+    it('should not show link section by default', function() {
+        expect(component.refs.showMessageThread).to.not.exist;
+    });
+
+    it('should show link section when it is set',function(){
+       var note = Note({
+            name : testGroupName,
+            author : testAuthor,
+            note : testNote,
+            when : testWhenTheLatestNoteOccured,
+            imgColumns : testImgCols,
+            detailColumns : testDetailCols,
+            showCommentLink : true
+        });
+
+        var testContainer = document.createElement('div');
+        document.documentElement.appendChild(testContainer);
+        React.renderComponent(note, testContainer);
+
+        expect(note.refs.showMessageThread).to.exist;
     });
 
 });
