@@ -1,5 +1,16 @@
-.login{}
 
-.login-form{}
+.blip-logo {
+  background-image: url('./images/blip_logo145x145.png');
+  background-repeat:no-repeat;
+  background-position:center;
+  min-height: 145px;
+  min-width: 145px;
+}
 
-.login-message{}
+.tidepool-logo {
+  background-image: url('./images/tidepool_logo.png');
+  background-repeat:no-repeat;
+  min-height: 21px;
+  min-width: 186px;
+  margin-bottom: 50px;
+}
