@@ -31,24 +31,32 @@ var Login = React.createClass({
       message: ''
     };
   },
-
+  renderLogos: function(){
+    return (
+      /* jshint ignore:start */
+      <div className='col-xs-offset-4 col-xs-4'>
+        <object type='image/svg+xml' data='images/tidepool_logo.svg' />
+      </div>
+      /* jshint ignore:end */
+      );
+  },
   renderSignInForm: function(){
     return (
       /* jshint ignore:start */
       <form className='login-form form-horizontal' role='form'>
         <div className='form-group'>
-          <div className='col-sm-3'>
+          <div className='col-xs-offset-4 col-xs-4'>
             <input type='email' ref='emailFeild' id='inputEmail3' className='form-control' placeholder='Email' />
           </div>
         </div>
         <div className='form-group'>
-          <div className='col-sm-3'>
+          <div className='col-xs-offset-4 col-xs-4'>
             <input type='password' ref='pwFeild' className='form-control' id='inputPassword3' placeholder='Password' />
           </div>
         </div>
         <div className='form-group'>
-          <div className='col-sm-offset-2 col-sm-3'>
-            <a type='submit' className='btn btn-default' ref='loginBtn' onClick={this.handleLogin}>Sign in</a>
+          <div className='col-xs-offset-4 col-xs-4'>
+            <a type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>Sign in</a>
           </div>
         </div>
       </form>
@@ -61,7 +69,7 @@ var Login = React.createClass({
 
       return (
          /* jshint ignore:start */
-          <div className='login-message col-sm-offset-2 col-sm-3 js-login-message'>
+          <div className='col-xs-offset-4 col-xs-4 login-message js-login-message'>
             {message}
           </div>
 
@@ -74,11 +82,13 @@ var Login = React.createClass({
   render: function() {
 
     var login = this.renderSignInForm();
+    var logos = this.renderLogos();
     var message = this.renderMessage();
 
     return (
        /* jshint ignore:start */
-      <div className='login content'>
+      <div className='login'>
+      {logos}
       {login}
       {message}
       </div>
