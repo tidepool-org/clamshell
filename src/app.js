@@ -35,7 +35,7 @@ var Login = require('./components/login/Login');
 var TeamPicker = require('./components/teampicker/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
-var UserMessage = require('./components/UserMessage');
+var UserMessage = require('./components/usermessage/UserMessage');
 /*jshint unused:false */
 
 //core functionality
@@ -53,7 +53,6 @@ if(false){
 var app = {
   log : bows('App'),
   api : api,
-  userHelper : require('./core/userHelper'),
   teamHelper : require('./core/teamHelper'),
   notesHelper : require('./core/notesHelper')
 };
