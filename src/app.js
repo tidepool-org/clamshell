@@ -60,6 +60,7 @@ var app = {
 
 var routes = {
   login:'login',
+  error:'error',
   messagesForAllTeams:'allGroupsConversations',
   messagesForSelectedTeam:'groupConversations',
   messageThread: 'conversationThread',
@@ -83,7 +84,8 @@ var ClamShellApp = React.createClass({
       userGroupsData : null,
       selectedGroup : null,
       selectedThread : null,
-      loggingOut : false
+      loggingOut : false,
+      userMessage : null
     };
   },
 
@@ -92,6 +94,7 @@ var ClamShellApp = React.createClass({
     console.log('setup ...');
     if (this.state.authenticated) {
       console.log('authenticated ...');
+
       this.fetchUserData(function(){
         this.setState({
           routeName: routes.messagesForAllTeams,
@@ -118,6 +121,7 @@ var ClamShellApp = React.createClass({
     api.user.team.get(function(err, team) {
       if(err){
         console.log(err);
+        self.setState({routeName : routes.error, userMessage : err });
         return;
       }
       self.setState({userGroupsData:[team]});
@@ -130,6 +134,7 @@ var ClamShellApp = React.createClass({
     api.user.patients.get(function(err, patients) {
       if(err){
         console.log(err);
+        self.setState({routeName : routes.error, userMessage : err });
         return;
       }
       var all = self.state.userGroupsData.concat(patients);
@@ -164,7 +169,6 @@ var ClamShellApp = React.createClass({
         loggedInUser : app.api.user.get()
       });
     }.bind(this));
-
   },
 
   handleShowConversationThread:function(mostRecentMessageInThread){
@@ -310,7 +314,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind(app.userHelper)}/>
+      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind()}/>
       </Layout>
       /* jshint ignore:end */
       );
@@ -320,7 +324,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <UserMessage login={this.state.userMessage}/>
+      <UserMessage message={this.state.userMessage}/>
       </Layout>
       /* jshint ignore:end */
       );
@@ -341,9 +345,16 @@ var ClamShellApp = React.createClass({
       else if(routes.messageThread === routeName){
         return this.renderMessageThread();
       }
+      else if(routes.error === routeName){
+        return this.renderErrorLayout();
+      }
 
     } else {
-      return this.renderLoginLayout();
+      if(routes.error === routeName){
+        return this.renderErrorLayout();
+      }else{
+        return this.renderLoginLayout();
+      }
     }
   }
 });

@@ -102,6 +102,9 @@ module.exports = function(api, host, superagent) {
   api.user.login = function(username, password,callback) {
     console.log('Logining in ...');
     platform.login({username:username,password:password},function(error, loginData){
+      if(error){
+        return callback(error);
+      }
       if(loginData){
         console.log('[production] Login success');
         user = loginData.user;

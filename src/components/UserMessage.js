@@ -30,7 +30,7 @@ var UserMessage = React.createClass({
     return (
        /* jshint ignore:start */
       <div className='login-message col-sm-offset-2 col-sm-3 js-login-message'>
-        this.props.userMessage;
+        {this.props.message}
       </div>
        /* jshint ignore:end */
       );
