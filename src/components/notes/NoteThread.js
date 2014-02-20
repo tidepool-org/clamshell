@@ -26,56 +26,54 @@ var Note = require('./Note');
 
 var NoteThread = React.createClass({
 
-    renderNote: function(message){
-      return (
-        /* jshint ignore:start */
-        <Note
-            ref='rootNote'
-            imgColumns='col-xs-2'
-            detailColumns='col-xs-10'
-            key={message.id}
-            author={message.userid}
-            note={message.messagetext}
-            when={message.timestamp}
-            showCommentLink={false}/>
-        /* jshint ignore:end */
+  renderNote: function(message){
+    return (
+      /* jshint ignore:start */
+      <Note
+      ref='rootNote'
+      imgColumns='col-xs-2'
+      detailColumns='col-xs-10'
+      key={message.id}
+      author={message.userid}
+      note={message.messagetext}
+      when={message.timestamp}
+      showCommentLink={false}/>
+      /* jshint ignore:end */
       );
-    },
-    renderCommentOnNote:function(message){
-      return (
-        /* jshint ignore:start */
-        <Note
-            ref='commentNote'
-            imgColumns='col-xs-2 col-xs-offset-2'
-            detailColumns='col-xs-8'
-            key={message.id}
-            author={message.userid}
-            note={message.messagetext}
-            when={message.timestamp}
-            showCommentLink={false}/>
-        /* jshint ignore:end */
+  },
+  renderCommentOnNote:function(message){
+    return (
+      /* jshint ignore:start */
+      <Note
+      ref='commentNote'
+      imgColumns='col-xs-2 col-xs-offset-2'
+      detailColumns='col-xs-8'
+      key={message.id}
+      author={message.userid}
+      note={message.messagetext}
+      when={message.timestamp}
+      showCommentLink={false}/>
+      /* jshint ignore:end */
       );
-    },
-    render: function() {
-        var items = this.props.messages.map(function(message, i) {
+  },
+  render: function() {
+    var items = this.props.messages.map(function(message, i) {
 
-            if(i==0) {
-                //this is the parent note
-                return this.renderNote(message);
-            } else {
-                //here are the comments if any
-                return this.renderCommentOnNote(message);
-            }
-        }.bind(this));
+      if(i==0) {
+        return this.renderNote(message);
+      } else {
+        return this.renderCommentOnNote(message);
+      }
+    }.bind(this));
 
-        return (
-        	/* jshint ignore:start */
-            <div ref='messageThread' className="messageitemlist-thread list-group">
-                {items}
-            </div>
-            /* jshint ignore:end */
-        );
-    }
+    return (
+     /* jshint ignore:start */
+     <div ref='messageThread' className="messageitemlist-thread list-group">
+     {items}
+     </div>
+     /* jshint ignore:end */
+     );
+  }
 });
 
 module.exports = NoteThread;
