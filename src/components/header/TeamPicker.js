@@ -47,11 +47,11 @@ var TeamPicker = React.createClass({
     }.bind(this));
 
     return this.transferPropsTo(
-      <div id='navbar-collapse-grid' className='navbar-collapse in'>
+      <div id='navbar-collapse-grid' className='navbar-collapse'>
         <ul className='nav navbar-nav'>
           <li ref='groupDropdown' className='dropdown yamm-fw'>
             <a href='#' data-toggle='dropdown' className='dropdown-toggle'>
-              <span className='dropdown-icon'></span>
+              <span className='caret'></span>
             </a>
             <ul ref='groups' className='dropdown-menu'>
               <li className='grid-demo'>
