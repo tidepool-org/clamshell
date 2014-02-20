@@ -7,7 +7,6 @@ Tech stack:
 - [React](http://facebook.github.io/react)
 - [Bootstrap](http://getbootstrap.com/)
 
-
 Table of contents:
 
 - [Install](#install)
@@ -89,7 +88,7 @@ $ npm install -g testem
 Then run:
 
 ```
-$ testem
+$ grunt test
 ```
 
 This will open and run the tests in Chrome by default. You can also open other browsers and point them to the specified URL.

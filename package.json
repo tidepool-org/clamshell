@@ -3,15 +3,16 @@
   "version": "0.0.1",
   "description": "",
   "private": true,
-  "repository": "",
+  "repository": "https://github.com/tidepool-org/clamshell.git",
+  "author": "Tidepool",
   "dependencies": {
     "bows": "0.3.0",
     "director": "1.2.2",
     "envify": "0.2.0",
+    "moment": "2.5.1",
     "platform-client": "tidepool-org/platform-client",
     "react": "0.8.0",
-    "underscore": "1.5.2",
-    "moment": "2.5.1"
+    "underscore": "1.5.2"
   },
   "devDependencies": {
     "jsx-loader": "petehunt/jsx-loader",
@@ -23,14 +24,15 @@
     "mocha": "1.16.2",
     "grunt": "0.4.2",
     "grunt-contrib-jshint": "0.7.2",
-    "grunt-contrib-uglify": "0.2.7",
+    "grunt-contrib-uglify": "~0.3.2",
     "grunt-shell-spawn": "0.3.0",
     "grunt-mocha-test": "0.8.1",
-    "grunt-cli": "0.1.13"
+    "grunt-cli": "0.1.13",
+    "lodash-cli": "~2.4.1",
+    "grunt-lodash": "~0.3.0"
   },
   "scripts": {
     "start": "webpack --watch --debug src/main.js build/clamshell.js",
     "test": "jsx src/ build/ ; browserify test/**/*.js -o build/browserified.js"
-  },
-  "author": "Tidepool"
+  }
 }

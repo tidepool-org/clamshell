@@ -25,6 +25,16 @@ module.exports = function(grunt) {
         },
         all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
       },
+      uglify: {
+        options: {
+          mangle: false
+        },
+        my_target: {
+          files: {
+            'build/clamshell.min.js': ['build/clamshell.js']
+          }
+        }
+      },
       shell: {
         buildApp: {
           // load config and start app at same time
@@ -58,7 +68,7 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', ['test']);
   // Standard tasks
-  grunt.registerTask('build', ['shell:buildApp']);
+  grunt.registerTask('build', ['shell:buildApp','uglify']);
   grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
 
 };
