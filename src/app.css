@@ -35,11 +35,11 @@ body {
 }
 
 .dropdown-icon {
-  text-indent: -9999px;
-  width: 32px;
-  height: 32px;
   background: url('images/icon_dropdown.png');
-  background-size: 32px 32px;
+  background-repeat:no-repeat;
+  background-position:center;
+  min-height: 32px;
+  min-width: 32px;
 }
 
 .listnavbar {
@@ -47,6 +47,10 @@ body {
   background-image: none;
 }
 
+.listnavbar
+.navbar-text {
+  color: #fff;
+}
 
 /* full width drop down */
 .yamm .nav,
