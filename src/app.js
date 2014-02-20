@@ -26,7 +26,8 @@ var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('underscore');
 
-//app components
+var config = require('./env');
+
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/header/ListNavBar');
@@ -38,14 +39,15 @@ var NoteThread = require('./components/notes/NoteThread');
 var UserMessage = require('./components/usermessage/UserMessage');
 /*jshint unused:false */
 
+require('./app.css');
+
 //core functionality
 var api = require('./core/api')(bows);
 
-if(false){
+if(config.demo){
   require('./core/mock')(api);
 } else {
-  //require('./core/platform')(api,'https://devel-api.tidepool.io',window.superagent);
-  require('./core/platform')(api,'http://localhost:8009',window.superagent);
+  require('./core/platform')(api,config.apiHost,window.superagent);
 }
 
 var app = {
@@ -62,8 +64,6 @@ var routes = {
   messageThread: 'conversationThread',
   startMessageThread:'newConversation'
 };
-
-require('./app.css');
 
 var ClamShellApp = React.createClass({
   getInitialState: function () {
@@ -115,7 +115,7 @@ var ClamShellApp = React.createClass({
     api.user.team.get(function(error, team) {
       if(error){
         app.log.error(error);
-        this.setState({routeName : routes.error, userMessage : err });
+        this.setState({routeName : routes.error, userMessage : error });
         return;
       }
       this.setState({userGroupsData:[team]});
@@ -126,12 +126,12 @@ var ClamShellApp = React.createClass({
   fetchPatientsData: function(callback) {
     app.log('fetching user patients data');
     api.user.patients.get(function(error, patients) {
-      if(err){
+      if(error){
         app.log.error(error);
-        this.setState({routeName : routes.error, userMessage : err });
+        this.setState({routeName : routes.error, userMessage : error });
         return;
       }
-      var all = self.state.userGroupsData.concat(patients);
+      var all = this.state.userGroupsData.concat(patients);
       this.setState({userGroupsData:all});
       callback();
     }.bind(this));
@@ -205,10 +205,10 @@ var ClamShellApp = React.createClass({
       app.log('thread started');
       if(error){
         app.log.error(error);
-        self.setState({routeName : routes.error, userMessage : error });
+        this.setState({routeName : routes.error, userMessage : error });
         return;
       }
-    });
+    }.bind(this));
 
     var updatedTeamNotes = this.state.selectedGroup;
 
@@ -235,10 +235,10 @@ var ClamShellApp = React.createClass({
       app.log('reply added');
       if(error){
         app.log.error(error);
-        self.setState({routeName : routes.error, userMessage : error });
+        this.setState({routeName : routes.error, userMessage : error });
         return;
       }
-    });
+    }.bind(this));
 
     thread.push(comment);
     this.setState({selectedThread: thread});
@@ -379,7 +379,7 @@ app.start = function() {
       document.getElementById('app')
     );
 
-    self.log('App started');
+    self.log('app started');
   });
 };
 
@@ -387,21 +387,6 @@ app.init = function(callback) {
 
   this.api.user.loadSession(callback);
   callback();
-  /*
-  var self = this;
-
-  function initApi() {
-    self.api.init();
-    initAuth();
-  }
-
-  function initAuth() {
-    //console.log('authenticating ...');
-    self.api.user.isAuthenticated(callback);
-    callback();
-  }
-
-  initApi();*/
 };
 
 module.exports = app;
