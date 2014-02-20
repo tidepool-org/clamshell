@@ -3,6 +3,7 @@
     "serve_files": [ "build/browserified.js" ],
     "src_files": [
       "build/**/*.js",
+      "build/**/*.css",
       "test/**/*.js"
     ],
     "launchers": {
