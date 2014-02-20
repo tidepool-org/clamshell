@@ -30,34 +30,40 @@ var TeamPicker = React.createClass({
     return false;
   },
 
-  render: function() {
+  render:function(){
 
     var groups = this.props.groups.map(function(group,i) {
       return (
-        /* jshint ignore:start */
-        <li key={i}>
-        <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
-        <p ref='groupName'>{group.name}</p>
-        <p ref='lastGroupActivity'>TODO:</p>
-        </a>
-        </li>
-        /* jshint ignore:end */
-        );
+        <div key={i} className="row col-xm-12">
+          <div className="col-xm-2">
+          </div>
+          <div className="col-xs-offset-2 col-xm-10">
+            <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
+              <p ref='groupName'>TODO: {group.id}</p>
+            </a>
+          </div>
+        </div>
+      );
     }.bind(this));
 
     return this.transferPropsTo(
-      /* jshint ignore:start */
-      <div ref='groupsDropDown' className='groupspicker btn-group'>
-      <button type='button' className='btn navbar-btn pull-left dropdown-toggle' data-toggle='dropdown'>
-      <span className='caret'></span>
-      </button>
-      <ul ref='groupsList' className='groupspicker-dropdown dropdown-menu' role='menu'>
-      {groups}
-      </ul>
+      <div id="navbar-collapse-grid" className="navbar-collapse in">
+        <ul className="nav navbar-nav">
+          <li className="dropdown yamm-fw">
+            <a href="#" data-toggle="dropdown" className="dropdown-toggle">
+              <span className='dropdown-icon'></span>
+            </a>
+            <ul className="dropdown-menu">
+              <li className="grid-demo">
+                {groups}
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
-      /* jshint ignore:end */
-      );
+    );
   }
+
 });
 
 module.exports = TeamPicker;

@@ -21,27 +21,30 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./ListNavBar.css')
+
 var ListNavBar = React.createClass({
 
-    handleAction:function(){
-        this.props.onNavBarAction();
-    },
-
-    render: function() {
-        return (
-            /* jshint ignore:start */
-            <nav className='listnavbar navbar navbar-default navbar-fixed-top' role='navigation'>
-                <div className='col-xs-1'>
-                    <button type='button' ref='actionBtn' className='btn btn-default navbar-btn' onClick={this.handleAction}><span className={this.props.actionIcon}></span></button>
-                </div>
-                <h4 className='navbar-text text-center col-xs-10'>{this.props.title}</h4>
-                <div>
-                    {this.props.children}
-                </div>
-            </nav>
-            /* jshint ignore:end */
-        );
-    }
+  handleAction:function(){
+    this.props.onNavBarAction();
+  },
+  render: function() {
+    return (
+      /* jshint ignore:start */
+      <div className='listnavbar navbar navbar-default navbar-fixed-top yamm' >
+        <div className='col-xs-1'>
+          <a href='#' ref='actionBtn' onClick={this.handleAction}>
+            <span className={this.props.actionIcon}></span>
+          </a>
+        </div>
+        <h4 className='navbar-text text-center col-xs-10'>{this.props.title}</h4>
+        <span>
+          {this.props.children}
+        </span>
+      </div>
+      /* jshint ignore:end */
+    );
+  }
 });
 
 module.exports = ListNavBar;

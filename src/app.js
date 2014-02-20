@@ -32,7 +32,7 @@ var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/header/ListNavBar');
 var MessageFooter = require('./components/footer/MessageFooter');
 var Login = require('./components/login/Login');
-var TeamPicker = require('./components/teampicker/TeamPicker');
+var TeamPicker = require('./components/header/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
 var UserMessage = require('./components/usermessage/UserMessage');
@@ -268,7 +268,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack}>
+      <ListNavBar title={this.state.selectedGroup.id} actionIcon='back-icon' onNavBarAction={this.handleBack}>
       <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <TeamNotes groups={[this.state.selectedGroup]} onThreadSelected={this.handleShowConversationThread} />
@@ -285,7 +285,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title='All Notes' actionIcon='glyphicon glyphicon-log-out' onNavBarAction={this.handleLogout}>
+      <ListNavBar title='All Notes' actionIcon='logout-icon' onNavBarAction={this.handleBack}>
       <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
       </ListNavBar>
       <TeamNotes groups={this.state.userGroupsData} onThreadSelected={this.handleShowConversationThread} />
@@ -298,7 +298,7 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup.id} actionIcon='glyphicon glyphicon-arrow-left' onNavBarAction={this.handleBack} />
+      <ListNavBar title={this.state.selectedGroup.id} actionIcon='back-icon' onNavBarAction={this.handleBack} />
       <NoteThread messages={this.state.selectedThread} />
       <MessageFooter
         messagePrompt='Type a comment here ...'

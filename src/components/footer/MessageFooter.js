@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./MessageFooter.css');
+
 //Form for adding Comments
 var MessageFooter = React.createClass({
 

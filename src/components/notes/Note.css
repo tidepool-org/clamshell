@@ -1,6 +1,7 @@
-.note{}
-.note-image{}
-.note-header{}
-.note-when{}
-.note-message{}
-.note-links{}
+.note-image{
+	background-image: url('./images/profile_standIn_60x60.png');
+  	background-repeat:no-repeat;
+  	background-position: 50% 50%;
+  	min-height: 60px;
+  	min-width: 60px;
+}
