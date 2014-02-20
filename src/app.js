@@ -42,10 +42,8 @@ var UserMessage = require('./components/usermessage/UserMessage');
 var api = require('./core/api')(bows);
 
 if(false){
-  console.log('mock setup');
   require('./core/mock')(api);
 } else {
-  console.log('production setup');
   //require('./core/platform')(api,'https://devel-api.tidepool.io',window.superagent);
   require('./core/platform')(api,'http://localhost:8009',window.superagent);
 }
@@ -88,10 +86,8 @@ var ClamShellApp = React.createClass({
 
   componentDidMount: function () {
 
-    console.log('setup ...');
     app.log('setup ...');
     if (this.state.authenticated) {
-      console.log('authenticated ...');
       app.log('authenticated ...');
 
       this.fetchUserData(function(){
@@ -115,43 +111,39 @@ var ClamShellApp = React.createClass({
 
   //---------- Data Loading ----------
   fetchUserData: function(callback) {
-    var self = this;
-
+    app.log('fetching user team data');
     api.user.team.get(function(error, team) {
       if(error){
-        console.log(error);
-        app.log(error);
-        self.setState({routeName : routes.error, userMessage : err });
+        app.log.error(error);
+        this.setState({routeName : routes.error, userMessage : err });
         return;
       }
-      self.setState({userGroupsData:[team]});
+      this.setState({userGroupsData:[team]});
       callback();
-    });
+    }.bind(this));
   },
 
   fetchPatientsData: function(callback) {
-    var self = this;
+    app.log('fetching user patients data');
     api.user.patients.get(function(error, patients) {
       if(err){
-        app.log(error);
-        console.log(error);
-        self.setState({routeName : routes.error, userMessage : err });
+        app.log.error(error);
+        this.setState({routeName : routes.error, userMessage : err });
         return;
       }
       var all = self.state.userGroupsData.concat(patients);
-      self.setState({userGroupsData:all});
+      this.setState({userGroupsData:all});
       callback();
-    });
+    }.bind(this));
   },
 
   //---------- App Handlers ----------
 
   handleLogout:function(){
-    console.log('logging out');
+    app.log('logging out');
     api.user.deleteSession(function(success){
       if(success){
         app.log('logged out');
-        console.log('logged out');
         this.setState({
           routeName: routes.login,
           authenticated: false
@@ -164,8 +156,7 @@ var ClamShellApp = React.createClass({
   handleBack:function(){
     var previousRoute = this.state.previousRoute;
     if(!previousRoute){
-      app.log('route was not set for some reason');
-      console.log('route was not set for some reason');
+      app.warn('route was not set for some reason');
       previousRoute = routes.messagesForAllTeams;
     }
     this.setState({routeName:previousRoute});
@@ -211,11 +202,9 @@ var ClamShellApp = React.createClass({
     };
 
     app.api.notes.add(thread,function(error){
-      console.log('thread started');
       app.log('thread started');
       if(error){
-        console.log(error);
-        app.log(error);
+        app.log.error(error);
         self.setState({routeName : routes.error, userMessage : error });
         return;
       }
@@ -243,11 +232,9 @@ var ClamShellApp = React.createClass({
     };
 
     app.api.notes.reply(comment,function(error){
-      console.log('reply added ');
       app.log('reply added');
       if(error){
-        console.log(error);
-        app.log(error);
+        app.log.error(error);
         self.setState({routeName : routes.error, userMessage : error });
         return;
       }
