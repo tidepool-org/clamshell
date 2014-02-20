@@ -34,10 +34,10 @@ var TeamPicker = React.createClass({
 
     var groups = this.props.groups.map(function(group,i) {
       return (
-        <div key={i} className="row col-xm-12">
-          <div className="col-xm-2">
+        <div key={i} ref='group' className='row col-xm-12'>
+          <div className='col-xm-2'>
           </div>
-          <div className="col-xs-offset-2 col-xm-10">
+          <div className='col-xs-offset-2 col-xm-10'>
             <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
               <p ref='groupName'>TODO: {group.id}</p>
             </a>
@@ -47,14 +47,14 @@ var TeamPicker = React.createClass({
     }.bind(this));
 
     return this.transferPropsTo(
-      <div id="navbar-collapse-grid" className="navbar-collapse in">
-        <ul className="nav navbar-nav">
-          <li className="dropdown yamm-fw">
-            <a href="#" data-toggle="dropdown" className="dropdown-toggle">
+      <div id='navbar-collapse-grid' className='navbar-collapse in'>
+        <ul className='nav navbar-nav'>
+          <li ref='groupDropdown' className='dropdown yamm-fw'>
+            <a href='#' data-toggle='dropdown' className='dropdown-toggle'>
               <span className='dropdown-icon'></span>
             </a>
-            <ul className="dropdown-menu">
-              <li className="grid-demo">
+            <ul ref='groups' className='dropdown-menu'>
+              <li className='grid-demo'>
                 {groups}
               </li>
             </ul>

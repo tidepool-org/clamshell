@@ -46,14 +46,19 @@ describe('TeamPicker', function() {
         document.documentElement.removeChild(container);
     });
 
-    it('should have a groups drop down', function() {
-        var groupsDropDown = component.refs.groupsDropDown;
-        expect(groupsDropDown).to.exist;
+    it('should have a group drop down', function() {
+        var groupDropdown = component.refs.groupDropdown;
+        expect(groupDropdown).to.exist;
     });
 
     it('should have a groups list', function() {
-        var groupsList = component.refs.groupsList;
+        var groupsList = component.refs.groups;
         expect(groupsList).to.exist;
+    });
+
+    it('should have a group to select', function() {
+        var groupToSelect = component.refs.group;
+        expect(groupToSelect).to.exist;
     });
 
     it('should fire the handler with the id of the choosen group', function() {
