@@ -11,8 +11,7 @@ body {
 /* MessageFooter*/
 
 .messagefooter{
-	background-color: #E6E5E5;
-	background-image: none;
+  
 }
 
 /* ListNavBar*/
@@ -25,7 +24,6 @@ body {
   height: 32px;
   margin-top: 10px;
 }
-
 
 .logout-icon {
   display: block;
@@ -45,15 +43,12 @@ body {
 }
 
 .listnavbar {
-	background-color: #89C1CE;
-	background-image: none;
+  background-color: #89C1CE;
+  background-image: none;
 }
 
-.dropdown-menu {
-  
-}
 
-/* full width drop down*/
+/* full width drop down */
 .yamm .nav,
 .yamm .collapse,
 .yamm .dropup,
@@ -98,9 +93,9 @@ body {
 
 /* Notes */
 .note-image{
-	background-image: url('images/profile_default.png');
-  	background-repeat:no-repeat;
-  	background-position: 50% 50%;
-  	min-height: 60px;
-  	min-width: 60px;
+  background-image: url('images/profile_default.png');
+ background-repeat:no-repeat;
+ background-position: 50% 50%;
+ min-height: 60px;
+ min-width: 60px;
 }
