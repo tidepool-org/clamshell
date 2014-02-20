@@ -27,8 +27,7 @@
     "grunt-contrib-uglify": "0.3.2",
     "grunt-shell-spawn": "0.3.0",
     "grunt-mocha-test": "0.8.1",
-    "grunt-cli": "0.1.13",
-    "react-tools": "0.8.0"
+    "grunt-cli": "0.1.13"
   },
   "scripts": {
     "start": "webpack --watch --debug src/main.js build/clamshell.js",
