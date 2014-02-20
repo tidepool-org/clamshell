@@ -3,7 +3,8 @@
 rm -rf node_modules
 rm -rf build
 npm install .
-sudo npm install -g react-tools
 
 # run tests
-./node_modules/.bin/grunt test
+./node_modules/.bin/jsx src/ build/
+./node_modules/.bin/browserify test/**/*.js -o build/browserified.js
+./node_modules/.bin/testem

@@ -15,19 +15,22 @@
     "underscore": "1.5.2"
   },
   "devDependencies": {
-    "jsx-loader": "petehunt/jsx-loader",
-    "webpack": "0.11.0",
-    "url-loader": "0.5.1",
-    "css-loader": "0.6.2",
-    "style-loader": "0.6.0",
+    "browserify": "3.30.1",
     "chai": "1.8.1",
-    "mocha": "1.16.2",
+    "css-loader": "0.6.2",
     "grunt": "0.4.2",
     "grunt-contrib-jshint": "0.7.2",
     "grunt-contrib-uglify": "0.3.2",
     "grunt-shell-spawn": "0.3.0",
     "grunt-mocha-test": "0.8.1",
-    "grunt-cli": "0.1.13"
+    "grunt-cli": "0.1.13",
+    "jsx-loader": "petehunt/jsx-loader",
+    "mocha": "1.16.2",
+    "react-tools": "0.8.0",
+    "style-loader": "0.6.0",
+    "testem": "0.6.8",
+    "url-loader": "0.5.1",
+    "webpack": "0.11.0"
   },
   "scripts": {
     "start": "webpack --watch --debug src/main.js build/clamshell.js",
