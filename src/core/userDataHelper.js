@@ -18,11 +18,34 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var _ = require('underscore');
 
-var notesHelper = {
+var userDataHelper = {
   getParentMessageId: function(thread) {
     var parentNote = _.findWhere(thread, { parentmessage : null });
     return parentNote.id;
+  },
+  getThread: function(team, parentmessageId) {
+
+    var notesInThread = _.where(team.notes, {parentmessage: parentmessageId});
+    var parentNote = _.findWhere(team.notes, {id: parentmessageId});
+
+    var thread;
+
+    if(notesInThread.length > 0){
+      notesInThread.push(parentNote);
+      thread = _.sortBy(notesInThread, function(note){ return note.timestamp; });
+    }else{
+      thread = [parentNote];
+    }
+
+    return thread;
+  },
+  getTeam: function(userTeams, groupId) {
+    return _.find(userTeams,
+      function(team){
+        return groupId === team.id;
+      }
+    );
   }
 };
 
-module.exports = notesHelper;
+module.exports = userDataHelper;

@@ -34,6 +34,7 @@ module.exports = function(api, host, superagent) {
       localStorage.setItem('auth_token', token);
       localStorage.setItem('auth_id', userid);
       console.log('[production] session saved');
+      api.log('[production] session saved');
     }
 
     if (newToken != null) {
@@ -44,6 +45,7 @@ module.exports = function(api, host, superagent) {
           }
           platform.refreshUserToken(token,newUserid,function(error,sessionData){
             console.log('[production] token refreshed');
+            api.log('[production] token refreshed');
             saveSession(sessionData.userid,sessionData.token);
           });
         },
@@ -58,7 +60,7 @@ module.exports = function(api, host, superagent) {
     return Boolean(token);
   };
 
-  api.user.deleteSession = function() {
+  api.user.deleteSession = function(callback) {
     token = null;
     userid = null;
     var localStorage = window.localStorage;
@@ -66,8 +68,11 @@ module.exports = function(api, host, superagent) {
 
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_id');
+      console.log('[production] session removed');
+      api.log('[production] session removed');
+      return callback(true);
     }
-    console.log('[production] Session removed');
+    return callback(false);
   };
 
   api.user.loadSession = function(callback) {
@@ -78,12 +83,11 @@ module.exports = function(api, host, superagent) {
       if (token && userid) {
         saveSession(userid,token);
       }
-      callback();
+      return callback(true);
+      api.log('[production] session loaded');
+      console.log('[production] session loaded');
     }
-    else {
-      callback();
-    }
-    console.log('[production] Session loaded');
+    return callback(false);
   };
 
   api.user.get = function() {
@@ -100,13 +104,15 @@ module.exports = function(api, host, superagent) {
   };
 
   api.user.login = function(username, password,callback) {
-    console.log('Logining in ...');
+    console.log('logging in ...');
+    api.log('logging in ...');
     platform.login({username:username,password:password},function(error, loginData){
       if(error){
         return callback(error);
       }
       if(loginData){
-        console.log('[production] Login success');
+        console.log('[production] login success');
+        api.log('[production] login success');
         user = loginData.user;
         saveSession(loginData.userid,loginData.token);
       }
@@ -125,6 +131,7 @@ module.exports = function(api, host, superagent) {
         }
         team.notes = notes;
         console.log('[production] got the team and notes');
+        api.log('[production] got the team and notes');
         return callback(null,team);
       });
     });
@@ -144,25 +151,41 @@ module.exports = function(api, host, superagent) {
     start.setDate(start.getDate()-21);
 
     var end = new Date();
+    console.log('[production] getting all messages ... ');
+    api.log('[production] getting all messages ... ');
     platform.getAllMessagesForTeam(groupId,start,end,token,function(error,messages){
+      console.log('[production] got all messages');
+      api.log('[production] got all messages');
       callback(error, messages);
     });
   };
 
   api.notes.getThread = function(groupId,callback) {
+    console.log('[production] getting thread ... ');
+    api.log('[production] getting thread ... ');
     platform.getAllMessagesForTeam(groupId,token,function(error,messages){
+      console.log('[production] got thread');
+      api.log('[production] got thread');
       callback(error, messages);
     });
   };
 
   api.notes.reply = function(comment,callback) {
+    console.log('[production] adding reply ... ');
+    api.log('[production] adding reply ... ');
     platform.replyToMessageThread(comment.parentmessage,comment,token,function(error,id){
+      console.log('[production] added reply');
+      api.log('[production] added reply');
       callback(error);
     });
   };
 
   api.notes.add = function(message,callback) {
+    console.log('[production] adding thread ... ');
+    api.log('[production] adding thread ... ');
     platform.startMessageThread(message.groupid,message,token,function(error,id){
+      console.log('[production] added thread ... ');
+      api.log('[production] added thread ... ');
       callback(error);
     });
   };

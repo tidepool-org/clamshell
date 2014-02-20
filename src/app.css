@@ -1,9 +1,106 @@
 body { 
-    padding-top: 70px;
-    background-color: #F7F7F8;
+  padding-top: 50px;
+  background-color: #F7F7F8;
 }
 
 .footer-btn{
-	width: 100%;
-	height: 50px;
+  width: 100%;
+  height: 50px;
+}
+
+/* MessageFooter*/
+
+.messagefooter{
+	background-color: #E6E5E5;
+	background-image: none;
+}
+
+/* ListNavBar*/
+
+.back-icon {
+  display: block;
+  background: url('images/icon_back.png');
+  background-size: 32px 32px;
+  width: 32px;
+  height: 32px;
+  margin-top: 10px;
+}
+
+
+.logout-icon {
+  display: block;
+  background: url('images/icon_logo.png');
+  background-size: 32px 32px;
+  width: 32px;
+  height: 32px;
+  margin-top: 10px;
+}
+
+.dropdown-icon {
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+  background: url('images/icon_dropdown.png');
+  background-size: 32px 32px;
+}
+
+.listnavbar {
+	background-color: #89C1CE;
+	background-image: none;
+}
+
+.dropdown-menu {
+  
+}
+
+/* full width drop down*/
+.yamm .nav,
+.yamm .collapse,
+.yamm .dropup,
+.yamm .dropdown {
+  position: static;
+}
+.yamm .container {
+  position: relative;
+}
+.yamm .dropdown-menu {
+  left: auto;
+}
+.yamm .nav.navbar-right .dropdown-menu {
+  left: auto;
+  right: 0;
+}
+.yamm .yamm-content {
+  padding: 20px 30px;
+}
+.yamm .dropdown.yamm-fw .dropdown-menu {
+  left: 0;
+  right: 0;
+}
+
+/* Login */
+
+.blip-logo {
+  background-image: url('images/blip_logo.png');
+  background-repeat:no-repeat;
+  background-position:center;
+  min-height: 145px;
+  min-width: 145px;
+}
+
+.tidepool-logo {
+  background-image: url('images/tidepool_logo.png');
+  background-repeat:no-repeat;
+  min-height: 21px;
+  min-width: 186px;
+  margin-bottom: 50px;
+}
+
+/* Notes */
+.note-image{
+	background-image: url('images/profile_default.png');
+  	background-repeat:no-repeat;
+  	background-position: 50% 50%;
+  	min-height: 60px;
+  	min-width: 60px;
 }

@@ -13,14 +13,14 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-var bows = window.bows;
-
-var api = {
-  user: {
-  	team:{},
-  	patients:{}
-  },
-  notes:{}
+module.exports = function(bows) {
+  var api = {
+    log: bows('Api'),
+    user: {
+      team:{},
+      patients:{}
+    },
+    notes:{}
+  };
+  return api;
 };
-
-module.exports = api;

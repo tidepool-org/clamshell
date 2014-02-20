@@ -39,7 +39,7 @@ var UserMessage = require('./components/usermessage/UserMessage');
 /*jshint unused:false */
 
 //core functionality
-var api = require('./core/api');
+var api = require('./core/api')(bows);
 
 if(false){
   console.log('mock setup');
@@ -53,8 +53,7 @@ if(false){
 var app = {
   log : bows('App'),
   api : api,
-  teamHelper : require('./core/teamHelper'),
-  notesHelper : require('./core/notesHelper')
+  dataHelper : require('./core/userDataHelper')
 };
 
 var routes = {
@@ -83,7 +82,6 @@ var ClamShellApp = React.createClass({
       userGroupsData : null,
       selectedGroup : null,
       selectedThread : null,
-      loggingOut : false,
       userMessage : null
     };
   },
@@ -91,8 +89,10 @@ var ClamShellApp = React.createClass({
   componentDidMount: function () {
 
     console.log('setup ...');
+    app.log('setup ...');
     if (this.state.authenticated) {
       console.log('authenticated ...');
+      app.log('authenticated ...');
 
       this.fetchUserData(function(){
         this.setState({
@@ -113,13 +113,14 @@ var ClamShellApp = React.createClass({
     router.init();
   },
 
-  //load the user and then thier groups and those groups messages
+  //---------- Data Loading ----------
   fetchUserData: function(callback) {
     var self = this;
 
-    api.user.team.get(function(err, team) {
-      if(err){
-        console.log(err);
+    api.user.team.get(function(error, team) {
+      if(error){
+        console.log(error);
+        app.log(error);
         self.setState({routeName : routes.error, userMessage : err });
         return;
       }
@@ -130,9 +131,10 @@ var ClamShellApp = React.createClass({
 
   fetchPatientsData: function(callback) {
     var self = this;
-    api.user.patients.get(function(err, patients) {
+    api.user.patients.get(function(error, patients) {
       if(err){
-        console.log(err);
+        app.log(error);
+        console.log(error);
         self.setState({routeName : routes.error, userMessage : err });
         return;
       }
@@ -145,17 +147,27 @@ var ClamShellApp = React.createClass({
   //---------- App Handlers ----------
 
   handleLogout:function(){
-    var self = this;
-    console.log('## TODO - handleLogout ##');
-    /*
-    app.auth.logout(function(){
-      self.setState(self.initializeAppState());
-    });
-*/
+    console.log('logging out');
+    api.user.deleteSession(function(success){
+      if(success){
+        app.log('logged out');
+        console.log('logged out');
+        this.setState({
+          routeName: routes.login,
+          authenticated: false
+        });
+        return;
+      }
+    }.bind(this));
   },
 
   handleBack:function(){
     var previousRoute = this.state.previousRoute;
+    if(!previousRoute){
+      app.log('route was not set for some reason');
+      console.log('route was not set for some reason');
+      previousRoute = routes.messagesForAllTeams;
+    }
     this.setState({routeName:previousRoute});
   },
 
@@ -178,19 +190,15 @@ var ClamShellApp = React.createClass({
       messagesId = mostRecentMessageInThread.parentmessage;
     }
 
-    var team = app.teamHelper.getTeam(this.state.userGroupsData,mostRecentMessageInThread.groupid);
-    var thread = app.teamHelper.getThread(team,messagesId);
+    var team = app.dataHelper.getTeam(this.state.userGroupsData,mostRecentMessageInThread.groupid);
+    var thread = app.dataHelper.getThread(team,messagesId);
 
-    this.setState(
-      {selectedThread : thread,
-       selectedGroup : team,
+    this.setState({
+      selectedThread : thread,
+      selectedGroup : team,
       routeName : routes.messageThread,
-      previousRoute : this.state.routeName}
-    );
-  },
-
-  handleStartingNewConversation:function(){
-    this.setState({routeName:routes.startMessageThread,previousRoute : this.state.routeName});
+      previousRoute : this.state.routeName
+    });
   },
 
   handleStartConversation:function(note){
@@ -203,7 +211,14 @@ var ClamShellApp = React.createClass({
     };
 
     app.api.notes.add(thread,function(error){
-      console.log('thread started ');
+      console.log('thread started');
+      app.log('thread started');
+      if(error){
+        console.log(error);
+        app.log(error);
+        self.setState({routeName : routes.error, userMessage : error });
+        return;
+      }
     });
 
     var updatedTeamNotes = this.state.selectedGroup;
@@ -217,7 +232,7 @@ var ClamShellApp = React.createClass({
   handleAddingToConversation:function(note){
 
     var thread = this.state.selectedThread;
-    var parentId = app.notesHelper.getParentMessageId(thread);
+    var parentId = app.dataHelper.getParentMessageId(thread);
 
     var comment = {
       parentmessage : parentId,
@@ -229,25 +244,30 @@ var ClamShellApp = React.createClass({
 
     app.api.notes.reply(comment,function(error){
       console.log('reply added ');
+      app.log('reply added');
+      if(error){
+        console.log(error);
+        app.log(error);
+        self.setState({routeName : routes.error, userMessage : error });
+        return;
+      }
     });
 
     thread.push(comment);
-
     this.setState({selectedThread: thread});
-
   },
 
-  handleGroupChanged:function(e){
+  handleGroupChanged:function(selectedGroup){
     var group = _.find(
       this.state.userGroupsData, function(group){
-        return e.groupId == group.id;
+        return selectedGroup.groupId == group.id;
       });
 
-    this.setState(
-      {routeName:routes.messagesForSelectedTeam,
+    this.setState({
+      routeName:routes.messagesForSelectedTeam,
       selectedGroup:group,
-      previousRoute : this.state.routeName}
-    );
+      previousRoute : this.state.routeName
+    });
   },
 
   //---------- Rendering Layouts ----------
@@ -329,7 +349,6 @@ var ClamShellApp = React.createClass({
       );
   },
 
-  //render layout based on route
   renderContent:function(){
     var routeName = this.state.routeName;
 

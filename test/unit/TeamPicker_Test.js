@@ -19,7 +19,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var TeamPicker = require('../../build/components/team/pickerTeamPicker');
+var TeamPicker = require('../../build/components/header/TeamPicker');
 
 var team = require('../../demo/data').team;
 

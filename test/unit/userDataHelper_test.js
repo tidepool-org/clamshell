@@ -18,14 +18,23 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var teamHelper = require('../../src/core/teamHelper');
+var userDataHelper = require('../../src/core/userDataHelper');
 var teamData = require('../../demo/data');
+var team = teamData.team;
+var patients = teamData.patients;
 
-describe('teamHelper', function() {
+describe('userDataHelper', function() {
+
+    it('getParentMessageId returns id of the parent message', function() {
+    	var parentId = '9233c2ae-7bad-41f5-9295-e73f0437295b';
+    	var thread = userDataHelper.getThread(team, parentId);
+        var foundParentId = userDataHelper.getParentMessageId(thread);
+        expect(foundParentId).to.equal(parentId);
+    });
 
     it('getThread returns notes in a thread', function() {
 
-        var thread = teamHelper.getThread(teamData.team,'9233c2ae-7bad-41f5-9295-e73f0437295b');
+        var thread = userDataHelper.getThread(team,'9233c2ae-7bad-41f5-9295-e73f0437295b');
         expect(thread).to.exist;
         expect(thread).to.be.a('array');
         expect(thread.length).to.equal(4);
@@ -35,12 +44,12 @@ describe('teamHelper', function() {
 
     	var groupToFind = '07abb942-5c77-4c87-aa94-12c08b805d7f';
 
-    	var groups = teamData.patients;
-    	groups.push(teamData.team);
+    	var groups = patients;
+    	groups.push(team);
 
-        var team = teamHelper.getTeam(groups,groupToFind);
-        expect(team).to.exist;
-        expect(team.id).to.equal(groupToFind);
+        var foundTeam = userDataHelper.getTeam(groups,groupToFind);
+        expect(foundTeam).to.exist;
+        expect(foundTeam.id).to.equal(groupToFind);
     });
 
 });
