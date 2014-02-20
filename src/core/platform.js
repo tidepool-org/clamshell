@@ -113,7 +113,7 @@ module.exports = function(api, host, superagent) {
         user = loginData.user;
         saveSession(loginData.userid,loginData.token);
       }
-      callback();
+      return callback();
     });
   };
 
@@ -121,7 +121,7 @@ module.exports = function(api, host, superagent) {
     platform.getGroupForUser(userid,'team',token,function(error,team){
       if(error){
         api.log.error(error);
-        callback(error,null);
+       return callback(error,null);
       }
       api.notes.get(team.id,function(notesError,notes){
         if(notesError){
@@ -151,7 +151,7 @@ module.exports = function(api, host, superagent) {
     api.log('[production] getting all messages ... ');
     platform.getAllMessagesForTeam(groupId,start,end,token,function(error,messages){
       api.log('[production] got all messages');
-      callback(error, messages);
+      return callback(error, messages);
     });
   };
 
@@ -159,7 +159,7 @@ module.exports = function(api, host, superagent) {
     api.log('[production] getting thread ... ');
     platform.getAllMessagesForTeam(groupId,token,function(error,messages){
       api.log('[production] got thread');
-      callback(error, messages);
+      return callback(error, messages);
     });
   };
 
@@ -167,7 +167,7 @@ module.exports = function(api, host, superagent) {
     api.log('[production] adding reply ... ');
     platform.replyToMessageThread(comment.parentmessage,comment,token,function(error,id){
       api.log('[production] added reply');
-      callback(error);
+      return callback(error);
     });
   };
 
@@ -175,7 +175,7 @@ module.exports = function(api, host, superagent) {
    api.log('[production] adding thread ... ');
     platform.startMessageThread(message.groupid,message,token,function(error,id){
       api.log('[production] added thread ... ');
-      callback(error);
+      return callback(error);
     });
   };
 };
