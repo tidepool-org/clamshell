@@ -5,6 +5,4 @@ rm -rf build
 npm install .
 
 # run tests
-./node_modules/.bin/jsx src/ build/
-./node_modules/.bin/browserify test/**/*.js -o build/browserified.js
-./node_modules/.bin/testem
+./node_modules/.bin/grunt test

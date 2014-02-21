@@ -39,13 +39,13 @@ module.exports = function(grunt) {
         buildApp: {
           // load config and start app at same time
           command: [
-            'webpack --debug src/main.js build/clamshell.js'
+            './node_modules/.bin/webpack --debug src/main.js build/clamshell.js'
           ]
         },
         testBuild: {
           command: [
-            'jsx src/ build/',
-            'browserify test/**/*.js -o build/browserified.js'
+            './node_modules/.bin/jsx src/ build/',
+            './node_modules/.bin/browserify test/**/*.js -o build/browserified.js'
           ].join('&&'),
           options: {
             async: false
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
         },
         testRun: {
           command: [
-            'testem'
+            './node_modules/.bin/testem ci'
           ]
         }
       }
