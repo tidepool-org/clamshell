@@ -155,9 +155,9 @@ module.exports = function(api, host, superagent) {
     });
   };
 
-  api.notes.getThread = function(groupId,callback) {
+  api.notes.getThread = function(messageId,callback) {
     api.log('[production] getting thread ... ');
-    platform.getAllMessagesForTeam(groupId,token,function(error,messages){
+    platform.getMessageThread(messageId,token,function(error,messages){
       api.log('[production] got thread');
       return callback(error, messages);
     });
