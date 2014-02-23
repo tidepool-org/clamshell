@@ -69,7 +69,7 @@ module.exports = function(api, host, superagent) {
       api.log('[production] session removed');
       return callback(true);
     }
-    api.warn('[production] issue removing session');
+    api.log.error('[production] issue removing session');
     return callback(false);
   };
 
@@ -78,14 +78,18 @@ module.exports = function(api, host, superagent) {
     if (localStorage && localStorage.getItem) {
       token = localStorage.getItem('auth_token');
       userid = localStorage.getItem('auth_id');
-      if (token && userid) {
-        saveSession(userid,token);
-      }
-      return callback(true);
       api.log('[production] session loaded');
+      if (token && userid) {
+        platform.refreshUserToken(token,userid,function(error,sessionData){
+            api.log('[production] token refreshed');
+            saveSession(sessionData.userid,sessionData.token);
+            return callback(true);
+        });
+      }
+    } else {
+      api.log.error('[production] issue loading session');
+      return callback(false);
     }
-    api.warn('[production] issue loading session');
-    return callback(false);
   };
 
   api.user.get = function() {
