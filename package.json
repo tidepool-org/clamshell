@@ -9,6 +9,7 @@
     "bows": "0.3.0",
     "director": "1.2.2",
     "envify": "1.2.1",
+    "express": "3.4.8",
     "moment": "2.5.1",
     "platform-client": "tidepool-org/platform-client",
     "underscore": "1.5.2",
@@ -33,7 +34,6 @@
     "webpack": "0.11.0"
   },
   "scripts": {
-    "start": "webpack --watch --debug src/main.js build/clamshell.js",
-    "test": "jsx src/ build/ ; browserify test/**/*.js -o build/browserified.js"
+    "start": "webpack --watch --debug src/main.js build/clamshell.js"
   }
 }

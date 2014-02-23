@@ -1,7 +1,10 @@
-node_modules
-*~
+app_build
 build
-.DS_Store
+
+node_modules
 npm-debug.log
+
+.DS_Store
+*~
 .idea
 *.iml

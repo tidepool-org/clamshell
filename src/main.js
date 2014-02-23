@@ -16,6 +16,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var app = require('./app');
+var clamshellApp = require('./app');
 
-app.start();
+clamshellApp.start();

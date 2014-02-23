@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         },
         my_target: {
           files: {
-            'build/clamshell.min.js': ['build/clamshell.js']
+            'build/clamshell.min.js': ['app_build/clamshell.js']
           }
         }
       },
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
         buildApp: {
           // load config and start app at same time
           command: [
-            './node_modules/.bin/webpack --debug src/main.js build/clamshell.js'
+            './node_modules/.bin/webpack --debug src/main.js app_build/clamshell.js'
           ]
         },
         testBuild: {
