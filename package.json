@@ -7,9 +7,11 @@
   "author": "Tidepool",
   "dependencies": {
     "bows": "0.3.0",
+    "bunyan": "0.22.1",
     "director": "1.2.2",
     "envify": "1.2.1",
     "express": "3.4.8",
+    "lodash": "2.4.1",
     "moment": "2.5.1",
     "platform-client": "tidepool-org/platform-client",
     "underscore": "1.5.2",

@@ -21,6 +21,7 @@ var path = require('path');
 var app = express();
 
 var envConfig = require('./src/env');
+var log = require('./log.js')('clamshellServer.js');
 
 var servicePort;
 
@@ -28,8 +29,6 @@ if (envConfig.httpPort != null) {
   servicePort = envConfig.httpPort;
 } else if (envConfig.httpsPort != null) {
   servicePort = envConfig.httpsPort;
-}else{
-  servicePort = 3000;
 }
 
 app.use('/app_build', express.static('app_build'));
@@ -40,5 +39,5 @@ app.get('/', function(req,res) {
 });
 
 app.listen(servicePort, function() {
-  console.log('clamshell server started on port', servicePort);
+  log.info('clamshell server started on port', servicePort);
 });
