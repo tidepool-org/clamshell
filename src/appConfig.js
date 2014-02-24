@@ -17,22 +17,16 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 module.exports = (function(){
-  var env = {};
+  var config = {};
 
   //app version
-  env.version = process.env.VERSION || '';
-  
+  config.version = process.env.VERSION || '';
+
   //in demo mode?
-  env.demo = process.env.DEMO || false;
-  
+  config.demo = process.env.DEMO || false;
+
   //the platform
-  env.apiHost = process.env.API_HOST || 'https://devel-api.tidepool.io';
+  config.apiHost = process.env.API_HOST || 'https://devel-api.tidepool.io';
 
-  // The port to attach an HTTP listener, if null, no HTTP listener will be attached
-  env.httpPort = process.env.PORT || null;
-
-  // The port to attach an HTTPS listener, if null, no HTTPS listener will be attached
-  env.httpsPort = process.env.HTTPS_PORT || null;
-
-  return env;
+  return config;
 })();

@@ -6,11 +6,13 @@
   "repository": "https://github.com/tidepool-org/clamshell.git",
   "author": "Tidepool",
   "dependencies": {
+    "amoeba": "0.0.3",
     "bows": "0.3.0",
     "bunyan": "0.22.1",
     "director": "1.2.2",
     "envify": "1.2.1",
     "express": "3.4.8",
+    "hakken": "0.1.4",
     "lodash": "2.4.1",
     "moment": "2.5.1",
     "platform-client": "tidepool-org/platform-client",

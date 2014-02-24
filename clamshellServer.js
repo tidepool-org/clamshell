@@ -17,18 +17,58 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var express = require('express');
-var path = require('path');
 var app = express();
 
-var envConfig = require('./src/env');
+var envConfig = require('./envConfig');
 var log = require('./log.js')('clamshellServer.js');
 
+var hakkenClient;
 var servicePort;
+var serviceDescriptor;
+var useDiscovery = false;
 
-if (envConfig.httpPort != null) {
-  servicePort = envConfig.httpPort;
-} else if (envConfig.httpsPort != null) {
-  servicePort = envConfig.httpsPort;
+function setupDiscovery(){
+  log.info('setting up service discovery');
+  useDiscovery = true;
+  hakkenClient = require('hakken')(envConfig.discovery).client();
+  hakkenClient.start();
+
+  var serviceDescriptor = { service: envConfig.serviceName };
+  var servicePort;
+
+  if (envConfig.httpsPort != null) {
+    servicePort = envConfig.httpPort;
+    serviceDescriptor['host'] = envConfig.publishHost + ':' + envConfig.httpsPort;
+    serviceDescriptor['protocol'] = 'https';
+  }
+  else if (envConfig.httpPort != null) {
+    servicePort = envConfig.httpPort;
+    serviceDescriptor['host'] = envConfig.publishHost + ':' + envConfig.httpPort;
+    serviceDescriptor['protocol'] = 'http';
+  }
+}
+
+function publishService(){
+  log.info('Publishing service[%j]', serviceDescriptor);
+  hakkenClient.publish(serviceDescriptor);
+}
+
+function setupLocal(){
+  log.info('setting up local service with no service discovery');
+  servicePort;
+  if (envConfig.httpsPort != null) {
+    servicePort = envConfig.httpPort;
+  }
+  else if (envConfig.httpPort != null) {
+    servicePort = envConfig.httpPort;
+  }
+}
+
+
+if(envConfig.discovery){
+  setupDiscovery();
+}else{
+  setupLocal();
 }
 
 app.use('/app_build', express.static('app_build'));
@@ -40,4 +80,7 @@ app.get('/', function(req,res) {
 
 app.listen(servicePort, function() {
   log.info('clamshell server started on port', servicePort);
+  if(useDiscovery){
+    publishService();
+  }
 });

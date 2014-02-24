@@ -26,7 +26,7 @@ var Router = require('director').Router;
 var bows = require('bows');
 var _ = require('lodash');
 
-var config = require('./env');
+var config = require('./appConfig');
 
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
