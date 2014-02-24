@@ -13,26 +13,32 @@ FOR A PARTICULAR PURPOSE. See the License for more details.
 You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
- */
+*/
 'use strict';
 
-module.exports = (function(){
-  var env = {};
+var express = require('express');
+var path = require('path');
+var app = express();
 
-  //app version
-  env.version = process.env.VERSION || '';
-  
-  //in demo mode?
-  env.demo = process.env.DEMO || false;
-  
-  //the platform
-  env.apiHost = process.env.API_HOST || 'https://devel-api.tidepool.io';
+var envConfig = require('./src/env');
 
-  // The port to attach an HTTP listener, if null, no HTTP listener will be attached
-  env.httpPort = process.env.PORT || null;
+var servicePort;
 
-  // The port to attach an HTTPS listener, if null, no HTTPS listener will be attached
-  env.httpsPort = process.env.HTTPS_PORT || null;
+if (envConfig.httpPort != null) {
+  servicePort = envConfig.httpPort;
+} else if (envConfig.httpsPort != null) {
+  servicePort = envConfig.httpsPort;
+}else{
+  servicePort = 3000;
+}
 
-  return env;
-})();
+app.use('/app_build', express.static('app_build'));
+app.use('/thirdparty', express.static('thirdparty'));
+
+app.get('/', function(req,res) {
+  res.sendfile('index.html');
+});
+
+app.listen(servicePort, function() {
+  console.log('clamshell server started on port', servicePort);
+});
