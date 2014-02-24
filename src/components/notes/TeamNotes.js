@@ -21,7 +21,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var React = require('react');
-var _ = require('underscore');
+var _ = require('lodash');
 var sundial = require('moment');
 
 var Note = require('./Note');

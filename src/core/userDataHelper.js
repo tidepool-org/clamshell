@@ -16,7 +16,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 var userDataHelper = {
   getParentMessageId: function(thread) {
