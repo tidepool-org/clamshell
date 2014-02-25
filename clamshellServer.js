@@ -25,16 +25,14 @@ var log = require('./log.js')('clamshellServer.js');
 var hakkenClient;
 var servicePort;
 var serviceDescriptor;
-var useDiscovery = false;
 
 function setupDiscovery(){
   log.info('setting up service discovery');
-  useDiscovery = true;
   hakkenClient = require('hakken')(envConfig.discovery).client();
   hakkenClient.start();
 
-  var serviceDescriptor = { service: envConfig.serviceName };
-  var servicePort;
+  serviceDescriptor = { service: envConfig.serviceName };
+  servicePort;
 
   if (envConfig.httpsPort != null) {
     servicePort = envConfig.httpPort;
@@ -64,7 +62,6 @@ function setupLocal(){
   }
 }
 
-
 if(envConfig.discovery){
   setupDiscovery();
 }else{
@@ -80,7 +77,7 @@ app.get('/', function(req,res) {
 
 app.listen(servicePort, function() {
   log.info('clamshell server started on port', servicePort);
-  if(useDiscovery){
+  if(envConfig.discovery){
     publishService();
   }
 });
