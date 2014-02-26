@@ -23,13 +23,31 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+var btnDisabled = 'btn btn-default disabled';
+var btnEnabled = 'btn btn-default';
+
 //Form for adding Comments
 var MessageFooter = React.createClass({
+
+  getInitialState: function() {
+    return {btnState: btnDisabled};
+  },
 
   handleMessage: function() {
     var messageText = this.refs.messageText.getDOMNode().value.trim();
     this.props.onFooterAction({text: messageText});
     this.refs.messageText.getDOMNode().value = '';
+    return false;
+  },
+
+  handleChange: function() {
+    var messageText = this.refs.messageText.getDOMNode().value.trim();
+
+    if(messageText.length > 0){
+      this.setState({btnState: btnEnabled});
+      return false;
+    }
+    this.setState({btnState: btnDisabled});
     return false;
   },
 
@@ -39,12 +57,10 @@ var MessageFooter = React.createClass({
       /* jshint ignore:start */
       <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
       <form className='navbar-form'>
-        <div className='col-xs-8 col-sm-10 form-group'>
-          <textarea type='textarea' rows='1' className='form-control' ref='messageText' placeholder={this.props.messagePrompt} />
+        <div className='col-xs-9 col-sm-10 form-group'>
+          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onChange={this.handleChange} placeholder={this.props.messagePrompt} />
         </div>
-        <div className='form-group'>
-        <button type='submit' ref='sendBtn' className='btn btn-default ' onClick={this.handleMessage}>{this.props.btnMessage}</button>
-        </div>
+        <button type='submit' ref='sendBtn' className={this.state.btnState} onClick={this.handleMessage}>{this.props.btnMessage}</button>
       </form>
       </nav>
       /* jshint ignore:end */
