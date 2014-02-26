@@ -58,7 +58,7 @@ var app = {
 
 var routes = {
   login:'login',
-  error:'error',
+  message:'message',
   messagesForAllTeams:'allGroupsConversations',
   messagesForSelectedTeam:'groupConversations',
   messageThread: 'conversationThread',
@@ -73,7 +73,7 @@ var ClamShellApp = React.createClass({
   //starting state for the app when first used or after logout
   initializeAppState : function(){
     return {
-      routeName : routes.login,
+      routeName : routes.message,
       previousRoute : null,
       authenticated : null,
       loggedInUser : null,
@@ -88,6 +88,15 @@ var ClamShellApp = React.createClass({
 
     app.log('setup ...');
 
+    var router = new Router({
+      '/': this.setState.bind(this, {routeName: routes.login}),
+      '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
+      '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
+      '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
+      '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
+    });
+    router.init();
+
     api.user.isAuthenticated(function(authenticated){
       if(authenticated){
         app.log('authenticated so lets getdata');
@@ -98,15 +107,11 @@ var ClamShellApp = React.createClass({
             loggedInUser : app.api.user.get()
           });
         }.bind(this));
+      } else {
+        this.setState({
+          routeName : routes.login
+        });
       }
-      var router = new Router({
-        '/': this.setState.bind(this, {routeName: routes.login}),
-        '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
-        '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
-        '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
-        '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
-      });
-      router.init();
     }.bind(this));
 
   },
@@ -117,7 +122,7 @@ var ClamShellApp = React.createClass({
     api.user.team.get(function(error, team) {
       if(error){
         app.log.error(error);
-        this.setState({routeName : routes.error, userMessage : error });
+        this.setState({routeName : routes.message, userMessage : error });
         return;
       }
       this.setState({userGroupsData:[team]});
@@ -130,7 +135,7 @@ var ClamShellApp = React.createClass({
     api.user.patients.get(function(error, patients) {
       if(error){
         app.log.error(error);
-        this.setState({routeName : routes.error, userMessage : error });
+        this.setState({routeName : routes.message, userMessage : error });
         return;
       }
       var all = this.state.userGroupsData.concat(patients);
@@ -207,7 +212,7 @@ var ClamShellApp = React.createClass({
       app.log('thread started');
       if(error){
         app.log.error(error);
-        this.setState({routeName : routes.error, userMessage : error });
+        this.setState({routeName : routes.message, userMessage : error });
         return;
       }
     }.bind(this));
@@ -237,7 +242,7 @@ var ClamShellApp = React.createClass({
       app.log('reply added');
       if(error){
         app.log.error(error);
-        this.setState({routeName : routes.error, userMessage : error });
+        this.setState({routeName : routes.message, userMessage : error });
         return;
       }
     }.bind(this));
@@ -328,7 +333,7 @@ var ClamShellApp = React.createClass({
       );
   },
 
-  renderErrorLayout:function(){
+  renderMessageLayout:function(){
     return (
       /* jshint ignore:start */
       <Layout>
@@ -352,13 +357,13 @@ var ClamShellApp = React.createClass({
       else if(routes.messageThread === routeName){
         return this.renderMessageThread();
       }
-      else if(routes.error === routeName){
-        return this.renderErrorLayout();
+      else if(routes.message === routeName){
+        return this.renderMessageLayout();
       }
 
     } else {
-      if(routes.error === routeName){
-        return this.renderErrorLayout();
+      if(routes.message === routeName){
+        return this.renderMessageLayout();
       }else{
         return this.renderLoginLayout();
       }

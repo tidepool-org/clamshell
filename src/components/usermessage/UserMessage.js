@@ -25,15 +25,44 @@ var React = require('react');
 
 var UserMessage = React.createClass({
 
+  renderLogos: function(){
+    return (
+      /* jshint ignore:start */
+      <div className='logos'>
+        <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
+          <div className='tidepool-logo' />
+        </div>
+        <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
+          <div className='blip-logo' />
+        </div>
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderMessage: function(){
+    return (
+      /* jshint ignore:start */
+      <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
+        {this.props.message}
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
   render: function() {
+
+    var logos = this.renderLogos();
+    var message = this.renderMessage();
 
     return (
        /* jshint ignore:start */
-      <div className='login-message col-sm-offset-2 col-sm-3 js-login-message'>
-        {this.props.message}
+      <div className='user-message'>
+      {logos}
+      {message}
       </div>
        /* jshint ignore:end */
-      );
+    );
   }
 });
 
