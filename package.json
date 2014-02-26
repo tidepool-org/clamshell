@@ -37,6 +37,6 @@
     "webpack": "0.11.0"
   },
   "scripts": {
-    "start": "webpack --watch --debug src/main.js build/clamshell.js"
+    "start": "webpack --watch --debug src/main.js app_build/clamshell.js"
   }
 }
