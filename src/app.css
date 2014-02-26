@@ -3,15 +3,11 @@ body {
   background-color: #F7F7F8;
 }
 
-.footer-btn{
-  width: 100%;
-  height: 50px;
-}
-
 /* MessageFooter*/
 
-.messagefooter{
-  
+.messagefooter 
+.message-text {
+  width: 100%;
 }
 
 /* ListNavBar*/
@@ -98,8 +94,28 @@ body {
 /* Notes */
 .note-image{
   background-image: url('images/profile_default.png');
- background-repeat:no-repeat;
- background-position: 50% 50%;
- min-height: 60px;
- min-width: 60px;
+  background-repeat:no-repeat;
+  background-position: 50% 50%;
+  min-height: 61px;
+  min-width: 61px;
+}
+
+/* Notes Lists */
+.list-group {
+  margin-bottom: 50px;
+}
+
+
+/* Notes */
+
+.note-header {
+  font-size: medium;
+}
+
+.note-when {
+  font-size: smaller;
+}
+
+.note-message {
+  font-size: initial;
 }
