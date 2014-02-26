@@ -57,12 +57,12 @@ var app = {
 };
 
 var routes = {
-  login:'login',
-  message:'message',
-  messagesForAllTeams:'allGroupsConversations',
-  messagesForSelectedTeam:'groupConversations',
-  messageThread: 'conversationThread',
-  startMessageThread:'newConversation'
+  login : 'login',
+  message : 'message',
+  messagesForAllTeams : 'allGroupsConversations',
+  messagesForSelectedTeam : 'groupConversations',
+  messageThread : 'conversationThread',
+  startMessageThread : 'newConversation'
 };
 
 var ClamShellApp = React.createClass({
@@ -88,19 +88,7 @@ var ClamShellApp = React.createClass({
 
     app.log('setup ...');
 
-    var router = new Router({
-      '/': this.setState.bind(this, {routeName: routes.login}),
-      '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
-      '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
-      '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
-      '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
-    });
-    router.init();
-
     api.user.isAuthenticated(function(authenticated){
-      
-      this.setState({ routeName : routes.message });
-
       if(authenticated){
         app.log('authenticated so lets getdata');
         this.fetchUserData(function(){
@@ -114,6 +102,15 @@ var ClamShellApp = React.createClass({
         this.setState({ routeName : routes.login });
       }
     }.bind(this));
+
+    var router = new Router({
+      '/': this.setState.bind(this, {routeName: routes.login}),
+      '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
+      '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
+      '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
+      '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
+    });
+    router.init();
 
   },
 
