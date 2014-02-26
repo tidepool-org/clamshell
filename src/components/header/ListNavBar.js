@@ -30,12 +30,12 @@ var ListNavBar = React.createClass({
     return (
       /* jshint ignore:start */
       <div className='listnavbar navbar navbar-default navbar-fixed-top yamm' >
-        <div className='col-xs-1'>
+        <div className='col-xs-2 col-sm-1'>
           <a href='#' ref='actionBtn' onClick={this.handleAction}>
             <span className={this.props.actionIcon}></span>
           </a>
         </div>
-        <h4 className='navbar-text text-center col-xs-10'>{this.props.title}</h4>
+        <h4 className='navbar-text text-center col-xs-8 col-sm-10'>{this.props.title}</h4>
         <span>
           {this.props.children}
         </span>
