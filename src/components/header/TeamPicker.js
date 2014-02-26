@@ -34,10 +34,11 @@ var TeamPicker = React.createClass({
 
     var groups = this.props.groups.map(function(group,i) {
       return (
-        <div key={i} ref='group' className='row col-xm-12'>
-          <div className='col-xm-2'>
+        <div key={i} ref='group' className='row list-group-item'>
+          <div ref='imgColumn' className='col-xs-3 col-sm-1'>
+            <div ref='authorImage' className="group-image"/>
           </div>
-          <div className='col-xs-offset-2 col-xm-10'>
+          <div className='col-xs-9 col-sm-11'>
             <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
               <p ref='groupName'>TODO: {group.id}</p>
             </a>
@@ -53,10 +54,8 @@ var TeamPicker = React.createClass({
             <a href='#' data-toggle='dropdown' className='dropdown-toggle'>
               <span className='caret'></span>
             </a>
-            <ul ref='groups' className='dropdown-menu'>
-              <li className='grid-demo'>
-                {groups}
-              </li>
+            <ul ref='groups' className='dropdown-menu list-group'>
+              {groups}
             </ul>
           </li>
         </ul>
