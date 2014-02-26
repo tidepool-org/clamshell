@@ -3,7 +3,10 @@ body {
   background-color: #F7F7F8;
 }
 
-/* MessageFooter*/
+/* MessageFooter
+
+- override form 
+*/
 
 .messagefooter 
 .message-text {
@@ -91,8 +94,8 @@ body {
   margin-bottom: 50px;
 }
 
-/* Notes */
-.note-image{
+/* Team Picker */
+.group-image {
   background-image: url('images/profile_default.png');
   background-repeat:no-repeat;
   background-position: 50% 50%;
@@ -100,13 +103,21 @@ body {
   min-width: 61px;
 }
 
+
 /* Notes Lists */
 .list-group {
   margin-bottom: 50px;
 }
 
-
 /* Notes */
+
+.note-image{
+  background-image: url('images/profile_default.png');
+  background-repeat:no-repeat;
+  background-position: 50% 50%;
+  min-height: 61px;
+  min-width: 61px;
+}
 
 .note-header {
   font-size: medium;

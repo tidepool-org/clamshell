@@ -56,9 +56,9 @@ var MessageFooter = React.createClass({
     return this.transferPropsTo(
       /* jshint ignore:start */
       <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
-      <form className='navbar-form'>
+      <form className='navbar-form row'>
         <div className='col-xs-9 col-sm-10 form-group'>
-          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onChange={this.handleChange} placeholder={this.props.messagePrompt} />
+          <textarea type='textarea' rows='1' className='message-text form-control' ref='messageText' onChange={this.handleChange} placeholder={this.props.messagePrompt} />
         </div>
         <button type='submit' ref='sendBtn' className={this.state.btnState} onClick={this.handleMessage}>{this.props.btnMessage}</button>
       </form>
