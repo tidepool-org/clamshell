@@ -311,7 +311,7 @@ var ClamShellApp = React.createClass({
       <NoteThread messages={this.state.selectedThread} />
       <MessageFooter
         messagePrompt='Type a comment here ...'
-        btnMessage='Comment'
+        btnMessage='Post'
         onFooterAction={this.handleAddingToConversation} />
       </Layout>
       /* jshint ignore:end */
