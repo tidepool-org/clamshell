@@ -35,10 +35,10 @@ var Login = React.createClass({
     return (
       /* jshint ignore:start */
       <div className='logos'>
-        <div className='col-xs-offset-4 col-xs-4 row'>
+        <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
           <div className='tidepool-logo' />
         </div>
-        <div className='col-xs-offset-4 col-xs-4 row'>
+        <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
           <div className='blip-logo' />
         </div>
       </div>
@@ -50,17 +50,17 @@ var Login = React.createClass({
       /* jshint ignore:start */
       <form className='login-form form-horizontal' role='form'>
         <div className='form-group'>
-          <div className='col-xs-offset-4 col-xs-4'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
             <input type='email' ref='emailFeild' id='inputEmail3' className='form-control' placeholder='Email' />
           </div>
         </div>
         <div className='form-group'>
-          <div className='col-xs-offset-4 col-xs-4'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
             <input type='password' ref='pwFeild' className='form-control' id='inputPassword3' placeholder='Password' />
           </div>
         </div>
         <div className='form-group'>
-          <div className='col-xs-offset-4 col-xs-4'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
             <a type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>Sign in</a>
           </div>
         </div>
@@ -74,7 +74,7 @@ var Login = React.createClass({
 
       return (
          /* jshint ignore:start */
-          <div className='col-xs-offset-4 col-xs-4 login-message js-login-message'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message js-login-message'>
             {message}
           </div>
 

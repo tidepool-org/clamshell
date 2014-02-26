@@ -38,11 +38,13 @@ var MessageFooter = React.createClass({
     return this.transferPropsTo(
       /* jshint ignore:start */
       <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
-      <form className='messagefooter-form navbar-form'>
-        <div className='form-group col-xs-10'>
+      <form className='navbar-form'>
+        <div className='col-xs-8 col-sm-10 form-group'>
           <textarea type='textarea' rows='1' className='form-control' ref='messageText' placeholder={this.props.messagePrompt} />
         </div>
-        <button type='submit' ref='sendBtn' className='btn btn-default col-xs-2' onClick={this.handleMessage}>{this.props.btnMessage}</button>
+        <div className='form-group'>
+        <button type='submit' ref='sendBtn' className='btn btn-default ' onClick={this.handleMessage}>{this.props.btnMessage}</button>
+        </div>
       </form>
       </nav>
       /* jshint ignore:end */
