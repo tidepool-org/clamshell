@@ -98,6 +98,9 @@ var ClamShellApp = React.createClass({
     router.init();
 
     api.user.isAuthenticated(function(authenticated){
+      
+      this.setState({ routeName : routes.message });
+
       if(authenticated){
         app.log('authenticated so lets getdata');
         this.fetchUserData(function(){
@@ -108,9 +111,7 @@ var ClamShellApp = React.createClass({
           });
         }.bind(this));
       } else {
-        this.setState({
-          routeName : routes.login
-        });
+        this.setState({ routeName : routes.login });
       }
     }.bind(this));
 
@@ -364,7 +365,7 @@ var ClamShellApp = React.createClass({
     } else {
       if(routes.message === routeName){
         return this.renderMessageLayout();
-      }else{
+      } else {
         return this.renderLoginLayout();
       }
     }
