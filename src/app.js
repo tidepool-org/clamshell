@@ -75,7 +75,7 @@ var ClamShellApp = React.createClass({
     return {
       routeName : routes.login,
       previousRoute : null,
-      authenticated : app.api.user.isAuthenticated(),
+      authenticated : null,
       loggedInUser : null,
       userGroupsData : null,
       selectedGroup : null,
@@ -87,26 +87,28 @@ var ClamShellApp = React.createClass({
   componentDidMount: function () {
 
     app.log('setup ...');
-    if (this.state.authenticated) {
-      app.log('authenticated ...');
 
-      this.fetchUserData(function(){
-        this.setState({
-          routeName: routes.messagesForAllTeams,
-          previousRoute : this.state.routeName,
-          loggedInUser : app.api.user.get()
-        });
-      }.bind(this));
-    }
+    api.user.isAuthenticated(function(authenticated){
+      if(authenticated){
+        app.log('authenticated so lets getdata');
+        this.fetchUserData(function(){
+          this.setState({
+            authenticated : authenticated,
+            routeName: routes.messagesForAllTeams,
+            loggedInUser : app.api.user.get()
+          });
+        }.bind(this));
+      }
+      var router = new Router({
+        '/': this.setState.bind(this, {routeName: routes.login}),
+        '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
+        '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
+        '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
+        '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
+      });
+      router.init();
+    }.bind(this));
 
-    var router = new Router({
-      '/': this.setState.bind(this, {routeName: routes.login}),
-      '/allGroupsConversations': this.setState.bind(this, {routeName: routes.messagesForAllTeams}),
-      '/groupConversations': this.setState.bind(this, {routeName: routes.messagesForSelectedTeam}),
-      '/conversationThread': this.setState.bind(this, {routeName: routes.messageThread}),
-      '/newConversation': this.setState.bind(this, {routeName: routes.startMessageThread})
-    });
-    router.init();
   },
 
   //---------- Data Loading ----------

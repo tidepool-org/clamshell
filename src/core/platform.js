@@ -53,9 +53,21 @@ module.exports = function(api, host, superagent) {
   }
 
   // ----- User -----
-
-  api.user.isAuthenticated = function() {
-    return Boolean(token);
+  api.user.isAuthenticated = function(callback) {
+    api.log('[production] is user authenticated?');
+    api.user.loadSession(function(authenticated){
+      api.log('[production] we have session data: ',authenticated);
+      //refresh token to check
+      platform.refreshUserToken(token,userid,function(error,sessionData){
+        if(error){
+          api.log.info('[production] token not refreshed, user not authenticated');
+          return callback(false);
+        }
+        api.log('[production] token checked and the user is authenticated');
+        saveSession(sessionData.userid,sessionData.token);
+        return callback(true);
+      });
+    });
   };
 
   api.user.deleteSession = function(callback) {
@@ -78,13 +90,12 @@ module.exports = function(api, host, superagent) {
     if (localStorage && localStorage.getItem) {
       token = localStorage.getItem('auth_token');
       userid = localStorage.getItem('auth_id');
-      api.log('[production] session loaded');
       if (token && userid) {
-        platform.refreshUserToken(token,userid,function(error,sessionData){
-            api.log('[production] token refreshed');
-            saveSession(sessionData.userid,sessionData.token);
-            return callback(true);
-        });
+        api.log('[production] session loaded');
+        return callback(true);
+      } else {
+        api.log('[production] no session found');
+        return callback(false);
       }
     } else {
       api.log.error('[production] issue loading session');
@@ -146,8 +157,7 @@ module.exports = function(api, host, superagent) {
 
   // ----- Messages API -----
   api.notes.get = function(groupId,callback) {
-    //TODO  set as three weeks ago
-    console.log('Fix TODO');
+    api.log.error('Fix fetching of notes - dates');
     var start = new Date();
     start.setDate(start.getDate()-21);
 
