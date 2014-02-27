@@ -43,7 +43,9 @@ var TeamNotes = React.createClass({
               detailColumns='col-xs-9 col-sm-11'
               onClick={this.props.onThreadSelected.bind(null, note)}
               key={note.id}
-              author={note.userid +' > '+ group.id }
+              author='Author'
+              team='Team'
+              numberOfComments='??'
               note={note.messagetext}
               when={note.timestamp}
               showCommentLink={true}/>
@@ -62,7 +64,7 @@ var TeamNotes = React.createClass({
 
     return (
         /* jshint ignore:start */
-        <div className="teamnotes list-group">
+        <div className='teamnotes list-group'>
             {items}
         </div>
         /* jshint ignore:end */

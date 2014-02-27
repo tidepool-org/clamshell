@@ -29,29 +29,61 @@ var Note = React.createClass({
     return sundial(time).calendar();
   },
 
+  renderHeading : function(){
+    /* jshint ignore:start */
+    var noteTeam;
+
+    if(this.props.team){
+      noteTeam = (
+        <span className='pull-right'>
+          <span className='note-for-team'> > </span>
+          <a onClick={this.props.onGroupSelected} className='note-link' ref='careTeam'>{this.props.team}</a>
+        </span>
+      );
+    }
+    return (
+      /* jshint ignore:start */
+      <div>
+        <span ref='messageAuthorAndGroup' className='note-header list-group-item-heading'> {this.props.author}</span>
+        {noteTeam}
+      </div>
+    );
+    /* jshint ignore:end */
+  },
+
+  renderCommentLink : function(){
+    if(this.props.showCommentLink){
+      return (
+        /* jshint ignore:start */
+        <div>
+        <a ref='showMessageThread' className='pull-left note-link'>{this.props.numberOfComments} Comments</a>
+        <a ref='showMessageThread' className='pull-right note-link'>Comment</a>
+        </div>
+        /* jshint ignore:end */
+      );
+    }
+  },
+
   render: function() {
 
-    /* jshint ignore:start */
-    var commentLink;
-
-    if(this.props.showCommentLink){
-      commentLink = (<div><a ref='showMessageThread' className='pull-left note-link'>x Comments</a><a ref='showMessageThread' className='pull-right note-link'>Comment</a></div>);
-    }
+    var commentLink = this.renderCommentLink();
+    var noteHeading = this.renderHeading();
 
     return this.transferPropsTo(
-      <div className="note list-group-item row">
+      /* jshint ignore:start */
+      <div className='note list-group-item row'>
       <div ref='imgColumn' className={this.props.imgColumns}>
-        <div ref='authorImage' className="note-image"/>
+        <div ref='authorImage' className='note-image'/>
       </div>
       <div ref='detailColumn' className={this.props.detailColumns}>
-      <h4 ref='messageAuthorAndGroup' className="note-header list-group-item-heading">{this.props.author}<a onClick={this.props.onGroupSelected} ref='careTeam'>{this.props.name}</a></h4>
+      {noteHeading}
       <span ref='messageWhen' className='note-when'>{this.niceTime(this.props.when)}</span>
-      <p ref='messageText' className="note-message list-group-item-text">{this.props.note}</p>
+      <p ref='messageText' className='note-message list-group-item-text'>{this.props.note}</p>
       {commentLink}
       </div>
       </div>
-      );
-    /* jshint ignore:end */
+      /* jshint ignore:end */
+    );
   }
 });
 
