@@ -74,6 +74,7 @@ var ClamShellApp = React.createClass({
   initializeAppState : function(){
     return {
       routeName : routes.message,
+      home : null ,
       previousRoute : null,
       authenticated : null,
       loggedInUser : null,
@@ -94,7 +95,7 @@ var ClamShellApp = React.createClass({
         this.fetchUserData(function(){
           this.setState({
             authenticated : authenticated,
-            routeName: routes.messagesForAllTeams,
+            routeName : routes.messagesForSelectedTeam,
             loggedInUser : app.api.user.get()
           });
         }.bind(this));
@@ -123,7 +124,9 @@ var ClamShellApp = React.createClass({
         this.setState({routeName : routes.message, userMessage : error });
         return;
       }
-      this.setState({userGroupsData:[team]});
+      //until we have also are pull back paitients
+      app.log('set data for the logged in users team');
+      this.setState({selectedGroup : team , userGroupsData: [team] });
       callback();
     }.bind(this));
   },
@@ -137,13 +140,12 @@ var ClamShellApp = React.createClass({
         return;
       }
       var all = this.state.userGroupsData.concat(patients);
-      this.setState({userGroupsData:all});
+      this.setState({userGroupsData : all});
       callback();
     }.bind(this));
   },
 
   //---------- App Handlers ----------
-
   handleLogout:function(){
     app.log('logging out');
     api.user.deleteSession(function(success){
@@ -171,8 +173,8 @@ var ClamShellApp = React.createClass({
     this.setState({authenticated: true});
     this.fetchUserData(function(){
       this.setState({
-        routeName: routes.messagesForAllTeams,
-        previousRoute : this.state.routeName,
+        authenticated : true,
+        routeName : routes.messagesForSelectedTeam,
         loggedInUser : app.api.user.get()
       });
     }.bind(this));
@@ -256,8 +258,8 @@ var ClamShellApp = React.createClass({
       });
 
     this.setState({
-      routeName:routes.messagesForSelectedTeam,
-      selectedGroup:group,
+      routeName : routes.messagesForSelectedTeam,
+      selectedGroup : group,
       previousRoute : this.state.routeName
     });
   },
@@ -276,13 +278,36 @@ var ClamShellApp = React.createClass({
       );
   },
 
+  renderNavBar:function(title, icon, actionHandler){
+    return (
+      /* jshint ignore:start */
+      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler} />
+      /* jshint ignore:end */
+    );
+  },
+
+  renderNavBarWithTeamPicker:function(title, icon, actionHandler){
+    return (
+      /* jshint ignore:start */
+      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler}>
+        <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
+      </ListNavBar>
+      /* jshint ignore:end */
+    );
+  },
+
   renderMessagesForSelectedTeam:function(){
+
+    var navBar = this.renderNavBar('... Care team','logout-icon',this.handleLogout);
+
+    if(this.state.userGroupsData.length > 1){
+      navBar = this.renderNavBarWithTeamPicker('... Care team','back-icon',this.handleBack);
+    }
+
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup.id} actionIcon='back-icon' onNavBarAction={this.handleBack}>
-      <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
-      </ListNavBar>
+      {navBar}
       <TeamNotes groups={[this.state.selectedGroup]} onThreadSelected={this.handleShowConversationThread} />
       <MessageFooter
         messagePrompt='Type a new note here ...'
@@ -294,12 +319,13 @@ var ClamShellApp = React.createClass({
   },
 
   renderMessagesForAllTeams:function(){
+
+    var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
+
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title='All Notes' actionIcon='logout-icon' onNavBarAction={this.handleBack}>
-      <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
-      </ListNavBar>
+        {navBar}
       <TeamNotes groups={this.state.userGroupsData} onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       /* jshint ignore:end */
@@ -307,10 +333,12 @@ var ClamShellApp = React.createClass({
   },
 
   renderMessageThread:function(){
+    var navBar = this.renderNavBar('Note in ... team','back-icon',this.handleBack);
+
     return (
       /* jshint ignore:start */
       <Layout>
-      <ListNavBar title={this.state.selectedGroup.id} actionIcon='back-icon' onNavBarAction={this.handleBack} />
+      {navBar}
       <NoteThread messages={this.state.selectedThread} />
       <MessageFooter
         messagePrompt='Type a comment here ...'
