@@ -37,6 +37,7 @@ var MessageFooter = React.createClass({
     var messageText = this.refs.messageText.getDOMNode().value.trim();
     this.props.onFooterAction({text: messageText});
     this.refs.messageText.getDOMNode().value = '';
+    this.setState({btnState: btnDisabled});
     return false;
   },
 
@@ -51,17 +52,29 @@ var MessageFooter = React.createClass({
     return false;
   },
 
+  renderMessageForm : function(){
+    return (
+      /* jshint ignore:start */
+      <form className='navbar-form'>
+        <div className='input-group'>
+          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onChange={this.handleChange} placeholder={this.props.messagePrompt}/>
+          <span className='input-group-btn'>
+            <button type='submit' ref='sendBtn' className={this.state.btnState} onClick={this.handleMessage}>{this.props.btnMessage}</button>
+          </span>
+        </div>
+      </form>
+      /* jshint ignore:end */
+    );
+  },
+
   render: function() {
+
+    var messageForm  = this.renderMessageForm();
 
     return this.transferPropsTo(
       /* jshint ignore:start */
       <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
-      <form className='navbar-form row'>
-        <div className='col-xs-9 col-sm-10 form-group'>
-          <textarea type='textarea' rows='1' className='message-text form-control' ref='messageText' onChange={this.handleChange} placeholder={this.props.messagePrompt} />
-        </div>
-        <button type='submit' ref='sendBtn' className={this.state.btnState} onClick={this.handleMessage}>{this.props.btnMessage}</button>
-      </form>
+        {messageForm}
       </nav>
       /* jshint ignore:end */
       );
