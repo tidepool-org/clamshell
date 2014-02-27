@@ -89,8 +89,8 @@ body {
 .tidepool-logo {
   background-image: url('images/tidepool_logo.png');
   background-repeat:no-repeat;
-  min-height: 21px;
-  min-width: 186px;
+  min-height: 16px;
+  min-width: 142px;
   margin-bottom: 50px;
 }
 
@@ -111,6 +111,10 @@ body {
 
 /* Notes */
 
+.note-for-team {
+  padding-right: 10px;
+}
+
 .note-image{
   background-image: url('images/profile_default.png');
   background-repeat:no-repeat;
@@ -121,6 +125,7 @@ body {
 
 .note-header {
   font-size: medium;
+  font-weight: bold;
 }
 
 .note-when {
