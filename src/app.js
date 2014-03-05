@@ -44,11 +44,7 @@ require('./app.css');
 //core functionality
 var api = require('./core/api')(bows);
 
-if(config.demo){
-  require('./core/mock')(api);
-} else {
-  require('./core/platform')(api,config.apiHost,window.superagent);
-}
+
 
 var app = {
   log : bows('App'),
@@ -67,6 +63,7 @@ var routes = {
 
 var ClamShellApp = React.createClass({
   getInitialState: function () {
+    app.log('initializing ...');
     return this.initializeAppState();
   },
 
@@ -85,9 +82,21 @@ var ClamShellApp = React.createClass({
     };
   },
 
+  setupPlatform : function(){
+    app.log('connect to platform ...');
+
+    if(config.demo){
+      require('./core/mock')(app.api);
+    } else {
+      require('./core/platform')(app.api,config.apiHost,window.superagent);
+    }
+  },
+
   componentDidMount: function () {
 
     app.log('setup ...');
+
+    this.setupPlatform();
 
     api.user.isAuthenticated(function(authenticated){
       if(authenticated){
@@ -398,28 +407,16 @@ var ClamShellApp = React.createClass({
 });
 
 app.start = function() {
-  var self = this;
 
-  this.init(function() {
+  //Make it touchable
+  React.initializeTouchEvents(true);
+  this.component = React.renderComponent(
+    /* jshint ignore:start */
+    <ClamShellApp />,
+    /* jshint ignore:end */
+    document.getElementById('app')
+  );
 
-    //Make it touchable
-    React.initializeTouchEvents(true);
-
-    self.component = React.renderComponent(
-      /* jshint ignore:start */
-      <ClamShellApp />,
-      /* jshint ignore:end */
-      document.getElementById('app')
-    );
-
-    self.log('app started');
-  });
-};
-
-app.init = function(callback) {
-
-  this.api.user.loadSession(callback);
-  callback();
 };
 
 module.exports = app;
