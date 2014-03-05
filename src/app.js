@@ -228,7 +228,7 @@ var ClamShellApp = React.createClass({
 
     var updatedTeamNotes = this.state.selectedGroup;
 
-    updatedTeamNotes.notes.push(thread);
+    updatedTeamNotes.notes.unshift(thread);
 
     this.setState({selectedGroup : updatedTeamNotes});
 
