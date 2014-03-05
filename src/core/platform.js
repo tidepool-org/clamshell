@@ -43,8 +43,12 @@ module.exports = function(api, host, superagent) {
             return;
           }
           platform.refreshUserToken(token,newUserid,function(error,sessionData){
-            api.log('[production] token refreshed');
-            saveSession(sessionData.userid,sessionData.token);
+            if(sessionData && sessionData.userid && sessionData.token){
+              api.log('[production] token refreshed');
+              saveSession(sessionData.userid,sessionData.token);
+            }else{
+              api.log('[production] token refresh failed: ',error);
+            }
           });
         },
         10 * 60 * 1000
@@ -133,7 +137,7 @@ module.exports = function(api, host, superagent) {
   };
 
   api.user.team.get = function(callback) {
-    platform.getGroupForUser(userid,'team',token,function(error,team){
+    platform.getUsersTeam(userid,token,function(error,team){
       if(error){
         api.log.error(error);
        return callback(error,null);
