@@ -1,6 +1,18 @@
 body { 
   padding-top: 50px;
   background-color: #F7F7F8;
+  color: #898997;
+}
+
+.btn {
+  background-color: #6AC1D2;
+  color: #fff;
+}
+
+.btn.disabled {
+  background-color: #6AC1D2;
+  color: #fff;
+  opacity: 0.5;
 }
 
 /* MessageFooter
@@ -12,6 +24,8 @@ body {
 .message-text {
   width: 100%;
 }
+
+
 
 /* ListNavBar*/
 
@@ -42,7 +56,7 @@ body {
 }
 
 .listnavbar {
-  background-color: #89C1CE;
+  background-color: #6AC1D2;
   background-image: none;
 }
 
@@ -134,4 +148,6 @@ body {
 
 .note-message {
   font-size: initial;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
