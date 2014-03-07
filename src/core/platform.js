@@ -61,16 +61,19 @@ module.exports = function(api, host, superagent) {
     api.log('[production] is user authenticated?');
     api.user.loadSession(function(authenticated){
       api.log('[production] we have session data: ',authenticated);
-      //refresh token to check
-      platform.refreshUserToken(token,userid,function(error,sessionData){
-        if(error){
-          api.log.info('[production] token not refreshed, user not authenticated');
-          return callback(false);
-        }
-        api.log('[production] token checked and the user is authenticated');
-        saveSession(sessionData.userid,sessionData.token);
-        return callback(true);
-      });
+      if(authenticated){
+        //refresh token to check
+        platform.refreshUserToken(token,userid,function(error,sessionData){
+          if(error){
+            api.log.info('[production] token not refreshed, user not authenticated');
+            return callback(false);
+          }
+          api.log('[production] token checked and the user is authenticated');
+          saveSession(sessionData.userid,sessionData.token);
+          return callback(true);
+        });
+      }
+      return callback(false);
     });
   };
 
