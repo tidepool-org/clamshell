@@ -31,7 +31,7 @@ var ListNavBar = React.createClass({
       /* jshint ignore:start */
       <div className='listnavbar navbar navbar-default navbar-fixed-top yamm' >
         <div className='col-xs-2 col-sm-1'>
-          <a href='#' ref='actionBtn' onClick={this.handleAction}>
+          <a ref='actionBtn' onClick={this.handleAction}>
             <span className={this.props.actionIcon}></span>
           </a>
         </div>
