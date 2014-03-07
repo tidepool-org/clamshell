@@ -59,9 +59,9 @@ var NoteThread = React.createClass({
   render: function() {
     var items = this.props.messages.map(function(message, i) {
 
-      if(i==0) {
+      if(!message.parentmessage) {
         return this.renderNote(message);
-      } else if (i > 0) {
+      } else if (message.parentmessage) {
         return this.renderCommentOnNote(message);
       }
     }.bind(this));
