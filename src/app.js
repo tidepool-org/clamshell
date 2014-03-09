@@ -91,7 +91,7 @@ var ClamShellApp = React.createClass({
   },
   attachHandlers : function(){
     app.log('attaching handlers ...');
-    require('./appHandlers')(this,app);
+    require('./appHandlers')(app);
   },
   componentDidMount: function () {
 

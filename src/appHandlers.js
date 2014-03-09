@@ -21,18 +21,17 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(app,helpers) {
+module.exports = function(app) {
 
-  
 
   //---------- App Handlers ----------
-  app.handleLogout =function(){
+  app.components.handleLogout =function(){
     app.log('logging out');
-    helpers.api.user.deleteSession(function(success){
+    app.api.user.deleteSession(function(success){
       if(success){
-        helpers.log('logged out');
-        app.setState({
-          routeName: helpers.routes.login,
+        app.log('logged out');
+        app.components.setState({
+          routeName: app.routes.login,
           authenticated: false
         });
         return;
@@ -40,27 +39,32 @@ module.exports = function(app,helpers) {
     }.bind(this));
   };
 
-  app.handleBack =function(){
-    var previousRoute = app.state.previousRoute;
+  app.components.handleBack =function(){
+    var previousRoute = app.components.state.previousRoute;
     if(!previousRoute){
-      helpers.warn('route was not set for some reason');
-      previousRoute = helpers.routes.messagesForAllTeams;
+      app.warn('route was not set for some reason');
+      previousRoute = app.routes.messagesForAllTeams;
     }
-    app.setState({routeName:previousRoute});
+    app.components.setState({routeName:previousRoute});
   };
 
-  app.handleLoginSuccess = function(){
-    app.setState({authenticated: true});
-    app.fetchUserData(function(){
-      app.setState({
+  app.components.handleError =function(error){
+    app.log.error(error);
+    app.components.setState({routeName : app.routes.message, userMessage : error });
+  };
+
+  app.components.handleLoginSuccess = function(){
+    app.components.setState({authenticated: true});
+    app.components.fetchUserData(function(){
+      app.components.setState({
         authenticated : true,
-        routeName : helpers.routes.messagesForSelectedTeam,
-        loggedInUser : helpers.api.user.get()
+        routeName : app.routes.messagesForSelectedTeam,
+        loggedInUser : app.api.user.get()
       });
     }.bind(this));
   },
 
-  app.handleShowConversationThread = function(mostRecentMessageInThread){
+  app.components.handleShowConversationThread = function(mostRecentMessageInThread){
 
     var messagesId = mostRecentMessageInThread.id;
 
@@ -68,82 +72,83 @@ module.exports = function(app,helpers) {
       messagesId = mostRecentMessageInThread.parentmessage;
     }
 
-    var team = helpers.dataHelper.getTeam(app.state.userGroupsData,mostRecentMessageInThread.groupid);
-    var thread = helpers.api.notes.getThread(messagesId,function(error,thread){
-      console.log('got thread ',thread);
+    var team = app.dataHelper.getTeam(app.components.state.userGroupsData,mostRecentMessageInThread.groupid);
+    var thread = app.api.notes.getThread(messagesId,function(error,thread){
 
-      app.setState({
+      if(error){
+        return app.components.handleError(error);
+      }
+
+      app.components.setState({
         selectedThread : thread,
         selectedGroup : team,
-        routeName : helpers.routes.messageThread,
-        previousRoute : app.state.routeName
+        routeName : app.routes.messageThread,
+        previousRoute : app.components.state.routeName
       });
     });
 
   };
 
-  app.handleStartConversation = function(note){
+  app.components.handleStartConversation = function(note){
 
     var thread = {
-      userid : app.state.loggedInUser.userid,
-      groupid : app.state.selectedGroup.id,
+      userid : app.components.state.loggedInUser.userid,
+      username : app.components.state.loggedInUser.name,
+      groupid : app.components.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
 
-    helpers.api.notes.add(thread,function(error){
-      helpers.log('thread started');
+    app.api.notes.add(thread,function(error){
+      app.log('thread started');
       if(error){
-        helpers.log.error(error);
-        app.setState({routeName : helpers.routes.message, userMessage : error });
-        return;
+        return app.components.handleError(error);
       }
     }.bind(this));
 
-    var updatedTeamNotes = app.state.selectedGroup;
+    var updatedTeamNotes = app.components.state.selectedGroup;
 
     updatedTeamNotes.notes.unshift(thread);
 
-    app.setState({selectedGroup : updatedTeamNotes});
+    app.components.setState({selectedGroup : updatedTeamNotes});
 
   };
 
-  app.handleAddingToConversation = function(note){
+  app.components.handleAddingToConversation = function(note){
 
-    var thread = app.state.selectedThread;
-    var parentId = app.dataHelper.getParentMessageId(thread);
+    var thread = app.components.state.selectedThread;
+    var parentId = app.components.dataHelper.getParentMessageId(thread);
 
     var comment = {
       parentmessage : parentId,
-      userid : app.state.loggedInUser.userid,
-      groupid : app.state.selectedGroup.id,
+      userid : app.components.state.loggedInUser.userid,
+      username : app.components.state.loggedInUser.name,
+      groupid : app.components.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
 
-    helpers.api.notes.reply(comment,function(error){
-      helpers.log('reply added');
+    app.api.notes.reply(comment,function(error){
+      app.log('reply added');
       if(error){
-        helpers.log.error(error);
-        app.setState({routeName : helpers.routes.message, userMessage : error });
-        return;
+        return app.components.handleError(error);
       }
     }.bind(this));
 
     thread.push(comment);
-    app.setState({selectedThread: thread});
+    app.components.setState({selectedThread: thread});
   };
 
-  app.handleGroupChanged = function(selectedGroup){
+  app.components.handleGroupChanged = function(selectedGroup){
     var group = _.find(
-      app.state.userGroupsData, function(group){
+      app.components.state.userGroupsData, function(group){
         return selectedGroup.groupId == group.id;
       });
 
-    app.setState({
-      routeName : helpers.routes.messagesForSelectedTeam,
+    app.components.setState({
+      routeName : app.routes.messagesForSelectedTeam,
       selectedGroup : group,
-      previousRoute : app.state.routeName
+      previousRoute : app.components.state.routeName
     });
   };
 };
