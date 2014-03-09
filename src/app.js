@@ -44,14 +44,6 @@ require('./app.css');
 //core functionality
 var api = require('./core/api')(bows);
 
-
-
-var app = {
-  log : bows('App'),
-  api : api,
-  dataHelper : require('./core/userDataHelper')
-};
-
 var routes = {
   login : 'login',
   message : 'message',
@@ -59,6 +51,13 @@ var routes = {
   messagesForSelectedTeam : 'groupConversations',
   messageThread : 'conversationThread',
   startMessageThread : 'newConversation'
+};
+
+var app = {
+  log : bows('App'),
+  api : api,
+  dataHelper : require('./core/userDataHelper'),
+  routes : routes
 };
 
 var ClamShellApp = React.createClass({
@@ -81,9 +80,8 @@ var ClamShellApp = React.createClass({
       userMessage : null
     };
   },
-
-  setupPlatform : function(){
-    app.log('connect to platform ...');
+  attachPlatform : function(){
+    app.log('attaching to platform ...');
 
     if(config.demo){
       require('./core/mock')(app.api);
@@ -91,16 +89,20 @@ var ClamShellApp = React.createClass({
       require('./core/platform')(app.api,config.apiHost,window.superagent);
     }
   },
-
+  attachHandlers : function(){
+    app.log('attaching handlers ...');
+    require('./appHandlers')(this,app);
+  },
   componentDidMount: function () {
 
     app.log('setup ...');
 
-    this.setupPlatform();
+    this.attachPlatform();
+    this.attachHandlers();
 
     api.user.isAuthenticated(function(authenticated){
       if(authenticated){
-        app.log('authenticated so lets getdata');
+        app.log('authenticated so lets get data');
         this.fetchUserData(function(){
           this.setState({
             authenticated : authenticated,
@@ -155,127 +157,7 @@ var ClamShellApp = React.createClass({
     }.bind(this));
   },
 
-  //---------- App Handlers ----------
-  handleLogout:function(){
-    app.log('logging out');
-    api.user.deleteSession(function(success){
-      if(success){
-        app.log('logged out');
-        this.setState({
-          routeName: routes.login,
-          authenticated: false
-        });
-        return;
-      }
-    }.bind(this));
-  },
-
-  handleBack:function(){
-    var previousRoute = this.state.previousRoute;
-    if(!previousRoute){
-      app.warn('route was not set for some reason');
-      previousRoute = routes.messagesForAllTeams;
-    }
-    this.setState({routeName:previousRoute});
-  },
-
-  handleLoginSuccess:function(){
-    this.setState({authenticated: true});
-    this.fetchUserData(function(){
-      this.setState({
-        authenticated : true,
-        routeName : routes.messagesForSelectedTeam,
-        loggedInUser : app.api.user.get()
-      });
-    }.bind(this));
-  },
-
-  handleShowConversationThread:function(mostRecentMessageInThread){
-
-    var messagesId = mostRecentMessageInThread.id;
-
-    if(mostRecentMessageInThread.parentmessage){
-      messagesId = mostRecentMessageInThread.parentmessage;
-    }
-
-    var team = app.dataHelper.getTeam(this.state.userGroupsData,mostRecentMessageInThread.groupid);
-    var thread = app.dataHelper.getThread(team,messagesId);
-
-    this.setState({
-      selectedThread : thread,
-      selectedGroup : team,
-      routeName : routes.messageThread,
-      previousRoute : this.state.routeName
-    });
-  },
-
-  handleStartConversation:function(note){
-
-    var thread = {
-      userid : this.state.loggedInUser.userid,
-      groupid : this.state.selectedGroup.id,
-      timestamp : new Date(),
-      messagetext : note.text
-    };
-
-    app.api.notes.add(thread,function(error){
-      app.log('thread started');
-      if(error){
-        app.log.error(error);
-        this.setState({routeName : routes.message, userMessage : error });
-        return;
-      }
-    }.bind(this));
-
-    var updatedTeamNotes = this.state.selectedGroup;
-
-    updatedTeamNotes.notes.unshift(thread);
-
-    this.setState({selectedGroup : updatedTeamNotes});
-
-  },
-
-  handleAddingToConversation:function(note){
-
-    var thread = this.state.selectedThread;
-    var parentId = app.dataHelper.getParentMessageId(thread);
-
-    var comment = {
-      parentmessage : parentId,
-      userid : this.state.loggedInUser.userid,
-      groupid : this.state.selectedGroup.id,
-      timestamp : new Date(),
-      messagetext : note.text
-    };
-
-    app.api.notes.reply(comment,function(error){
-      app.log('reply added');
-      if(error){
-        app.log.error(error);
-        this.setState({routeName : routes.message, userMessage : error });
-        return;
-      }
-    }.bind(this));
-
-    thread.push(comment);
-    this.setState({selectedThread: thread});
-  },
-
-  handleGroupChanged:function(selectedGroup){
-    var group = _.find(
-      this.state.userGroupsData, function(group){
-        return selectedGroup.groupId == group.id;
-      });
-
-    this.setState({
-      routeName : routes.messagesForSelectedTeam,
-      selectedGroup : group,
-      previousRoute : this.state.routeName
-    });
-  },
-
   //---------- Rendering Layouts ----------
-
   render: function () {
     var content = this.renderContent();
 
