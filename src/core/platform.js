@@ -24,7 +24,7 @@ module.exports = function(api, host, superagent) {
 
   var token;
   var userid;
-  var user;
+  var loggedInUser = {};
 
   function saveSession(newUserid, newToken) {
     token = newToken;
@@ -112,16 +112,9 @@ module.exports = function(api, host, superagent) {
   };
 
   api.user.get = function() {
-
-    if(user){
-      return user;
-    }
-
-    user = {
-      userid : userid
-    };
-
-    return user;
+    api.log('getting logged in user');
+    loggedInUser.userid = userid;
+    return loggedInUser;
   };
 
   api.user.login = function(username, password,callback) {
@@ -153,6 +146,8 @@ module.exports = function(api, host, superagent) {
         api.log('[production] getting profile for team user');
         platform.findProfile(userid,token,function(profileError,profile){
           team.profile = profile;
+          //set the logged in users profile also
+          loggedInUser.profile = profile;
           callback(profileError,team);
         });
       },

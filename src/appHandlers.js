@@ -23,6 +23,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 module.exports = function(component,app) {
 
+  var _ = require('lodash');
 
   //---------- App Handlers ----------
   component.handleLogout =function(){
@@ -93,7 +94,7 @@ module.exports = function(component,app) {
 
     var thread = {
       userid : component.state.loggedInUser.userid,
-      username : component.state.loggedInUser.name,
+      username : component.state.loggedInUser.profile.shortname,
       groupid : component.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
@@ -117,12 +118,12 @@ module.exports = function(component,app) {
   component.handleAddingToConversation = function(note){
 
     var thread = component.state.selectedThread;
-    var parentId = component.dataHelper.getParentMessageId(thread);
+    var parentId = app.dataHelper.getParentMessageId(thread);
 
     var comment = {
       parentmessage : parentId,
       userid : component.state.loggedInUser.userid,
-      username : component.state.loggedInUser.name,
+      username : component.state.loggedInUser.profile.shortname,
       groupid : component.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
