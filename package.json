@@ -7,6 +7,7 @@
   "author": "Tidepool",
   "dependencies": {
     "amoeba": "0.0.3",
+    "async": "0.2.10",
     "bows": "0.3.0",
     "bunyan": "0.22.1",
     "director": "1.2.2",

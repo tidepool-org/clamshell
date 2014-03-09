@@ -20,6 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 module.exports = function(api, host, superagent) {
 
   var platform = require('platform-client')(host,superagent);
+  var async = require('async');
 
   var token;
   var userid;
@@ -139,21 +140,35 @@ module.exports = function(api, host, superagent) {
     });
   };
 
-  api.user.team.get = function(callback) {
-    platform.getUsersTeam(userid,token,function(error,team){
-      if(error){
-        api.log.error(error);
-       return callback(error,null);
+  api.user.team.get = function(cb) {
+
+    async.waterfall([
+      function(callback){
+        api.log('[production] getting team');
+        platform.getUsersTeam(userid,token,function(teamError,team){
+          callback(teamError,team);
+        });
+      },
+      function(team, callback){
+        api.log('[production] getting profile for team user');
+        platform.findProfile(userid,token,function(profileError,profile){
+          team.profile = profile;
+          callback(profileError,team);
+        });
+      },
+      function(team, callback){
+        api.log('[production] getting notes for team');
+        platform.getNotesForTeam(team.id, token, function(notesError,notes){
+          team.notes = notes;
+          callback(notesError,team);
+        });
       }
-      api.notes.get(team.id,function(notesError,notes){
-        if(notesError){
-          return callback(notesError,null);
-        }
-        team.notes = notes;
-        api.log('[production] got the team and notes');
-        return callback(null,team);
-      });
+    ], function (error, teamDetails) {
+      api.log('[production] return details for team');
+      console.log(teamDetails);
+      return cb(error,teamDetails);
     });
+
   };
 
   api.user.patients.get = function(callback) {
