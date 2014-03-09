@@ -44,7 +44,6 @@ var TeamNotes = React.createClass({
               onClick={this.props.onThreadSelected.bind(null, note)}
               key={note.id}
               author={note.username}
-              team='Team'
               numberOfComments='??'
               note={note.messagetext}
               when={note.timestamp}
