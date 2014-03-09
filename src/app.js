@@ -136,6 +136,7 @@ var ClamShellApp = React.createClass({
       //until we have also are pull back paitients
       app.log('set data for the logged in users team');
       this.setState({selectedGroup : team , userGroupsData: [team] });
+
       callback();
     }.bind(this));
   },
@@ -307,7 +308,9 @@ var ClamShellApp = React.createClass({
 
   renderMessagesForSelectedTeam:function(){
 
-    var navBar = this.renderNavBar('... Care team','logout-icon',this.handleLogout);
+    var careTeamName = this.state.selectedGroup.profile.shortname +'\'s Care team';
+
+    var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
     if(this.state.userGroupsData.length > 1){
       navBar = this.renderNavBarWithTeamPicker('... Care team','back-icon',this.handleBack);
@@ -342,7 +345,10 @@ var ClamShellApp = React.createClass({
   },
 
   renderMessageThread:function(){
-    var navBar = this.renderNavBar('Note in ... team','back-icon',this.handleBack);
+
+    var careTeamName = 'Note in '+ this.state.selectedGroup.profile.shortname +'\'s team';
+
+    var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
     return (
       /* jshint ignore:start */
