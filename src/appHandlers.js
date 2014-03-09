@@ -69,14 +69,17 @@ module.exports = function(app,helpers) {
     }
 
     var team = helpers.dataHelper.getTeam(app.state.userGroupsData,mostRecentMessageInThread.groupid);
-    var thread = helpers.dataHelper.getThread(team,messagesId);
+    var thread = helpers.api.notes.getThread(messagesId,function(error,thread){
+      console.log('got thread ',thread);
 
-    app.setState({
-      selectedThread : thread,
-      selectedGroup : team,
-      routeName : helpers.routes.messageThread,
-      previousRoute : app.state.routeName
+      app.setState({
+        selectedThread : thread,
+        selectedGroup : team,
+        routeName : helpers.routes.messageThread,
+        previousRoute : app.state.routeName
+      });
     });
+
   };
 
   app.handleStartConversation = function(note){
