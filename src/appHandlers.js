@@ -21,16 +21,16 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(app) {
+module.exports = function(component,app) {
 
 
   //---------- App Handlers ----------
-  app.components.handleLogout =function(){
+  component.handleLogout =function(){
     app.log('logging out');
     app.api.user.deleteSession(function(success){
       if(success){
         app.log('logged out');
-        app.components.setState({
+        component.setState({
           routeName: app.routes.login,
           authenticated: false
         });
@@ -39,24 +39,24 @@ module.exports = function(app) {
     }.bind(this));
   };
 
-  app.components.handleBack =function(){
-    var previousRoute = app.components.state.previousRoute;
+  component.handleBack =function(){
+    var previousRoute = component.state.previousRoute;
     if(!previousRoute){
       app.warn('route was not set for some reason');
       previousRoute = app.routes.messagesForAllTeams;
     }
-    app.components.setState({routeName:previousRoute});
+    component.setState({routeName:previousRoute});
   };
 
-  app.components.handleError =function(error){
+  component.handleError =function(error){
     app.log.error(error);
-    app.components.setState({routeName : app.routes.message, userMessage : error });
+    component.setState({routeName : app.routes.message, userMessage : error });
   };
 
-  app.components.handleLoginSuccess = function(){
-    app.components.setState({authenticated: true});
-    app.components.fetchUserData(function(){
-      app.components.setState({
+  component.handleLoginSuccess = function(){
+    component.setState({authenticated: true});
+    component.fetchUserData(function(){
+      component.setState({
         authenticated : true,
         routeName : app.routes.messagesForSelectedTeam,
         loggedInUser : app.api.user.get()
@@ -64,7 +64,7 @@ module.exports = function(app) {
     }.bind(this));
   },
 
-  app.components.handleShowConversationThread = function(mostRecentMessageInThread){
+  component.handleShowConversationThread = function(mostRecentMessageInThread){
 
     var messagesId = mostRecentMessageInThread.id;
 
@@ -72,29 +72,29 @@ module.exports = function(app) {
       messagesId = mostRecentMessageInThread.parentmessage;
     }
 
-    var team = app.dataHelper.getTeam(app.components.state.userGroupsData,mostRecentMessageInThread.groupid);
+    var team = app.dataHelper.getTeam(component.state.userGroupsData,mostRecentMessageInThread.groupid);
     var thread = app.api.notes.getThread(messagesId,function(error,thread){
 
       if(error){
-        return app.components.handleError(error);
+        return component.handleError(error);
       }
 
-      app.components.setState({
+      component.setState({
         selectedThread : thread,
         selectedGroup : team,
         routeName : app.routes.messageThread,
-        previousRoute : app.components.state.routeName
+        previousRoute : component.state.routeName
       });
     });
 
   };
 
-  app.components.handleStartConversation = function(note){
+  component.handleStartConversation = function(note){
 
     var thread = {
-      userid : app.components.state.loggedInUser.userid,
-      username : app.components.state.loggedInUser.name,
-      groupid : app.components.state.selectedGroup.id,
+      userid : component.state.loggedInUser.userid,
+      username : component.state.loggedInUser.name,
+      groupid : component.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
@@ -102,28 +102,28 @@ module.exports = function(app) {
     app.api.notes.add(thread,function(error){
       app.log('thread started');
       if(error){
-        return app.components.handleError(error);
+        return component.handleError(error);
       }
     }.bind(this));
 
-    var updatedTeamNotes = app.components.state.selectedGroup;
+    var updatedTeamNotes = component.state.selectedGroup;
 
     updatedTeamNotes.notes.unshift(thread);
 
-    app.components.setState({selectedGroup : updatedTeamNotes});
+    component.setState({selectedGroup : updatedTeamNotes});
 
   };
 
-  app.components.handleAddingToConversation = function(note){
+  component.handleAddingToConversation = function(note){
 
-    var thread = app.components.state.selectedThread;
-    var parentId = app.components.dataHelper.getParentMessageId(thread);
+    var thread = component.state.selectedThread;
+    var parentId = component.dataHelper.getParentMessageId(thread);
 
     var comment = {
       parentmessage : parentId,
-      userid : app.components.state.loggedInUser.userid,
-      username : app.components.state.loggedInUser.name,
-      groupid : app.components.state.selectedGroup.id,
+      userid : component.state.loggedInUser.userid,
+      username : component.state.loggedInUser.name,
+      groupid : component.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
     };
@@ -131,24 +131,24 @@ module.exports = function(app) {
     app.api.notes.reply(comment,function(error){
       app.log('reply added');
       if(error){
-        return app.components.handleError(error);
+        return component.handleError(error);
       }
     }.bind(this));
 
     thread.push(comment);
-    app.components.setState({selectedThread: thread});
+    component.setState({selectedThread: thread});
   };
 
-  app.components.handleGroupChanged = function(selectedGroup){
+  component.handleGroupChanged = function(selectedGroup){
     var group = _.find(
-      app.components.state.userGroupsData, function(group){
+      component.state.userGroupsData, function(group){
         return selectedGroup.groupId == group.id;
       });
 
-    app.components.setState({
+    component.setState({
       routeName : app.routes.messagesForSelectedTeam,
       selectedGroup : group,
-      previousRoute : app.components.state.routeName
+      previousRoute : component.state.routeName
     });
   };
 };
