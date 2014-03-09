@@ -23,7 +23,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var bows = require('bows');
-var _ = require('lodash');
 
 var config = require('./appConfig');
 var router = require('./appRouter')();
@@ -87,7 +86,6 @@ var ClamShellApp = React.createClass({
   attachRouter : function(){
     app.log('attaching router ...');
     router.init(this);
-    //require('./appRouter')(this);
   },
   componentDidMount: function () {
 
