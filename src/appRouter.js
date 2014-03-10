@@ -27,20 +27,18 @@ module.exports = function() {
     routes : {
       login : 'login',
       message : 'message',
-      messagesForAllTeams : 'allGroupsConversations',
-      messagesForSelectedTeam : 'groupConversations',
-      messageThread : 'conversationThread',
-      startMessageThread : 'newConversation'
+      messagesForAllTeams : 'allTeams',
+      messagesForSelectedTeam : 'usersTeam',
+      messageThread : 'thread'
     },
     init : function(appComponent){
       var Router = require('director').Router;
 
       var router = new Router({
         '/': appComponent.setState.bind(appComponent, {routeName: this.routes.login}),
-        '/allGroupsConversations': appComponent.setState.bind(appComponent, {routeName: this.routes.messagesForAllTeams}),
-        '/groupConversations': appComponent.setState.bind(appComponent, {routeName: this.routes.messagesForSelectedTeam}),
-        '/conversationThread': appComponent.setState.bind(appComponent, {routeName: this.routes.messageThread}),
-        '/newConversation': appComponent.setState.bind(appComponent, {routeName: this.routes.startMessageThread})
+        '/allTeams': appComponent.setState.bind(appComponent, {routeName: this.routes.messagesForAllTeams}),
+        '/usersTeam': appComponent.setState.bind(appComponent, {routeName: this.routes.messagesForSelectedTeam}),
+        '/thread': appComponent.setState.bind(appComponent, {routeName: this.routes.messageThread})
       });
 
       router.init();
