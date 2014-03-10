@@ -95,54 +95,55 @@ var ClamShellApp = React.createClass({
     this.attachHandlers();
     this.attachRouter();
 
-    this.setState({routeName : app.routes.message, userMessage : 'Loading' });
-
     api.user.isAuthenticated(function(authenticated){
+
       if(authenticated){
+        this.setState({
+          routeName : app.routes.message,
+          userMessage : 'Loading ...',
+          authenticated : authenticated,
+          loggedInUser : app.api.user.get()
+        });
+
         app.log('authenticated so lets get data');
-        this.fetchUserData(function(){
-          this.setState({
-            authenticated : authenticated,
-            routeName : app.routes.messagesForSelectedTeam,
-            loggedInUser : app.api.user.get()
-          });
-        }.bind(this));
+        this.loadUserData();
       } else {
         this.setState({ routeName : app.routes.login });
       }
     }.bind(this));
-
   },
+  loadUserData: function(){
+    app.log('authenticated so lets get data');
 
-  //---------- Data Loading ----------
-  fetchUserData: function(callback) {
-    app.log('fetching user team data');
-    api.user.team.get(function(error, team) {
+    api.user.loadData(function(error,teams){
+
+      app.log('loaded user teams');
+
       if(error){
         this.handleError(error);
         return;
       }
-      //until we have also are pull back paitients
-      app.log('set data for the logged in users team');
-      this.setState({selectedGroup : team , userGroupsData: [team] });
+      this.showUserData(teams);
 
-      callback();
     }.bind(this));
   },
+  showUserData: function(teams){
 
-  fetchPatientsData: function(callback) {
-    app.log('fetching user patients data');
-    api.user.patients.get(function(error, patients) {
-      if(error){
-        this.handleError(error);
-        return;
-      }
-      var all = this.state.userGroupsData.concat(patients);
-      this.setState({userGroupsData : all});
-      callback();
-    }.bind(this));
+    if (teams.length>1) {
+      app.log('all teams');
+      this.setState({
+        userGroupsData: teams,
+        routeName : app.routes.messagesForAllTeams
+      });
+    } else {
+      app.log('just the one team');
+      this.setState({
+        selectedGroup : teams[0] ,
+        userGroupsData: teams ,
+        routeName : app.routes.messagesForSelectedTeam
+      });
+    }
   },
-
   //---------- Rendering Layouts ----------
   render: function () {
     var content = this.renderContent();
@@ -155,7 +156,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
       );
   },
-
   renderNavBar:function(title, icon, actionHandler){
     return (
       /* jshint ignore:start */
@@ -163,7 +163,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
     );
   },
-
   renderNavBarWithTeamPicker:function(title, icon, actionHandler){
     return (
       /* jshint ignore:start */
@@ -173,16 +172,11 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
     );
   },
-
   renderMessagesForSelectedTeam:function(){
 
     var careTeamName = this.state.selectedGroup.profile.shortname +'\'s Care team';
 
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
-
-    if(this.state.userGroupsData.length > 1){
-      navBar = this.renderNavBarWithTeamPicker('... Care team','back-icon',this.handleBack);
-    }
 
     return (
       /* jshint ignore:start */
@@ -197,7 +191,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
       );
   },
-
   renderMessagesForAllTeams:function(){
 
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
@@ -211,7 +204,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
       );
   },
-
   renderMessageThread:function(){
 
     var careTeamName = 'Note in '+ this.state.selectedGroup.profile.shortname +'\'s team';

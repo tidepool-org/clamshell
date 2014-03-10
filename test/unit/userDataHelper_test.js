@@ -15,6 +15,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+'use strict';
+
 var chai = require('chai');
 var expect = chai.expect;
 
@@ -25,31 +27,47 @@ var patients = teamData.patients;
 
 describe('userDataHelper', function() {
 
-    it('getParentMessageId returns id of the parent message', function() {
-    	var parentId = '9233c2ae-7bad-41f5-9295-e73f0437295b';
-    	var thread = userDataHelper.getThread(team, parentId);
-        var foundParentId = userDataHelper.getParentMessageId(thread);
-        expect(foundParentId).to.equal(parentId);
-    });
+  it('getParentMessageId returns id of the parent message', function() {
+    var parentId = '9233c2ae-7bad-41f5-9295-e73f0437295b';
+    var thread = userDataHelper.getThread(team, parentId);
+    var foundParentId = userDataHelper.getParentMessageId(thread);
+    expect(foundParentId).to.equal(parentId);
+  });
 
-    it('getThread returns notes in a thread', function() {
+  it('getThread returns notes in a thread', function() {
+    var thread = userDataHelper.getThread(team,'9233c2ae-7bad-41f5-9295-e73f0437295b');
+    expect(thread).to.exist;
+    expect(thread).to.be.a('array');
+    expect(thread.length).to.equal(4);
+  });
 
-        var thread = userDataHelper.getThread(team,'9233c2ae-7bad-41f5-9295-e73f0437295b');
-        expect(thread).to.exist;
-        expect(thread).to.be.a('array');
-        expect(thread.length).to.equal(4);
-    });
+  it('getTeam returns team with the given id', function() {
 
-    it('getTeam returns team with the given id', function() {
+    var groupToFind = '07abb942-5c77-4c87-aa94-12c08b805d7f';
 
-    	var groupToFind = '07abb942-5c77-4c87-aa94-12c08b805d7f';
+    var groups = patients;
+    groups.push(team);
 
-    	var groups = patients;
-    	groups.push(team);
+    var foundTeam = userDataHelper.getTeam(groups,groupToFind);
+    expect(foundTeam).to.exist;
+    expect(foundTeam.id).to.equal(groupToFind);
+  });
 
-        var foundTeam = userDataHelper.getTeam(groups,groupToFind);
-        expect(foundTeam).to.exist;
-        expect(foundTeam.id).to.equal(groupToFind);
-    });
+  it('combineTeams returns only the unique list of teams', function() {
+
+    var existingTeams = [team];
+    var combined = userDataHelper.combineTeams(team,existingTeams);
+    expect(combined).to.exist;
+    expect(combined.length).to.equal(1);
+    expect(combined[0]).to.equal(team);
+  });
+
+  it('combineTeams returns a combined object of the existing teams and the given team to add', function() {
+
+    var existingTeams = patients;
+    var combined = userDataHelper.combineTeams(team,existingTeams);
+    expect(combined).to.exist;
+    expect(combined.length).to.equal(2);
+  });
 
 });

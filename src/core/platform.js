@@ -21,6 +21,7 @@ module.exports = function(api, host, superagent) {
 
   var platform = require('platform-client')(host,superagent);
   var async = require('async');
+  var _ = require('lodash');
 
   var token;
   var userid;
@@ -55,6 +56,34 @@ module.exports = function(api, host, superagent) {
         10 * 60 * 1000
       );
     }
+  }
+
+  function getPatientDetail(patientId, cb) {
+    async.waterfall([
+      function(callback){
+        api.log('[production] getting patients team');
+        platform.getUsersTeam(patientId,token,function(teamError,team){
+          callback(teamError,team);
+        });
+      },
+      function(team, callback){
+        api.log('[production] getting patients profile');
+        platform.findProfile(userid,token,function(profileError,profile){
+          team.profile = profile;
+          callback(profileError,team);
+        });
+      },
+      function(team, callback){
+        api.log('[production] getting the patients notes');
+        platform.getNotesForTeam(team.id, token, function(notesError,notes){
+          team.notes = notes;
+          callback(notesError,team);
+        });
+      }
+    ], function (error, teamDetails) {
+      api.log('[production] adding details for patient');
+      return cb(error,teamDetails);
+    });
   }
 
   // ----- User -----
@@ -133,6 +162,33 @@ module.exports = function(api, host, superagent) {
     });
   };
 
+  api.user.loadData = function(cb){
+    api.log('fetching initial data for user');
+
+    async.waterfall([
+      function(callback){
+        api.log('[production] users team data');
+        api.user.team.get(function(error,usersTeam){
+          callback(error,usersTeam);
+        });
+      },
+      function(usersTeam, callback){
+        api.log('[production] users patient data');
+        api.user.patients.get(function(error,otherTeams){
+          if(otherTeams){
+            otherTeams.push(usersTeam);
+            callback(error,otherTeams);
+          }else{
+            callback(error,[usersTeam]);
+          }
+        });
+      }
+    ], function (error, teams) {
+      api.log('[production] got all team data');
+      return cb(error,teams);
+    });
+  };
+
   api.user.team.get = function(cb) {
 
     async.waterfall([
@@ -160,19 +216,41 @@ module.exports = function(api, host, superagent) {
       }
     ], function (error, teamDetails) {
       api.log('[production] return details for team');
-      console.log(teamDetails);
       return cb(error,teamDetails);
     });
-
   };
 
-  api.user.patients.get = function(callback) {
+  api.user.patients.get = function(cb) {
 
-    return callback(null,[]);
+    var details = [];
 
+    platform.getUsersPatients(userid,token,function(error,userPatients){
+
+      if(userPatients.members){
+
+        var patientIds = _(userPatients.members).uniq().valueOf();
+
+        if(patientIds && patientIds.length>0){
+
+          //call back once all finished
+          var done = _.after(patientIds.length, function() {
+            return cb(null,details);
+          });
+
+          _.forEach(patientIds, function(patientId) {
+            getPatientDetail(patientId,function(error,patientsTeam){
+              details.push(patientsTeam);
+              done();
+            });
+          });
+        }
+      }
+      //no patients
+      return cb(null,null);
+    });
   };
 
-  // ----- Messages API -----
+  // ----- Messages -----
   api.notes.get = function(groupId,callback) {
     api.log.error('Fix fetching of notes - dates');
     var start = new Date();
@@ -203,7 +281,7 @@ module.exports = function(api, host, superagent) {
   };
 
   api.notes.add = function(message,callback) {
-   api.log('[production] adding thread ... ');
+    api.log('[production] adding thread ... ');
     platform.startMessageThread(message.groupid,message,token,function(error,id){
       api.log('[production] added thread ... ');
       return callback(error);

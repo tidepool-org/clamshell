@@ -55,15 +55,8 @@ module.exports = function(component,app) {
   };
 
   component.handleLoginSuccess = function(){
-    component.setState({authenticated: true});
-    component.fetchUserData(function(){
-      component.setState({
-        authenticated : true,
-        routeName : app.routes.messagesForSelectedTeam,
-        loggedInUser : app.api.user.get()
-      });
-    }.bind(this));
-  },
+    component.loadUserData();
+  };
 
   component.handleShowConversationThread = function(mostRecentMessageInThread){
 
@@ -74,7 +67,7 @@ module.exports = function(component,app) {
     }
 
     var team = app.dataHelper.getTeam(component.state.userGroupsData,mostRecentMessageInThread.groupid);
-    var thread = app.api.notes.getThread(messagesId,function(error,thread){
+    app.api.notes.getThread(messagesId,function(error,thread){
 
       if(error){
         return component.handleError(error);
