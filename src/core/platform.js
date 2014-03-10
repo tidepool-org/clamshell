@@ -165,27 +165,16 @@ module.exports = function(api, host, superagent) {
   api.user.loadData = function(cb){
     api.log('fetching initial data for user');
 
-    async.waterfall([
-      function(callback){
-        api.log('[production] users team data');
-        api.user.team.get(function(error,usersTeam){
-          callback(error,usersTeam);
-        });
+    async.series({
+      team: function(callback){
+        api.user.team.get(callback);
       },
-      function(usersTeam, callback){
-        api.log('[production] users patient data');
-        api.user.patients.get(function(error,otherTeams){
-          if(otherTeams){
-            otherTeams.push(usersTeam);
-            callback(error,otherTeams);
-          }else{
-            callback(error,[usersTeam]);
-          }
-        });
+      patients: function(callback){
+        api.user.patients.get(callback);
       }
-    ], function (error, teams) {
-      api.log('[production] got all team data');
-      return cb(error,teams);
+    },
+    function(error, results) {
+      return cb(error,results);
     });
   };
 
@@ -246,7 +235,7 @@ module.exports = function(api, host, superagent) {
         }
       }
       //no patients
-      return cb(null,null);
+      return cb(null,details);
     });
   };
 

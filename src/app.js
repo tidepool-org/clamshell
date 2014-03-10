@@ -122,22 +122,26 @@ var ClamShellApp = React.createClass({
     }.bind(this));
 
   },
-  showUserData: function(teams){
+  showUserData: function(userTeams){
 
-    if (teams.length>1) {
-      app.log('all teams');
-      this.setState({
-        userGroupsData: teams,
-        routeName : app.routes.messagesForAllTeams
-      });
-    } else {
-      app.log('just the one team');
-      this.setState({
-        selectedGroup : teams[0] ,
-        userGroupsData: teams ,
-        routeName : app.routes.messagesForSelectedTeam
-      });
+    if (userTeams.patients.length > 0) {
+      var teams = app.dataHelper.combineTeams(userTeams.team,userTeams.patients);
+      if(teams.length>1){
+        app.log('user has patients also');
+        this.setState({
+          userGroupsData: teams,
+          routeName : app.routes.messagesForAllTeams
+        });
+
+        return;
+      }
     }
+    app.log('just the care team');
+    this.setState({
+      selectedGroup : userTeams.team ,
+      userGroupsData: [userTeams.team] ,
+      routeName : app.routes.messagesForSelectedTeam
+    });
   },
   //---------- Rendering Layouts ----------
   render: function () {
