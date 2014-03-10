@@ -40,7 +40,7 @@ var TeamPicker = React.createClass({
           </div>
           <div className='col-xs-9 col-sm-11'>
             <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
-              <p ref='groupName'>TODO: {group.id}</p>
+              <p ref='groupName'>{group.profile.shortname}</p>
             </a>
           </div>
         </div>
