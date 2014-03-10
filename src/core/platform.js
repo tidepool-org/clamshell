@@ -60,9 +60,9 @@ module.exports = function(api, host, superagent) {
   // ----- User -----
   api.user.isAuthenticated = function(callback) {
     api.log('[production] is user authenticated?');
-    api.user.loadSession(function(authenticated){
-      api.log('[production] we have session data: ',authenticated);
-      if(authenticated){
+    api.user.loadSession(function(hasExistingSession){
+      api.log('[production] we have session data: ',hasExistingSession);
+      if(hasExistingSession){
         //refresh token to check
         platform.refreshUserToken(token,userid,function(error,sessionData){
           if(error){
@@ -126,7 +126,7 @@ module.exports = function(api, host, superagent) {
       }
       if(loginData){
         api.log('[production] login success');
-        user = loginData.user;
+        loggedInUser = loginData.user;
         saveSession(loginData.userid,loginData.token);
       }
       return callback();
