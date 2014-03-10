@@ -4,14 +4,7 @@ body {
   color: #898997;
 }
 
-.btn {
-  background-color: #6AC1D2;
-  color: #fff;
-}
-
 .btn.disabled {
-  background-color: #6AC1D2;
-  color: #fff;
   opacity: 0.5;
 }
 
@@ -24,8 +17,6 @@ body {
 .message-text {
   width: 100%;
 }
-
-
 
 /* ListNavBar*/
 
