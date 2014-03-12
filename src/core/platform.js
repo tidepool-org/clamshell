@@ -68,7 +68,7 @@ module.exports = function(api, host, superagent) {
       },
       function(team, callback){
         api.log('[production] getting patients profile');
-        platform.findProfile(userid,token,function(profileError,profile){
+        platform.findProfile(patientId,token,function(profileError,profile){
           team.profile = profile;
           callback(profileError,team);
         });
