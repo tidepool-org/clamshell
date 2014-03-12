@@ -131,6 +131,16 @@ body {
 
 /* Notes */
 
+.note-number-comments{
+
+}
+
+.note-comment{
+  background-image: url('images/comment16x16.png');
+  background-repeat: no-repeat;
+  padding-left: 20px;  /* width of the image plus a little extra padding */
+}
+
 .note-for-team {
   padding-right: 10px;
 }

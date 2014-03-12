@@ -56,8 +56,8 @@ var Note = React.createClass({
       return (
         /* jshint ignore:start */
         <div>
-        <a ref='showMessageThread' className='pull-left note-link'>{this.props.numberOfComments} Comments</a>
-        <a ref='showMessageThread' className='pull-right note-link'>Comment</a>
+        <a ref='showMessageThread' className='pull-left note-number-comments'>{this.props.numberOfComments} Comments</a>
+        <a ref='showMessageThread' className='pull-right note-comment'>Comment</a>
         </div>
         /* jshint ignore:end */
       );
