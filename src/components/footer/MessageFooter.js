@@ -73,7 +73,7 @@ var MessageFooter = React.createClass({
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <nav className='messagefooter navbar navbar-default navbar-fixed-bottom'>
+      <nav className='messagefooter navbar navbar-inverse navbar-fixed-bottom'>
         {messageForm}
       </nav>
       /* jshint ignore:end */
