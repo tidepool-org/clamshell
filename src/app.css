@@ -110,6 +110,10 @@ body {
 
 
 /* Notes Lists */
+.list-group-item {
+  border: none;
+}
+
 .list-group {
   margin-bottom: 50px;
 }
