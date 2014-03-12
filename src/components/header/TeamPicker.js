@@ -36,7 +36,7 @@ var TeamPicker = React.createClass({
       return (
         <div key={i} ref='group' className='row list-group-item'>
           <div ref='imgColumn' className='col-xs-3 col-sm-1'>
-            <div ref='authorImage' className="group-image"/>
+            <div ref='authorImage' className="icon-clamshell_profile"/>
           </div>
           <div className='col-xs-9 col-sm-11'>
             <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
@@ -52,7 +52,7 @@ var TeamPicker = React.createClass({
         <ul className='nav navbar-nav'>
           <li ref='groupDropdown' className='dropdown yamm-fw'>
             <a href='#' data-toggle='dropdown' className='dropdown-toggle'>
-              <span className='caret'></span>
+              <span className='icon-clamshell_messege_dropdown'></span>
             </a>
             <ul ref='groups' className='dropdown-menu list-group'>
               {groups}

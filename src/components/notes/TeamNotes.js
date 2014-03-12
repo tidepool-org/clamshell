@@ -41,6 +41,7 @@ var TeamNotes = React.createClass({
               ref='teamNote'
               imgColumns='col-xs-3 col-sm-1'
               detailColumns='col-xs-9 col-sm-11'
+              image='note-image-large'
               onClick={this.props.onThreadSelected.bind(null, note)}
               key={note.id}
               author={note.username}

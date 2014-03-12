@@ -22,7 +22,7 @@ body {
 
 .back-icon {
   display: block;
-  background: url('images/icon_back.png');
+  background: url('images/back32x32.png');
   background-size: 32px 32px;
   width: 32px;
   height: 32px;
@@ -31,7 +31,7 @@ body {
 
 .logout-icon {
   display: block;
-  background: url('images/icon_logo.png');
+  background: url('images/blip_logo32x32.png');
   background-size: 32px 32px;
   width: 32px;
   height: 32px;
@@ -39,7 +39,7 @@ body {
 }
 
 .dropdown-icon {
-  background: url('images/icon_dropdown.png');
+  background: url('images/dropdown32x32.png');
   background-repeat:no-repeat;
   background-position:center;
   min-height: 32px;
@@ -84,24 +84,24 @@ body {
 /* Login */
 
 .blip-logo {
-  background-image: url('images/blip_logo.png');
+  background-image: url('images/blip_logo128x128.png');
   background-repeat:no-repeat;
   background-position:center;
-  min-height: 145px;
-  min-width: 145px;
+  min-height: 128px;
+  min-width: 128px;
 }
 
 .tidepool-logo {
   background-image: url('images/tidepool_logo.png');
   background-repeat:no-repeat;
-  min-height: 16px;
-  min-width: 142px;
+  min-height: 20px;
+  min-width: 185px;
   margin-bottom: 50px;
 }
 
 /* Team Picker */
 .group-image {
-  background-image: url('images/profile_default.png');
+  background-image: url('images/profile80x80.png');
   background-repeat:no-repeat;
   background-position: 50% 50%;
   min-height: 61px;
@@ -120,12 +120,20 @@ body {
   padding-right: 10px;
 }
 
-.note-image{
-  background-image: url('images/profile_default.png');
+.note-image-large{
+  background-image: url('images/profile80x80.png');
   background-repeat:no-repeat;
   background-position: 50% 50%;
-  min-height: 61px;
-  min-width: 61px;
+  min-height: 90px;
+  min-width: 90px;
+}
+
+.note-image{
+  background-image: url('images/profile50x50.png');
+  background-repeat:no-repeat;
+  background-position: 50% 50%;
+  min-height: 70px;
+  min-width: 70px;
 }
 
 .note-header {

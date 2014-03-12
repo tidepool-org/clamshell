@@ -73,7 +73,7 @@ var Note = React.createClass({
       /* jshint ignore:start */
       <div className='note list-group-item row'>
       <div ref='imgColumn' className={this.props.imgColumns}>
-        <div ref='authorImage' className='note-image'/>
+        <div ref='authorImage' className={this.props.image}/>
       </div>
       <div ref='detailColumn' className={this.props.detailColumns}>
       {noteHeading}
