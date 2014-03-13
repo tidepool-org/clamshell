@@ -31,8 +31,8 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='rootNote'
-      imgColumns='col-xs-3 col-sm-1'
-      detailColumns='col-xs-9 col-sm-11'
+      imgColumns='col-xs-4 col-sm-1'
+      detailColumns='col-xs-8 col-sm-11'
       image='note-image-large'
       key={message.id}
       author={message.username}
@@ -47,8 +47,8 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='commentNote'
-      imgColumns='col-xs-3 col-sm-1'
-      detailColumns='col-xs-9 col-sm-11'
+      imgColumns='col-xs-4 col-sm-1'
+      detailColumns='col-xs-8 col-sm-11'
       image='note-image'
       key={message.id}
       author={message.username}

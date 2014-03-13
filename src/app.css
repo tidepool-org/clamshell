@@ -28,14 +28,11 @@ body {
   min-width: 32px;
 }
 
-.listnavbar {
-  background-color: #6AC1D2;
-  background-image: none;
-}
+/* message footer */
 
-.listnavbar
-.navbar-text {
-  color: #fff;
+.navbar-form {
+  margin: 0;
+  border: none;
 }
 
 /* full width drop down */
