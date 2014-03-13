@@ -119,15 +119,15 @@ module.exports = function(component,app) {
       messagetext : note.text
     };
 
-    app.api.notes.reply(comment,function(error){
+    app.api.notes.reply(comment,function(error, addedComment){
       app.log('reply added');
       if(error){
         return component.handleError(error);
       }
+      thread.push(addedComment);
+      component.setState({selectedThread: thread});
     }.bind(this));
 
-    thread.push(comment);
-    component.setState({selectedThread: thread});
   };
 
   component.handleGroupChanged = function(selectedGroup){
