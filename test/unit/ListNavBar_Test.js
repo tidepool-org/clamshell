@@ -15,6 +15,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
+'use strict';
+
 var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
@@ -25,48 +27,47 @@ var ListNavBar = require('../../build/components/header/ListNavBar');
 var handled = false;
 
 var actionHandeled = function(){
-    handled = true;
+  handled = true;
 };
 
 var testTitle = 'My Test NavBar';
 
 
 describe('ListNavBar', function() {
-    var component, container;
+  var component, container;
 
-    beforeEach(function() {
-        //we add our component to test into a div and then render it
-        //onLogoutSuccess={this.handleLogoutSuccess} logout={app.auth.logout.bind(app.auth)
-        component = ListNavBar({
-            title : testTitle,
-            onNavBarAction : actionHandeled
-        });
-
-        container = document.createElement('div');
-        document.documentElement.appendChild(container);
-        React.renderComponent(component, container);
-
+  beforeEach(function() {
+    //we add our component to test into a div and then render it
+    component = new ListNavBar({
+      title : testTitle,
+      onNavBarAction : actionHandeled
     });
 
-    afterEach(function() {
-        React.unmountComponentAtNode(container);
-        document.documentElement.removeChild(container);
-    });
+    container = document.createElement('div');
+    document.documentElement.appendChild(container);
+    React.renderComponent(component, container);
 
-    it('should an action button', function() {
-        var actionBtn = component.refs.actionBtn;
-        expect(actionBtn).to.exist;
-    });
+  });
 
-    it('should give the title to be what we set it as', function() {
-        var theTitle = component.props.title;
-        expect(theTitle).to.equal(testTitle);
-    });
+  afterEach(function() {
+    React.unmountComponentAtNode(container);
+    document.documentElement.removeChild(container);
+  });
 
-    it('should call actionHandeled action button clicked', function() {
+  it('should an action button', function() {
+    var actionBtn = component.refs.actionBtn;
+    expect(actionBtn).to.exist;
+  });
 
-        component.refs.actionBtn.props.onClick();
-        expect(handled).to.be.true;
-    });
+  it('should give the title to be what we set it as', function() {
+    var theTitle = component.props.title;
+    expect(theTitle).to.equal(testTitle);
+  });
+
+  it('should call actionHandeled action button clicked', function() {
+
+    component.refs.actionBtn.props.onClick();
+    expect(handled).to.be.true;
+  });
 
 });

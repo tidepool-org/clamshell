@@ -13,7 +13,9 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-module.exports = function(bows) {
+ 'use strict';
+
+ module.exports = function(bows) {
   var api = {
     log: bows('Api'),
     user: {
