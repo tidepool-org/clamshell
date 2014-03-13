@@ -35,7 +35,7 @@ var TeamPicker = React.createClass({
     var groups = this.props.groups.map(function(group,i) {
       return (
         <div key={i} ref='group' className='row list-group-item'>
-          <div ref='imgColumn' className='col-xs-3 col-sm-1'>
+          <div ref='imgColumn' className='col-xs-2 col-sm-1'>
             <div ref='authorImage' className="icon-clamshell_profile"/>
           </div>
           <div className='col-xs-9 col-sm-11'>

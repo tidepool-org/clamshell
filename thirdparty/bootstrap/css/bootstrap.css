@@ -1682,7 +1682,7 @@ output {
   padding-top: 7px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #cccccc;
+  color: #808184;
 }
 .form-control {
   display: block;
@@ -1691,8 +1691,8 @@ output {
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #cccccc;
-  background-color: #ffffff;
+  color: #808184;
+  background-color: #f7f7f8;
   background-image: none;
   border: 1px solid #cccccc;
   border-radius: 4px;
@@ -2755,7 +2755,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   font-size: 14px;
   font-weight: normal;
   line-height: 1;
-  color: #cccccc;
+  color: #808184;
   text-align: center;
   background-color: #f7f7f8;
   border: 1px solid #cccccc;
