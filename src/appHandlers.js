@@ -93,19 +93,16 @@ module.exports = function(component,app) {
       messagetext : note.text
     };
 
-    app.api.notes.add(thread,function(error){
+    app.api.notes.add(thread,function(error,addedNote){
       app.log('thread started');
       if(error){
         return component.handleError(error);
       }
+      var updatedTeamNotes = component.state.selectedGroup;
+      updatedTeamNotes.notes.unshift(addedNote);
+      component.setState({selectedGroup : updatedTeamNotes});
+
     }.bind(this));
-
-    var updatedTeamNotes = component.state.selectedGroup;
-
-    updatedTeamNotes.notes.unshift(thread);
-
-    component.setState({selectedGroup : updatedTeamNotes});
-
   };
 
   component.handleAddingToConversation = function(note){

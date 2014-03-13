@@ -265,7 +265,8 @@ module.exports = function(api, host, superagent) {
     api.log('[production] adding reply ... ');
     platform.replyToMessageThread(comment.parentmessage,comment,token,function(error,id){
       api.log('[production] added reply');
-      return callback(error);
+      comment.id = id;
+      return callback(error,comment);
     });
   };
 
@@ -273,7 +274,8 @@ module.exports = function(api, host, superagent) {
     api.log('[production] adding thread ... ');
     platform.startMessageThread(message.groupid,message,token,function(error,id){
       api.log('[production] added thread ... ');
-      return callback(error);
+      message.id = id;
+      return callback(error,message);
     });
   };
 };
