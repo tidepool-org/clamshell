@@ -1,5 +1,21 @@
 body { 
-  padding-top: 51px;  /* required for navbar */
+  padding-top: 50px;
+  background-color: #F7F7F8;
+  color: #898997;
+}
+
+.btn.disabled {
+  opacity: 0.5;
+}
+
+/* MessageFooter
+
+- override form 
+*/
+
+.messagefooter 
+.message-text {
+  width: 100%;
 }
 
 /* ListNavBar*/
@@ -85,9 +101,10 @@ body {
 .group-image {
   background-image: url('images/profile80x80.png');
   background-repeat:no-repeat;
-  background-size:cover;
-  width: 80px;
-  height: 80px;
+  background-position: 50% 50%;
+  min-height: 80px;
+  min-width: 80px;
+  /*margin-right: 20px;*/
 }
 
 
@@ -113,10 +130,15 @@ body {
 
 /* Notes */
 
+.note-number-comments{
+  margin-left: 100px; /*size of image and offset */
+}
+
 .note-comment{
   background-image: url('images/comment16x16.png');
   background-repeat: no-repeat;
   padding-left: 20px;
+  margin-right: 20px;
 }
 
 .note-for-team {
@@ -126,17 +148,19 @@ body {
 .note-image-large{
   background-image: url('images/profile80x80.png');
   background-repeat:no-repeat;
-  background-size:cover;
-  width: 80px;
-  height: 80px;
+  background-position: 50% 50%;
+  min-height: 80px;
+  min-width: 80px;
+  /*margin-right: 20px;*/
 }
 
 .note-image{
   background-image: url('images/profile50x50.png');
   background-repeat:no-repeat;
-  background-size:cover;
-  width: 50px;
-  height: 50px;
+  background-position: 50% 50%;
+  min-height: 50px;
+  min-width: 50px;
+  /*margin-right: 20px;*/
 }
 
 .note-header {

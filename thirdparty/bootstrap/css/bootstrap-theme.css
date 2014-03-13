@@ -40,6 +40,7 @@
   filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
   background-repeat: repeat-x;
   border-color: #39a6bc;
+  text-shadow: 0 1px 0 #fff;
   border-color: #ccc;
 }
 .btn-default:hover,
