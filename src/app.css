@@ -1,4 +1,4 @@
-body { 
+body {
   padding-top: 51px;  /* required for navbar */
   padding-bottom: 51px; /* required for footer */
 }
@@ -34,7 +34,6 @@ body {
 }
 
 /* message footer */
-
 .navbar-form {
   margin: 0;
   border: none;
@@ -94,6 +93,11 @@ body {
 
 
 /* Notes Lists */
+
+.media:first-child {
+  margin-top: 10px;
+}
+
 .media {
   padding-left: 10px;
   padding-right: 10px;

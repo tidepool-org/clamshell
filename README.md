@@ -31,7 +31,7 @@ $ npm install .
 
 ## Quick start
 
-Once you have completed the install then build the app 
+Once you have completed the install then build the app
 
 ```bash
 $ npm start
@@ -50,7 +50,7 @@ The following snippets of documentation should help you find your way around and
 - **App** (`src/main.js`): Starts the app and used for the webpack build to pull in the various components.
 - **Components** (`src/components`): Reusable React components, the building-blocks of the application.
 - **Layout** (`src/layout`): React container that holds the components that make up the different parts of the screen.
-- **Core** (`app/core/`): Core data and service opjects 
+- **Core** (`app/core/`): Core data and service opjects
 
 ### React components
 
@@ -62,6 +62,18 @@ When writing [React](http://facebook.github.io/react) components, try to follow 
 
 See ["Writing good React components"](http://blog.whn.se/post/69621609605/writing-good-react-components).
 
+
+### Styling
+
+- Uses [Bootstrap](www.getbootstrap.com)
+
+Usage:
+
+- Add the content of the (`thirdparty/bootstrap/config.json`) file to a gist
+  - e.g. https://gist.github.com/jh-bate/f4485668523435eb5063
+- Getting the ID of the Gist add it to the [Bootstrap customization URL](http://getbootstrap.com/customize/?id=)
+- Make any modifications and then download the cusomization package and update the files in Clamshell
+
 ### Vendor packages
 
 Third-party dependencies are managed npm and are installed when you do the install.
@@ -70,7 +82,7 @@ Third-party dependencies are managed npm and are installed when you do the insta
 
 Requirements:
 
-- [Mocha](http://visionmedia.github.io/mocha/) 
+- [Mocha](http://visionmedia.github.io/mocha/)
 - [Chai](http://chaijs.com/)
 - [Browserify](http://browserify.org/)
 - [Testem](https://github.com/airportyh/testem) as the test runner.
