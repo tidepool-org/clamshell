@@ -1,5 +1,10 @@
 body { 
   padding-top: 51px;  /* required for navbar */
+  padding-bottom: 51px; /* required for footer */
+}
+
+.btn-default {
+  text-shadow: none;
 }
 
 /* ListNavBar*/
@@ -80,32 +85,23 @@ body {
 
 /* Team Picker */
 .group-image {
-  background-image: url('images/profile80x80.png');
+  background-image: url('images/profile50x50.png');
   background-repeat:no-repeat;
   background-size:cover;
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
 }
 
 
 /* Notes Lists */
-.list-group-item {
-  border: none;
-}
-
-.list-group {
-  margin-bottom: 50px;
-}
-
-.note.list-group-item.row {
-  margin-bottom: 5px;
-  margin-top: 5px;
-  margin-left: 10px;
+.media {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .notethread
-.note.list-group-item.row:not(:first-of-type) {
-  margin-left:50px;
+.media:not(:first-of-type) {
+  margin-left: 30px;
 }
 
 /* Notes */
@@ -116,24 +112,20 @@ body {
   padding-left: 20px;
 }
 
-.note-for-team {
-  padding-right: 10px;
-}
-
 .note-image-large{
-  background-image: url('images/profile80x80.png');
-  background-repeat:no-repeat;
-  background-size:cover;
-  width: 80px;
-  height: 80px;
-}
-
-.note-image{
   background-image: url('images/profile50x50.png');
   background-repeat:no-repeat;
   background-size:cover;
   width: 50px;
   height: 50px;
+}
+
+.note-image{
+  background-image: url('images/profile32x32.png');
+  background-repeat:no-repeat;
+  background-size:cover;
+  width: 32px;
+  height: 32px;
 }
 
 .note-header {

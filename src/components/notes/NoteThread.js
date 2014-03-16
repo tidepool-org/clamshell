@@ -31,8 +31,6 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='rootNote'
-      imgColumns='col-xs-4 col-sm-1'
-      detailColumns='col-xs-8 col-sm-11'
       image='note-image-large'
       key={message.id}
       author={message.username}
@@ -45,22 +43,21 @@ var NoteThread = React.createClass({
   renderCommentOnNote:function(message){
     return (
       /* jshint ignore:start */
-      <Note
-      ref='commentNote'
-      imgColumns='col-xs-4 col-sm-1'
-      detailColumns='col-xs-8 col-sm-11'
-      image='note-image'
-      key={message.id}
-      author={message.username}
-      note={message.messagetext}
-      when={message.timestamp}
-      showCommentLink={false}/>
+      <li className='media'>
+        <Note
+        ref='commentNote'
+        image='note-image'
+        key={message.id}
+        author={message.username}
+        note={message.messagetext}
+        when={message.timestamp}
+        showCommentLink={false}/>
+      </li>
       /* jshint ignore:end */
       );
   },
   render: function() {
     var items = this.props.messages.map(function(message, i) {
-
       if(!message.parentmessage) {
         return this.renderNote(message);
       } else if (message.parentmessage) {
@@ -70,9 +67,9 @@ var NoteThread = React.createClass({
 
     return (
      /* jshint ignore:start */
-     <div ref='messageThread' className="notethread list-group">
+     <ul ref='messageThread' className='notethread media-list'>
      {items}
-     </div>
+     </ul>
      /* jshint ignore:end */
      );
   }

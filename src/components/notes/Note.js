@@ -42,9 +42,8 @@ var Note = React.createClass({
       );
     }
     return (
-      /* jshint ignore:start */
       <div>
-        <span ref='messageAuthorAndGroup' className='note-header list-group-item-heading'> {this.props.author}</span>
+        <span ref='messageAuthorAndGroup' className='note-header media-heading'> {this.props.author}</span>
         {noteTeam}
       </div>
     );
@@ -56,8 +55,8 @@ var Note = React.createClass({
       return (
         /* jshint ignore:start */
         <div>
-        <a ref='showMessageThread' className='pull-left note-number-comments'>{this.props.numberOfComments} Comments</a>
-        <a ref='showMessageThread' className='pull-right note-comment'>Comment</a>
+          <a ref='showMessageThread' className='pull-left note-number-comments'>{this.props.numberOfComments} Comments</a>
+          <a ref='showMessageThread' className='pull-right note-comment'>Comment</a>
         </div>
         /* jshint ignore:end */
       );
@@ -71,17 +70,17 @@ var Note = React.createClass({
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <div className='note list-group-item row'>
-      <div ref='imgColumn' className={this.props.imgColumns}>
-        <div ref='authorImage' className={this.props.image}/>
-      </div>
-      <div ref='detailColumn' className={this.props.detailColumns}>
-      {noteHeading}
-      <span ref='messageWhen' className='note-when'>{this.niceTime(this.props.when)}</span>
-      <p ref='messageText' className='note-message list-group-item-text'>{this.props.note}</p>
-      {commentLink}
-      </div>
-      </div>
+      <li className='note media'>
+        <div ref='imgColumn' className='media-object pull-left'>
+          <div ref='authorImage' className={this.props.image}/>
+        </div>
+        <div ref='detailColumn' className='media-body'>
+          {noteHeading}
+          <span ref='messageWhen' className='note-when'>{this.niceTime(this.props.when)}</span>
+          <p ref='messageText' className='note-message'>{this.props.note}</p>
+          {commentLink}
+        </div>
+      </li>
       /* jshint ignore:end */
     );
   }

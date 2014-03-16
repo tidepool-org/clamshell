@@ -39,8 +39,7 @@ var TeamNotes = React.createClass({
           /* jshint ignore:start */
           <Note
               ref='teamNote'
-              imgColumns='col-xs-4 col-sm-1'
-              detailColumns='col-xs-8 col-sm-11'
+              imgColumns='pull-left'
               image='note-image-large'
               onClick={this.props.onThreadSelected.bind(null, note)}
               key={note.id}
@@ -64,9 +63,9 @@ var TeamNotes = React.createClass({
 
     return (
         /* jshint ignore:start */
-        <div className='teamnotes list-group'>
+        <ul className='teamnotes media-list'>
             {items}
-        </div>
+        </ul>
         /* jshint ignore:end */
     );
   }
