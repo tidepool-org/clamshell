@@ -1706,14 +1706,14 @@ output {
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
 .form-control::-moz-placeholder {
-  color: #ffffff;
+  color: #989897;
   opacity: 1;
 }
 .form-control:-ms-input-placeholder {
-  color: #ffffff;
+  color: #989897;
 }
 .form-control::-webkit-input-placeholder {
-  color: #ffffff;
+  color: #989897;
 }
 .form-control[disabled],
 .form-control[readonly],
@@ -2012,7 +2012,7 @@ select[multiple].input-lg {
 }
 .btn:hover,
 .btn:focus {
-  color: #989897;
+  color: #ffffff;
   text-decoration: none;
 }
 .btn:active,
@@ -2033,7 +2033,7 @@ fieldset[disabled] .btn {
   box-shadow: none;
 }
 .btn-default {
-  color: #989897;
+  color: #ffffff;
   background-color: #6ac1d2;
   border-color: #6ac1d2;
 }
@@ -2042,7 +2042,7 @@ fieldset[disabled] .btn {
 .btn-default:active,
 .btn-default.active,
 .open .dropdown-toggle.btn-default {
-  color: #989897;
+  color: #ffffff;
   background-color: #4bb4c9;
   border-color: #3badc4;
 }
@@ -2071,7 +2071,7 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-default .badge {
   color: #6ac1d2;
-  background-color: #989897;
+  background-color: #ffffff;
 }
 .btn-primary {
   color: #6ac1d2;
