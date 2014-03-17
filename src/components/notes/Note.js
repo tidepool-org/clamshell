@@ -70,7 +70,7 @@ var Note = React.createClass({
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <li className='note media'>
+      <div className='note media'>
         <div ref='imgColumn' className='media-object pull-left'>
           <div ref='authorImage' className={this.props.image}/>
         </div>
@@ -80,7 +80,7 @@ var Note = React.createClass({
           <p ref='messageText' className='note-message'>{this.props.note}</p>
           {commentLink}
         </div>
-      </li>
+      </div>
       /* jshint ignore:end */
     );
   }

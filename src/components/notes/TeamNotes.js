@@ -63,9 +63,9 @@ var TeamNotes = React.createClass({
 
     return (
         /* jshint ignore:start */
-        <ul className='teamnotes media-list'>
+        <div className='teamnotes'>
             {items}
-        </ul>
+        </div>
         /* jshint ignore:end */
     );
   }

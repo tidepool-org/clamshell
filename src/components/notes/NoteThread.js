@@ -43,16 +43,14 @@ var NoteThread = React.createClass({
   renderCommentOnNote:function(message){
     return (
       /* jshint ignore:start */
-      <li className='media'>
-        <Note
-        ref='commentNote'
-        image='note-image'
-        key={message.id}
-        author={message.username}
-        note={message.messagetext}
-        when={message.timestamp}
-        showCommentLink={false}/>
-      </li>
+      <Note
+      ref='commentNote'
+      image='note-image'
+      key={message.id}
+      author={message.username}
+      note={message.messagetext}
+      when={message.timestamp}
+      showCommentLink={false}/>
       /* jshint ignore:end */
       );
   },
@@ -67,9 +65,9 @@ var NoteThread = React.createClass({
 
     return (
      /* jshint ignore:start */
-     <ul ref='messageThread' className='notethread media-list'>
+     <div ref='messageThread' className='notethread'>
      {items}
-     </ul>
+     </div>
      /* jshint ignore:end */
      );
   }
