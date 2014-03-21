@@ -27,19 +27,18 @@ var TeamPicker = React.createClass({
 
   handleSelection: function(selectedGroup) {
     this.props.onGroupPicked({groupId:selectedGroup});
-    return false;
   },
 
   render:function(){
 
     var groups = this.props.groups.map(function(group,i) {
       return (
-        <div key={i} ref='group' className='row list-group-item'>
-          <div ref='imgColumn' className='col-xs-2 col-sm-1'>
-            <div ref='authorImage' className="icon-clamshell_profile"/>
+        <div key={i} ref='group' className='media'>
+          <div ref='imgColumn' className='media-object pull-left'>
+            <div ref='authorImage' className='group-image'/>
           </div>
-          <div className='col-xs-9 col-sm-11'>
-            <a ref='groupSelect' href='#' onClick={this.handleSelection.bind(null, group.id)}>
+          <div ref='teamColumn' className='media-body'>
+            <a ref='groupSelect' onClick={this.handleSelection.bind(null, group.id)}>
               <p ref='groupName'>{group.profile.shortname}</p>
             </a>
           </div>
@@ -48,17 +47,17 @@ var TeamPicker = React.createClass({
     }.bind(this));
 
     return this.transferPropsTo(
-      <div id='navbar-collapse-grid' className='navbar-collapse'>
-        <ul className='nav navbar-nav'>
-          <li ref='groupDropdown' className='dropdown yamm-fw'>
-            <a href='#' data-toggle='dropdown' className='dropdown-toggle'>
-              <span className='icon-clamshell_messege_dropdown'></span>
-            </a>
-            <ul ref='groups' className='dropdown-menu list-group'>
-              {groups}
-            </ul>
-          </li>
-        </ul>
+      <div ref='selectGroup'>
+        <div className='navbar-header'>
+          <a className='btn-team-picker btn btn-default navbar-toggle' data-toggle='collapse' data-target='#groups-navbar'>
+            <span className='caret'></span>
+          </a>
+        </div>
+        <div className='collapse navbar-collapse' id='groups-navbar'>
+          <div className='team-picker nav navbar-nav'>
+            {groups}
+          </div>
+        </div>
       </div>
     );
   }

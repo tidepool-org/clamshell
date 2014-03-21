@@ -174,8 +174,11 @@ var ClamShellApp = React.createClass({
   renderMessagesForSelectedTeam:function(){
 
     var careTeamName = this.state.selectedGroup.profile.shortname +'\'s Care team';
-
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
+
+    if(app.dataHelper.hasMultipleTeams(this.state.userGroupsData)){
+      navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
+    }
 
     return (
       /* jshint ignore:start */

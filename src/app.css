@@ -26,42 +26,30 @@ body {
 }
 
 .dropdown-icon {
+  display: block;
   background: url('images/dropdown32x32.png');
   background-repeat:no-repeat;
-  background-position:center;
-  min-height: 32px;
-  min-width: 32px;
+  height: 32px;
+  margin-top: 9px;
+}
+
+.navbar-collapse {
+  background: #e5e5e6;
+}
+
+.btn-team-picker {
+  border: none;
+  box-shadow: none;
+}
+
+.btn-team-picker:hover{
+  background: #6ac1d2;
 }
 
 /* message footer */
 .navbar-form {
   margin: 0;
   border: none;
-}
-
-/* full width drop down */
-.yamm .nav,
-.yamm .collapse,
-.yamm .dropup,
-.yamm .dropdown {
-  position: static;
-}
-.yamm .container {
-  position: relative;
-}
-.yamm .dropdown-menu {
-  left: auto;
-}
-.yamm .nav.navbar-right .dropdown-menu {
-  left: auto;
-  right: 0;
-}
-.yamm .yamm-content {
-  padding: 20px 30px;
-}
-.yamm .dropdown.yamm-fw .dropdown-menu {
-  left: 0;
-  right: 0;
 }
 
 /* Login */
@@ -84,16 +72,15 @@ body {
 
 /* Team Picker */
 .group-image {
-  background-image: url('images/profile50x50.png');
+  background-image: url('images/profile32x32.png');
   background-repeat:no-repeat;
   background-size:cover;
-  width: 50px;
-  height: 50px;
+  width: 32px;
+  height: 32px;
 }
 
 
 /* Notes Lists */
-
 .media:first-child {
   margin-top: 10px;
 }

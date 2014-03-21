@@ -31,16 +31,14 @@ var ListNavBar = React.createClass({
   render: function() {
     return (
       /* jshint ignore:start */
-      <div className='listnavbar navbar navbar-default navbar-fixed-top yamm' >
+      <div className='listnavbar navbar navbar-default navbar-fixed-top' >
         <div className='col-xs-2 col-sm-1'>
           <a ref='actionBtn' onClick={this.handleAction}>
             <span className={this.props.actionIcon}></span>
           </a>
         </div>
         <h4 className='navbar-text text-center col-xs-8 col-sm-9'>{this.props.title}</h4>
-        <span className='pull-right'>
-          {this.props.children}
-        </span>
+        {this.props.children}
       </div>
       /* jshint ignore:end */
     );

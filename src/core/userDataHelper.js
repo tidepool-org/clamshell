@@ -49,6 +49,9 @@ var userDataHelper = {
   combineTeams : function (teamToAdd,existingTeams){
     existingTeams.push(teamToAdd);
     return _.uniq(existingTeams, function(team) { return team.id; });
+  },
+  hasMultipleTeams : function(userTeams) {
+    return (_.size(userTeams) > 1);
   }
 };
 
