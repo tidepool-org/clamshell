@@ -1,0 +1,9 @@
+/* Notes Lists */
+.note:first-child {
+  margin-top: 10px;
+}
+
+.notethread .note:not(:first-of-type) {
+    margin-left: 80px;
+    margin-top: 0px;
+}

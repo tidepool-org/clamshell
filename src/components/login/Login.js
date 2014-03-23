@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./Login.css');
+
 var Login = React.createClass({
 
   getInitialState: function() {
@@ -35,7 +37,7 @@ var Login = React.createClass({
     return (
       /* jshint ignore:start */
       <div className='logos'>
-        <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
+        <div className='col-xs-offset-1 col-sm-offset-2 row'>
           <div className='tidepool-logo' />
         </div>
         <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>

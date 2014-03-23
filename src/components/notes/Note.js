@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var sundial = require('moment');
 
+require('./Note.css');
+
 var Note = React.createClass({
 
   niceTime: function(time){
@@ -43,7 +45,7 @@ var Note = React.createClass({
     }
     return (
       <div>
-        <span ref='messageAuthorAndGroup' className='note-header media-heading'> {this.props.author}</span>
+        <strong ref='messageAuthorAndGroup' className='note-header media-heading'> {this.props.author}</strong>
         {noteTeam}
       </div>
     );
@@ -76,7 +78,7 @@ var Note = React.createClass({
         </div>
         <div ref='detailColumn' className='media-body'>
           {noteHeading}
-          <span ref='messageWhen' className='note-when'>{this.niceTime(this.props.when)}</span>
+          <span ref='messageWhen' className='small note-when'>{this.niceTime(this.props.when)}</span>
           <p ref='messageText' className='note-message'>{this.props.note}</p>
           {commentLink}
         </div>

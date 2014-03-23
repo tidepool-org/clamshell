@@ -234,7 +234,7 @@ module.exports = function(api, host, superagent) {
           });
         }
       }
-      //no patients
+      api.log('[production] user has no patients');
       return cb(null,details);
     });
   };

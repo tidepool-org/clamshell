@@ -26,6 +26,8 @@ var sundial = require('moment');
 
 var Note = require('./Note');
 
+require('./TeamNotes.css');
+
 var TeamNotes = React.createClass({
 
   notesForGroup:function(group){

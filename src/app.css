@@ -7,129 +7,14 @@ body {
   text-shadow: none;
 }
 
-/* ListNavBar*/
-
-.back-icon {
-  display: block;
-  background: url('images/back24x24.png');
-  background-repeat:no-repeat;
-  height: 24px;
-  margin-top: 13px;
+.btn {
+  border-radius: 0px;
 }
 
-.logout-icon {
-  display: block;
-  background: url('images/blip_logo32x32.png');
-  background-repeat:no-repeat;
-  height: 32px;
-  margin-top: 9px;
-}
-
-.dropdown-icon {
-  display: block;
-  background: url('images/dropdown32x32.png');
-  background-repeat:no-repeat;
-  height: 32px;
-  margin-top: 9px;
-}
-
-.navbar-collapse {
-  background: #e5e5e6;
-}
-
-.btn-team-picker {
-  border: none;
+.form-control {
+  border-radius: 0px;
+  -webkit-box-shadow: none;
   box-shadow: none;
-}
-
-.btn-team-picker:hover{
-  background: #6ac1d2;
-}
-
-/* message footer */
-.navbar-form {
-  margin: 0;
-  border: none;
-}
-
-/* Login */
-
-.blip-logo {
-  background-image: url('images/blip_logo128x128.png');
-  background-repeat:no-repeat;
-  background-position:center;
-  min-height: 128px;
-  min-width: 128px;
-}
-
-.tidepool-logo {
-  background-image: url('images/tidepool_logo.png');
-  background-repeat:no-repeat;
-  min-height: 20px;
-  min-width: 185px;
-  margin-bottom: 50px;
-}
-
-/* Team Picker */
-.group-image {
-  background-image: url('images/profile32x32.png');
-  background-repeat:no-repeat;
-  background-size:cover;
-  width: 32px;
-  height: 32px;
-}
-
-
-/* Notes Lists */
-.media:first-child {
-  margin-top: 10px;
-}
-
-.media {
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.notethread
-.media:not(:first-of-type) {
-  margin-left: 30px;
-}
-
-/* Notes */
-
-.note-comment{
-  background-image: url('images/comment16x16.png');
-  background-repeat: no-repeat;
-  padding-left: 20px;
-}
-
-.note-image-large{
-  background-image: url('images/profile50x50.png');
-  background-repeat:no-repeat;
-  background-size:cover;
-  width: 50px;
-  height: 50px;
-}
-
-.note-image{
-  background-image: url('images/profile32x32.png');
-  background-repeat:no-repeat;
-  background-size:cover;
-  width: 32px;
-  height: 32px;
-}
-
-.note-header {
-  font-size: medium;
-  font-weight: bold;
-}
-
-.note-when {
-  font-size: smaller;
-}
-
-.note-message {
-  font-size: initial;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  -webkit-transition: none;
+  transition: none;
 }

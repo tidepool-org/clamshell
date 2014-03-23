@@ -1,0 +1,12 @@
+/* message footer */
+.messagefooter
+.navbar-form {
+	padding: 0px;
+  margin-left : 10px;
+  margin-right : 10px;
+  border: none;
+}
+
+.messagefooter.navbar-inverse {
+	background-image: none;
+}
