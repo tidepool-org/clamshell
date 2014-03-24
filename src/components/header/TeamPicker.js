@@ -35,14 +35,15 @@ var TeamPicker = React.createClass({
 
     var groups = this.props.groups.map(function(group,i) {
       return (
-        <div key={i} ref='group' className='media'>
+        <div key={i} ref='group' className='group media'>
           <div ref='imgColumn' className='media-object pull-left'>
             <div ref='authorImage' className='group-image'/>
           </div>
-          <div ref='teamColumn' className='media-body'>
-            <a ref='groupSelect' onClick={this.handleSelection.bind(null, group.id)}>
-              <p ref='groupName'>{group.profile.shortname}</p>
-            </a>
+          <div ref='teamColumn' className='media-body' onClick={this.handleSelection.bind(null, group.id)}>
+            <div>
+              <strong ref='groupName' className='media-heading' >{group.profile.shortname}</strong>
+            </div>
+            <span ref='lastGroupNote' className='small pull-left'>Last note ...</span>
           </div>
         </div>
       );
@@ -55,8 +56,8 @@ var TeamPicker = React.createClass({
             <span className='caret'></span>
           </a>
         </div>
-        <div className='collapse navbar-collapse' id='groups-navbar'>
-          <div className='team-picker nav navbar-nav'>
+        <div className='team-picker collapse navbar-collapse' id='groups-navbar'>
+          <div className='nav navbar-nav'>
             {groups}
           </div>
         </div>
