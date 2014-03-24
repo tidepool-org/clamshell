@@ -7,8 +7,12 @@
   box-shadow: none;
 }
 
-.btn-team-picker:hover{
-  background: #6ac1d2;
+.btn-team-picker.navbar-toggle {
+  margin-bottom:0px;
+}
+
+.btn-team-picker.navbar-toggle:hover {
+    background-color: #6ac1d2;
 }
 
 .group-image {
