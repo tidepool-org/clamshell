@@ -1,3 +1,7 @@
+.listnavbar {
+  background-image: none;
+}
+
 .back-icon {
   display: block;
   background: url('images/back24x24.png');
