@@ -70,6 +70,9 @@ var ClamShellApp = React.createClass({
       userMessage : null
     };
   },
+  /**
+   * Data integrration for the app
+   */
   attachPlatform : function(){
     app.log('attaching to platform ...');
 
@@ -79,10 +82,16 @@ var ClamShellApp = React.createClass({
       require('./core/platform')(app.api,config.apiHost,window.superagent);
     }
   },
+  /**
+   * Handlers for the app
+   */
   attachHandlers : function(){
     app.log('attaching handlers ...');
     require('./appHandlers')(this,app);
   },
+  /**
+   * Router for the app
+   */
   attachRouter : function(){
     app.log('attaching router ...');
     router.init(this);
@@ -103,6 +112,9 @@ var ClamShellApp = React.createClass({
       }
     }.bind(this));
   },
+  /**
+   * Load the logged in users data for all the teams that are a part of
+   */
   loadUserData: function(){
 
     this.setState({
@@ -122,6 +134,9 @@ var ClamShellApp = React.createClass({
     }.bind(this));
 
   },
+  /**
+   * Show the logged in users data for all the teams that are a part of
+   */
   showUserData: function(userTeams){
 
     if (userTeams.patients.length > 0) {
@@ -132,7 +147,6 @@ var ClamShellApp = React.createClass({
           userGroupsData: teams,
           routeName : app.routes.messagesForAllTeams
         });
-
         return;
       }
     }
@@ -195,16 +209,18 @@ var ClamShellApp = React.createClass({
   },
   renderMessagesForAllTeams:function(){
 
+    /* jshint ignore:start */
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
 
     return (
-      /* jshint ignore:start */
       <Layout>
         {navBar}
-      <TeamNotes groups={this.state.userGroupsData} onThreadSelected={this.handleShowConversationThread} />
+       <TeamNotes 
+         groups={this.state.userGroupsData} 
+         onThreadSelected={this.handleShowConversationThread} />
       </Layout>
-      /* jshint ignore:end */
       );
+    /* jshint ignore:end */
   },
   renderMessageThread:function(){
 
