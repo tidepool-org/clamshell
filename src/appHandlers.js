@@ -65,6 +65,7 @@ module.exports = function(component,app) {
     component.setState({
       routeName : app.routes.message,
       userMessage : error,
+      userMessageIsError : true,
       previousRoute : component.state.routeName
     });
   };

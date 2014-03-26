@@ -67,7 +67,8 @@ var ClamShellApp = React.createClass({
       userGroupsData : null,
       selectedGroup : null,
       selectedThread : null,
-      userMessage : null
+      userMessage : null,
+      userMessageIsError : false
     };
   },
   /**
@@ -246,17 +247,26 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout>
-      <Login onLoginSuccess={this.handleLoginSuccess} login={app.api.user.login.bind()}/>
+      <Login
+        onLoginSuccess={this.handleLoginSuccess}
+        login={app.api.user.login.bind()} />
       </Layout>
       /* jshint ignore:end */
       );
   },
 
   renderMessageLayout:function(){
+    var navBar;
+
+    if(this.state.userMessageIsError){
+      navBar = this.renderNavBar(null,'back-icon',this.handleBack);
+    }
+
     return (
       /* jshint ignore:start */
       <Layout>
-      <UserMessage message={this.state.userMessage}/>
+      {navBar}
+      <UserMessage message={this.state.userMessage} />
       </Layout>
       /* jshint ignore:end */
       );
