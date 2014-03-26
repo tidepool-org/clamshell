@@ -17,4 +17,15 @@
 .login-form
 .form-control {
   text-align: center;
+  border: 2px solid #e6e6e5;
+}
+
+.login-form
+.form-control:focus {
+  border: 2px solid #66afe9;
+}
+
+.login-form
+.btn {
+  border:none;
 }
