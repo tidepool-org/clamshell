@@ -83,11 +83,12 @@ module.exports = function(component,app) {
 
   };
 
+
   component.handleStartConversation = function(note){
 
     var thread = {
       userid : component.state.loggedInUser.userid,
-      username : component.state.loggedInUser.profile.shortname,
+      username : component.state.loggedInUser.profile.firstName,
       groupid : component.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text
@@ -113,7 +114,7 @@ module.exports = function(component,app) {
     var comment = {
       parentmessage : parentId,
       userid : component.state.loggedInUser.userid,
-      username : component.state.loggedInUser.profile.shortname,
+      username : component.state.loggedInUser.profile.firstName,
       groupid : component.state.selectedGroup.id,
       timestamp : new Date(),
       messagetext : note.text

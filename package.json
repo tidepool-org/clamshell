@@ -16,8 +16,8 @@
     "hakken": "0.1.4",
     "lodash": "2.4.1",
     "moment": "2.5.1",
-    "tidepool-platform-client": "0.0.2",
-    "react": "0.9.0"
+    "react": "0.9.0",
+    "tidepool-platform-client": "0.0.6"
   },
   "devDependencies": {
     "browserify": "3.30.1",

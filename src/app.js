@@ -173,7 +173,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessagesForSelectedTeam:function(){
 
-    var careTeamName = this.state.selectedGroup.profile.shortname +'\'s Care team';
+    var careTeamName = this.state.selectedGroup.profile.firstName +'\'s Care team';
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
     if(app.dataHelper.hasMultipleTeams(this.state.userGroupsData)){
@@ -208,7 +208,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessageThread:function(){
 
-    var careTeamName = 'Note in '+ this.state.selectedGroup.profile.shortname +'\'s team';
+    var careTeamName = 'Note in '+ this.state.selectedGroup.profile.firstName +'\'s team';
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 

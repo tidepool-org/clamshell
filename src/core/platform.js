@@ -199,7 +199,10 @@ module.exports = function(api, host, superagent) {
       function(team, callback){
         api.log('[production] getting notes for team');
         platform.getNotesForTeam(team.id, token, function(notesError,notes){
-          team.notes = notes;
+          team.notes = [];
+          if(notes){
+            team.notes = notes;
+          }
           callback(notesError,team);
         });
       }

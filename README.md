@@ -39,7 +39,6 @@ $ npm start
 
 Open the index.html in your web browser and start using ClamShell
 
-
 ## Development
 
 The following snippets of documentation should help you find your way around and contribute to the app's code.
@@ -65,7 +64,9 @@ See ["Writing good React components"](http://blog.whn.se/post/69621609605/writin
 
 ### Styling
 
-- Uses [Bootstrap](www.getbootstrap.com)
+- Base styling uses [Bootstrap](www.getbootstrap.com)
+- Individual components have any associated styling with the component itself
+ - e.g. (`src/components/footer/MessageFooter.css`)
 
 Usage:
 
