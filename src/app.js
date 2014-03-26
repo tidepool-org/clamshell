@@ -237,9 +237,12 @@ var ClamShellApp = React.createClass({
   },
 
   renderMessageLayout:function(){
+    var navBar = this.renderNavBar('','back-icon',this.handleBack);
+
     return (
       /* jshint ignore:start */
       <Layout>
+      {navBar}
       <UserMessage message={this.state.userMessage}/>
       </Layout>
       /* jshint ignore:end */

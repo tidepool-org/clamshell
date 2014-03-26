@@ -51,7 +51,11 @@ module.exports = function(component,app) {
 
   component.handleError =function(error){
     app.log.error(error);
-    component.setState({routeName : app.routes.message, userMessage : error });
+    component.setState({ 
+      routeName : app.routes.message,
+      userMessage : error,
+      previousRoute : component.state.routeName
+     });
   };
 
   component.handleLoginSuccess = function(){
