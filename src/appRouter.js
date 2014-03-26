@@ -24,6 +24,9 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 module.exports = function() {
 
   return {
+    /**
+     * The routes we handle
+     */
     routes : {
       login : 'login',
       message : 'message',
@@ -31,6 +34,11 @@ module.exports = function() {
       messagesForSelectedTeam : 'usersTeam',
       messageThread : 'thread'
     },
+    /**
+     * Initialize the router for the given component
+     *
+     * @param {Component} appComponent - the app component that the router will be attached too
+     */
     init : function(appComponent){
       var Router = require('director').Router;
 

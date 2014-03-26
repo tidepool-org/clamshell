@@ -25,7 +25,10 @@ module.exports = function(component,app) {
 
   var _ = require('lodash');
 
-  //---------- App Handlers ----------
+
+  /**
+   * Delete the users session and set app state to be logged out
+   */
   component.handleLogout =function(){
     app.log('logging out');
     app.api.user.deleteSession(function(success){
@@ -40,6 +43,9 @@ module.exports = function(component,app) {
     }.bind(this));
   };
 
+  /**
+   * Set app state to handle the back command
+   */
   component.handleBack =function(){
     var previousRoute = component.state.previousRoute;
     if(!previousRoute){
@@ -49,19 +55,32 @@ module.exports = function(component,app) {
     component.setState({routeName:previousRoute});
   };
 
+  /**
+   * Basic handler when an error has occured, we just show the message
+   *
+   * @param {Error} error - The error that has occured to be shown.
+   */
   component.handleError =function(error){
     app.log.error(error);
-    component.setState({ 
+    component.setState({
       routeName : app.routes.message,
       userMessage : error,
       previousRoute : component.state.routeName
-     });
+    });
   };
 
+  /**
+   * Trigger load of user data on successful login
+   */
   component.handleLoginSuccess = function(){
     component.loadUserData();
   };
 
+  /**
+   * Load a message thread from the platform
+   *
+   * @param {Message} mostRecentMessageInThread - The most recent message in a thread
+   */
   component.handleShowConversationThread = function(mostRecentMessageInThread){
 
     var messagesId = mostRecentMessageInThread.id;
@@ -87,7 +106,11 @@ module.exports = function(component,app) {
 
   };
 
-
+  /**
+   * Save the given message to the platform
+   *
+   * @param {Object} note - The root message text of this thread
+   */
   component.handleStartConversation = function(note){
 
     var thread = {
@@ -110,6 +133,11 @@ module.exports = function(component,app) {
     }.bind(this));
   };
 
+  /**
+   * Add a comment to an existing thread
+   *
+   * @param {Object} note - A comment on the thread
+   */
   component.handleAddingToConversation = function(note){
 
     var thread = component.state.selectedThread;
@@ -135,6 +163,11 @@ module.exports = function(component,app) {
 
   };
 
+  /**
+   * Change which group is being displayed
+   *
+   * @param {Object} selectedGroup - the group that has been selected
+   */
   component.handleGroupChanged = function(selectedGroup){
     var group = _.find(
       component.state.userGroupsData, function(group){
