@@ -19,7 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 module.exports = function(api, host, superagent) {
 
-  var platform = require('tidepool-platform-client')(host,superagent);
+  var platform = require('tidepool-platform-client/index')(host,superagent);
   var async = require('async');
   var _ = require('lodash');
 
