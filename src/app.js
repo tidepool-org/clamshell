@@ -24,7 +24,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var bows = require('bows');
 
-var config = require('./appConfig');
+var config = window.appConfig;
+
 var router = require('./appRouter')();
 
 /*jshint unused:true */

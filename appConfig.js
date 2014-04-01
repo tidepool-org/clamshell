@@ -16,17 +16,15 @@ not, you can obtain one from Tidepool Project at tidepool.org.
  */
 'use strict';
 
-module.exports = (function(){
-  var config = {};
-
-  //app version
-  config.version = process.env.VERSION || '';
-
-  //in demo mode?
-  config.demo = process.env.DEMO || false;
-
-  //the platform
-  config.apiHost = process.env.API_HOST || 'https://devel-api.tidepool.io';
-
-  return config;
-})();
+window.appConfig = {
+  version: '<%= version %>' || '',
+  demo: (function(){
+    var mockValue = '<%= demo %>';
+    if (mockValue === '') {
+      return false;
+    } else {
+      return mockValue === 'true';
+    }
+  })(),
+  apiHost: '<%= api_host %>' || 'https://devel-api.tidepool.io'
+};

@@ -16,9 +16,11 @@
 module.exports = function(grunt) {
   'use strict';
 
+  var packageJson = require('./package.json');
+
   // Project configuration.
   grunt.initConfig({
-      pkg: grunt.file.readJSON('package.json'),
+      pkg: packageJson,
       jshint: {
         options: {
           jshintrc: '.jshintrc'
@@ -56,19 +58,37 @@ module.exports = function(grunt) {
             './node_modules/.bin/testem ci'
           ]
         }
+      },
+      template: {
+        parseConfig: {
+          options: {
+            data: {
+              version : packageJson.version,
+              demo : process.env.DEMO,
+              api_host : process.env.API_HOST
+            }
+          },
+          files: {
+            'app_build/appConfig.js': ['appConfig.js']
+          }
+        }
       }
     });
+
+  // Process Config
 
   // Load the plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-shell-spawn');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-template');
 
   // Default task(s).
   grunt.registerTask('default', ['test']);
   // Standard tasks
   grunt.registerTask('build', ['shell:buildApp','uglify']);
+  grunt.registerTask('parseConfig', ['template:parseConfig']);
   grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
 
 };
