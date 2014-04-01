@@ -25,7 +25,6 @@ module.exports = function(component,app) {
 
   var _ = require('lodash');
 
-
   /**
    * Delete the users session and set app state to be logged out
    */
@@ -118,7 +117,7 @@ module.exports = function(component,app) {
       userid : component.state.loggedInUser.userid,
       username : component.state.loggedInUser.profile.firstName,
       groupid : component.state.selectedGroup.id,
-      timestamp : new Date(),
+      timestamp : new Date().toISOString(),
       messagetext : note.text
     };
 
@@ -149,7 +148,7 @@ module.exports = function(component,app) {
       userid : component.state.loggedInUser.userid,
       username : component.state.loggedInUser.profile.firstName,
       groupid : component.state.selectedGroup.id,
-      timestamp : new Date(),
+      timestamp : new Date().toISOString(),
       messagetext : note.text
     };
 
