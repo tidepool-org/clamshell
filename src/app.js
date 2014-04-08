@@ -217,8 +217,8 @@ var ClamShellApp = React.createClass({
     return (
       <Layout>
         {navBar}
-       <TeamNotes 
-         groups={this.state.userGroupsData} 
+       <TeamNotes
+         groups={this.state.userGroupsData}
          onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       );
