@@ -47,7 +47,7 @@ describe('TeamPicker', function() {
   });
 
   it('should have a group drop down', function() {
-    var groupDropdown = component.refs.groupDropdown;
+    var groupDropdown = component.refs.selectGroup;
     expect(groupDropdown).to.exist;
   });
 
@@ -61,8 +61,13 @@ describe('TeamPicker', function() {
     expect(groupToSelect).to.exist;
   });
 
+  it('should have a teamColumn', function() {
+    var teamColumn = component.refs.teamColumn;
+    expect(teamColumn).to.exist;
+  });
+
   it('should fire the handler with the id of the choosen group', function() {
-    component.refs.groupSelect.props.onClick();
+    component.refs.teamColumn.props.onClick();
     expect(selectedGroupId).to.exist;
   });
 

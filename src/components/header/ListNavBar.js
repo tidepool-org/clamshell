@@ -23,9 +23,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-require('./ListNavBar.css');
-
-
 var ListNavBar = React.createClass({
 
   handleAction:function(){

@@ -70,4 +70,43 @@ describe('userDataHelper', function() {
     expect(combined.length).to.equal(2);
   });
 
+  it('createMessage returns message that is for a specified group', function() {
+
+    var userDetails = {
+      userid : '12345678',
+      profile : { firstName : 'Bob' }
+    };
+
+    var testMessage = 'whoomp there it is';
+    var testGroupId = 'theId';
+
+    var message = userDataHelper.createMessage(testMessage,userDetails,testGroupId);
+
+    expect(message.userid).to.equal(userDetails.userid);
+    expect(message.parentmessage).to.not.exist;
+    expect(message.groupid).to.equal(testGroupId);
+    expect(message.timestamp).to.exist;
+    expect(message.messagetext).to.equal(testMessage);
+  });
+
+  it('createReply returns message that is for a specified group and parent message', function() {
+
+    var userDetails = {
+      userid : '12345678',
+      profile : { firstName : 'Bob' }
+    };
+
+    var testReply = 'Tag Team in 1993';
+    var testGroupId = 'theId';
+    var parentMessageId = 'theParentMessage';
+
+    var reply = userDataHelper.createMessage(testReply,userDetails,testGroupId, parentMessageId);
+
+    expect(reply.userid).to.equal(userDetails.userid);
+    expect(reply.parentmessage).to.equal(parentMessageId);
+    expect(reply.groupid).to.equal(testGroupId);
+    expect(reply.timestamp).to.exist;
+    expect(reply.messagetext).to.equal(testReply);
+  });
+
 });

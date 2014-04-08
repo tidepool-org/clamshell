@@ -22,11 +22,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var _ = require('lodash');
-var sundial = require('moment');
 
 var Note = require('./Note');
-
-require('./TeamNotes.css');
 
 var TeamNotes = React.createClass({
 
@@ -40,16 +37,15 @@ var TeamNotes = React.createClass({
         return (
           /* jshint ignore:start */
           <Note
-              ref='teamNote'
-              imgColumns='pull-left'
-              image='note-image-large'
-              onClick={this.props.onThreadSelected.bind(null, note)}
-              key={note.id}
-              author={note.username}
-              numberOfComments='??'
-              note={note.messagetext}
-              when={note.timestamp}
-              showCommentLink={true}/>
+            ref='teamNote'
+            image='note-image-large'
+            onClick={this.props.onThreadSelected.bind(null, note)}
+            key={note.id}
+            author={note.username}
+            numberOfComments='??'
+            note={note.messagetext}
+            when={note.timestamp}
+            showCommentLink={true}/>
           /* jshint ignore:end */
         );
       }.bind(this));

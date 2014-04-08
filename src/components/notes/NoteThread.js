@@ -24,8 +24,6 @@ var React = require('react');
 
 var Note = require('./Note');
 
-require('./NoteThread.css');
-
 var NoteThread = React.createClass({
 
   renderNote: function(message){

@@ -18,3 +18,11 @@ body {
   -webkit-transition: none;
   transition: none;
 }
+
+@import url("./components/footer/MessageFooter.css");
+@import url("./components/header/ListNavBar.css");
+@import url("./components/header/TeamPicker.css");
+@import url("./components/login/Login.css");
+@import url("./components/notes/Note.css");
+@import url("./components/notes/NoteThread.css");
+@import url("./components/notes/TeamNotes.css");

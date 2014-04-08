@@ -25,7 +25,6 @@ module.exports = function(component,app) {
 
   var _ = require('lodash');
 
-
   /**
    * Delete the users session and set app state to be logged out
    */
@@ -114,15 +113,13 @@ module.exports = function(component,app) {
    */
   component.handleStartConversation = function(note){
 
-    var thread = {
-      userid : component.state.loggedInUser.userid,
-      username : component.state.loggedInUser.profile.firstName,
-      groupid : component.state.selectedGroup.id,
-      timestamp : new Date(),
-      messagetext : note.text
-    };
+    var message = app.dataHelper.createMessage(
+      note.text,
+      component.state.loggedInUser,
+      component.state.selectedGroup.id
+      );
 
-    app.api.notes.add(thread,function(error,addedNote){
+    app.api.notes.add(message,function(error,addedNote){
       app.log('thread started');
       if(error){
         return component.handleError(error);
@@ -144,14 +141,13 @@ module.exports = function(component,app) {
     var thread = component.state.selectedThread;
     var parentId = app.dataHelper.getParentMessageId(thread);
 
-    var comment = {
-      parentmessage : parentId,
-      userid : component.state.loggedInUser.userid,
-      username : component.state.loggedInUser.profile.firstName,
-      groupid : component.state.selectedGroup.id,
-      timestamp : new Date(),
-      messagetext : note.text
-    };
+    //we set the parentId here
+    var comment = app.dataHelper.createMessage(
+      note.text,
+      component.state.loggedInUser,
+      component.state.selectedGroup.id,
+      parentId
+      );
 
     app.api.notes.reply(comment,function(error, addedComment){
       app.log('reply added');
