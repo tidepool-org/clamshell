@@ -23,9 +23,17 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var sundial = require('moment');
 
-require('./Note.css');
-
 var Note = React.createClass({
+
+  propTypes: {
+    when : React.PropTypes.string,
+    image : React.PropTypes.string,
+    author : React.PropTypes.string,
+    note : React.PropTypes.string,
+    team : React.PropTypes.string,
+    showCommentLink : React.PropTypes.bool,
+    onGroupSelected : React.PropTypes.func
+  },
 
   niceTime: function(time){
     return sundial(time).calendar();

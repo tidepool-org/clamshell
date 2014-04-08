@@ -26,8 +26,6 @@ var testGroupName = 'My Test Group';
 var testAuthor = 'Jamie';
 var testNote = 'A summary of the latest note to my care group conversation thread';
 var testWhenTheLatestNoteOccured = 'Dec 24';
-var testImgCols = 'col-2';
-var testDetailCols = 'col-10';
 
 describe('Note', function() {
   var component, container;
@@ -38,9 +36,7 @@ describe('Note', function() {
       name : testGroupName,
       author : testAuthor,
       note : testNote,
-      when : testWhenTheLatestNoteOccured,
-      imgColumns : testImgCols,
-      detailColumns : testDetailCols
+      when : testWhenTheLatestNoteOccured
     });
 
     container = document.createElement('div');
@@ -63,28 +59,12 @@ describe('Note', function() {
     expect(formattedTime).to.equal('12/23/2013');
   });
 
-  it('should have a property for imgColumns', function() {
-    expect(component.props.imgColumns).to.exist;
-  });
-
-  it('should have a property for detailColumns', function() {
-    expect(component.props.detailColumns).to.exist;
-  });
-
   it('should have a ref for imgColumn', function() {
     expect(component.refs.imgColumn).to.exist;
   });
 
   it('should have a ref for detailColumn', function() {
     expect(component.refs.detailColumn).to.exist;
-  });
-
-  it('detailColumn class set', function() {
-    expect(component.refs.detailColumn.props.className).equal(testDetailCols);
-  });
-
-  it('imgColumn class set', function() {
-    expect(component.refs.imgColumn.props.className).equal(testImgCols);
   });
 
   it('should have a property for detailColumn', function() {
@@ -125,8 +105,6 @@ describe('Note', function() {
       author : testAuthor,
       note : testNote,
       when : testWhenTheLatestNoteOccured,
-      imgColumns : testImgCols,
-      detailColumns : testDetailCols,
       showCommentLink : true
     });
 

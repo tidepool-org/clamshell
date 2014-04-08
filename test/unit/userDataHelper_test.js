@@ -83,7 +83,7 @@ describe('userDataHelper', function() {
     var message = userDataHelper.createMessage(testMessage,userDetails,testGroupId);
 
     expect(message.userid).to.equal(userDetails.userid);
-    expect(message.username).to.equal(userDetails.profile.firstName);
+    expect(message.parentmessage).to.not.exist;
     expect(message.groupid).to.equal(testGroupId);
     expect(message.timestamp).to.exist;
     expect(message.messagetext).to.equal(testMessage);
@@ -100,11 +100,10 @@ describe('userDataHelper', function() {
     var testGroupId = 'theId';
     var parentMessageId = 'theParentMessage';
 
-    var reply = userDataHelper.createReply(testReply,userDetails,testGroupId, parentMessageId);
+    var reply = userDataHelper.createMessage(testReply,userDetails,testGroupId, parentMessageId);
 
     expect(reply.userid).to.equal(userDetails.userid);
     expect(reply.parentmessage).to.equal(parentMessageId);
-    expect(reply.username).to.equal(userDetails.profile.firstName);
     expect(reply.groupid).to.equal(testGroupId);
     expect(reply.timestamp).to.exist;
     expect(reply.messagetext).to.equal(testReply);

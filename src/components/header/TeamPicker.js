@@ -23,9 +23,12 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-require('./TeamPicker.css');
-
 var TeamPicker = React.createClass({
+
+  propTypes: {
+    groups : React.PropTypes.array,
+    onGroupPicked : React.PropTypes.func
+  },
 
   handleSelection: function(selectedGroup) {
     this.props.onGroupPicked({groupId:selectedGroup});
@@ -57,7 +60,7 @@ var TeamPicker = React.createClass({
           </a>
         </div>
         <div className='team-picker collapse navbar-collapse' id='groups-navbar'>
-          <div className='nav navbar-nav'>
+          <div ref='groups' className='nav navbar-nav'>
             {groups}
           </div>
         </div>
