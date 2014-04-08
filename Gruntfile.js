@@ -37,6 +37,13 @@ module.exports = function(grunt) {
           }
         }
       },
+      copy: {
+        main: {
+          files: [
+            { expand:true, cwd: 'src/components', src: ['**/*.css'], dest: 'build/components/'}
+          ]
+        }
+      },
       shell: {
         buildApp: {
           // load config and start app at same time
@@ -50,7 +57,8 @@ module.exports = function(grunt) {
             './node_modules/.bin/browserify test/**/*.js -o build/browserified.js'
           ].join('&&'),
           options: {
-            async: false
+            async: false,
+            expand: true
           }
         },
         testRun: {
@@ -83,12 +91,13 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell-spawn');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-template');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task(s).
   grunt.registerTask('default', ['test']);
   // Standard tasks
   grunt.registerTask('build', ['shell:buildApp','uglify']);
   grunt.registerTask('parseConfig', ['template:parseConfig']);
-  grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
+  grunt.registerTask('test', ['shell:testBuild','copy','shell:testRun']);
 
 };

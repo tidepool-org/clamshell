@@ -52,6 +52,29 @@ var userDataHelper = {
   },
   hasMultipleTeams : function(userTeams) {
     return (_.size(userTeams) > 1);
+  },
+  createMessage : function(messageText,user,groupId){
+    var message = {
+      userid : user.userid,
+      username : user.profile.firstName,
+      groupid : groupId,
+      timestamp : new Date().toISOString(),
+      messagetext : messageText
+    };
+    return message;
+  },
+  createReply : function(replyText, user, parentId, groupId ){
+
+    var reply = {
+      parentmessage : parentId,
+      userid : user.userid,
+      username : user.profile.firstName,
+      groupid : groupId,
+      timestamp : new Date().toISOString(),
+      messagetext : replyText
+    };
+
+    return reply;
   }
 };
 
