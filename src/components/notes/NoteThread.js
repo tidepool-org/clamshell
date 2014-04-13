@@ -26,6 +26,10 @@ var Note = require('./Note');
 
 var NoteThread = React.createClass({
 
+  propTypes: {
+    messages: React.PropTypes.array
+  },
+
   renderNote: function(message){
     return (
       /* jshint ignore:start */

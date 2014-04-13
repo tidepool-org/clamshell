@@ -27,6 +27,11 @@ var Note = require('./Note');
 
 var TeamNotes = React.createClass({
 
+  propTypes: {
+    groups: React.PropTypes.array,
+    onThreadSelected: React.PropTypes.func
+  },
+
   notesForGroup:function(group){
 
     var notes = _.filter(group.notes, function(note){

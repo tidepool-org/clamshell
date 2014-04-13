@@ -23,16 +23,23 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+var Notification = require('../components/notification/Notification');
+
 var Layout = React.createClass({
 
+	propTypes: {
+		notification: React.PropTypes.string
+  },
+
   render: function() {
-    return this.transferPropsTo(
-      /* jshint ignore:start */
-      <div className='content'>
-      {this.props.children}
-      </div>
-      /* jshint ignore:end */
-    );
+	return this.transferPropsTo(
+	  /* jshint ignore:start */
+	  <div className='content'>
+			<Notification message={this.props.notification} />
+			{this.props.children}
+	  </div>
+	  /* jshint ignore:end */
+	);
   }
 });
 

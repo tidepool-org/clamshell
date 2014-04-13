@@ -36,7 +36,6 @@ var Login = require('./components/login/Login');
 var TeamPicker = require('./components/header/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
-var UserMessage = require('./components/usermessage/UserMessage');
 /*jshint unused:false */
 
 require('./app.css');
@@ -60,7 +59,7 @@ var ClamShellApp = React.createClass({
   //starting state for the app when first used or after logout
   initializeAppState : function(){
     return {
-      routeName : app.routes.message,
+      routeName : app.routes.login,
       home : null,
       previousRoute : null,
       authenticated : null,
@@ -68,8 +67,7 @@ var ClamShellApp = React.createClass({
       userGroupsData : null,
       selectedGroup : null,
       selectedThread : null,
-      userMessage : null,
-      userMessageIsError : false
+      notificationMessage : null
     };
   },
   /**
@@ -120,8 +118,6 @@ var ClamShellApp = React.createClass({
   loadUserData: function(){
 
     this.setState({
-      routeName : app.routes.message,
-      userMessage : 'Loading ...',
       authenticated : true,
       loggedInUser : app.api.user.get()
     });
@@ -198,13 +194,15 @@ var ClamShellApp = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <Layout>
-      {navBar}
-      <TeamNotes groups={[this.state.selectedGroup]} onThreadSelected={this.handleShowConversationThread} />
-      <MessageFooter
-        messagePrompt='Type a new note here ...'
-        btnMessage='Post'
-        onFooterAction={this.handleStartConversation}/>
+      <Layout notification={this.state.notificationMessage}>
+        {navBar}
+        <TeamNotes 
+          groups={[this.state.selectedGroup]} 
+          onThreadSelected={this.handleShowConversationThread} />
+        <MessageFooter
+          messagePrompt='Type a new note here ...'
+          btnMessage='Post'
+          onFooterAction={this.handleStartConversation} />
       </Layout>
       /* jshint ignore:end */
       );
@@ -215,11 +213,12 @@ var ClamShellApp = React.createClass({
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
 
     return (
-      <Layout>
+      <Layout 
+        notification={this.state.notificationMessage}>
         {navBar}
-       <TeamNotes
-         groups={this.state.userGroupsData}
-         onThreadSelected={this.handleShowConversationThread} />
+        <TeamNotes
+          groups={this.state.userGroupsData}
+          onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       );
     /* jshint ignore:end */
@@ -232,7 +231,8 @@ var ClamShellApp = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <Layout>
+      <Layout
+        notification={this.state.notificationMessage}>
       {navBar}
       <NoteThread messages={this.state.selectedThread} />
       <MessageFooter
@@ -247,27 +247,11 @@ var ClamShellApp = React.createClass({
   renderLoginLayout:function(){
     return (
       /* jshint ignore:start */
-      <Layout>
-      <Login
-        onLoginSuccess={this.handleLoginSuccess}
-        login={app.api.user.login.bind()} />
-      </Layout>
-      /* jshint ignore:end */
-      );
-  },
-
-  renderMessageLayout:function(){
-    var navBar;
-
-    if(this.state.userMessageIsError){
-      navBar = this.renderNavBar(null,'back-icon',this.handleBack);
-    }
-
-    return (
-      /* jshint ignore:start */
-      <Layout>
-      {navBar}
-      <UserMessage message={this.state.userMessage} />
+      <Layout
+        notification={this.state.notificationMessage}>
+        <Login
+          onLoginSuccess={this.handleLoginSuccess}
+          login={app.api.user.login.bind()} />
       </Layout>
       /* jshint ignore:end */
       );
@@ -287,15 +271,9 @@ var ClamShellApp = React.createClass({
       else if(app.routes.messageThread === routeName){
         return this.renderMessageThread();
       }
-      else if(app.routes.message === routeName){
-        return this.renderMessageLayout();
-      }
-
     } else {
       if(app.routes.login === routeName){
         return this.renderLoginLayout();
-      } else {
-        return this.renderMessageLayout();
       }
     }
   }

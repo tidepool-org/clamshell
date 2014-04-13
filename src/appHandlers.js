@@ -70,6 +70,18 @@ module.exports = function(component,app) {
   };
 
   /**
+   * Basic handler when an error has occured, we just show the message
+   *
+   * @param {Error} error - The error that has occured to be shown.
+   */
+  component.handleNotifiction =function(message,type){
+    app.log.info(message);
+    component.setState({
+      userMessage : message
+    });
+  };
+
+  /**
    * Trigger load of user data on successful login
    */
   component.handleLoginSuccess = function(){
