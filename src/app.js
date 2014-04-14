@@ -60,14 +60,14 @@ var ClamShellApp = React.createClass({
   initializeAppState : function(){
     return {
       routeName : app.routes.login,
-      home : null,
+      setupComplete : false,
       previousRoute : null,
       authenticated : null,
       loggedInUser : null,
       userGroupsData : null,
       selectedGroup : null,
       selectedThread : null,
-      notificationMessage : null
+      notification : null
     };
   },
   /**
@@ -103,6 +103,8 @@ var ClamShellApp = React.createClass({
     this.attachPlatform();
     this.attachHandlers();
     this.attachRouter();
+
+    this.setState({setupComplete : true});
 
     api.user.isAuthenticated(function(authenticated){
       if(authenticated){
@@ -194,10 +196,12 @@ var ClamShellApp = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <Layout notification={this.state.notificationMessage}>
+      <Layout
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
-        <TeamNotes 
-          groups={[this.state.selectedGroup]} 
+        <TeamNotes
+          groups={[this.state.selectedGroup]}
           onThreadSelected={this.handleShowConversationThread} />
         <MessageFooter
           messagePrompt='Type a new note here ...'
@@ -213,8 +217,9 @@ var ClamShellApp = React.createClass({
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
 
     return (
-      <Layout 
-        notification={this.state.notificationMessage}>
+      <Layout
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
         <TeamNotes
           groups={this.state.userGroupsData}
@@ -225,14 +230,15 @@ var ClamShellApp = React.createClass({
   },
   renderMessageThread:function(){
 
-    var careTeamName = 'Note in '+ this.state.selectedGroup.profile.firstName +'\'s team';
+    var careTeamName = this.state.selectedGroup.profile.firstName +'\'s notes';
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
     return (
       /* jshint ignore:start */
       <Layout
-        notification={this.state.notificationMessage}>
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
       {navBar}
       <NoteThread messages={this.state.selectedThread} />
       <MessageFooter
@@ -248,11 +254,20 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <Layout
-        notification={this.state.notificationMessage}>
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
         <Login
           onLoginSuccess={this.handleLoginSuccess}
           login={app.api.user.login.bind()} />
       </Layout>
+      /* jshint ignore:end */
+      );
+  },
+
+  renderStartupLayout:function(){
+    return (
+      /* jshint ignore:start */
+      <Layout />
       /* jshint ignore:end */
       );
   },
@@ -271,11 +286,11 @@ var ClamShellApp = React.createClass({
       else if(app.routes.messageThread === routeName){
         return this.renderMessageThread();
       }
-    } else {
-      if(app.routes.login === routeName){
-        return this.renderLoginLayout();
-      }
     }
+    if(app.routes.login === routeName && this.state.setupComplete){
+      return this.renderLoginLayout();
+    }
+    return this.renderStartupLayout();
   }
 });
 

@@ -79,6 +79,13 @@ module.exports = function(component,app) {
   };
 
   /**
+   * Clears the notification
+   */
+  component.handleNotificationDismissed = function(){
+    component.setState({ notification : null });
+  }
+
+  /**
    * Trigger load of user data on successful login
    */
   component.handleLoginSuccess = function(){
