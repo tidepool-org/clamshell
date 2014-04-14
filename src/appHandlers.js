@@ -30,15 +30,15 @@ module.exports = function(component,app) {
    */
   component.handleLogout =function(){
     app.log('logging out');
-    app.api.user.deleteSession(function(success){
-      if(success){
-        app.log('logged out');
-        component.setState({
-          routeName: app.routes.login,
-          authenticated: false
-        });
-        return;
+    app.api.user.logout(function(error,success){
+      if(error){
+        component.handleError(error);
       }
+      component.setState({
+        routeName: app.routes.login,
+        authenticated: false
+      });
+      return;
     }.bind(this));
   };
 
@@ -60,24 +60,21 @@ module.exports = function(component,app) {
    * @param {Error} error - The error that has occured to be shown.
    */
   component.handleError =function(error){
-    app.log.error(error);
-    component.setState({
-      routeName : app.routes.message,
-      userMessage : error,
-      userMessageIsError : true,
-      previousRoute : component.state.routeName
-    });
+    return component.handleNotification(error,'danger');
   };
 
   /**
-   * Basic handler when an error has occured, we just show the message
+   * Basic handler when a message needs to be shown to the user
    *
-   * @param {Error} error - The error that has occured to be shown.
+   * @param message - The notification message to show
+   * @param type - The type of notification show, defaults to `info`
    */
-  component.handleNotifiction =function(message,type){
-    app.log.info(message);
+  component.handleNotification =function(message,type){
+
+    type = type ? type : 'success';
+
     component.setState({
-      userMessage : message
+      notification : { message: message, type: type}
     });
   };
 

@@ -19,63 +19,30 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 module.exports = function(api, host, superagent) {
 
-  var platform = require('tidepool-platform-client/index')(host,superagent);
+  var platform = require('tidepool-platform-client/index')({host:host},superagent,api.log);
   var async = require('async');
   var _ = require('lodash');
 
-  var token;
-  var userid;
   var loggedInUser = {};
-
-  function saveSession(newUserid, newToken) {
-    token = newToken;
-    userid = newUserid;
-
-    var localStorage = window.localStorage;
-    if (localStorage && localStorage.setItem) {
-      localStorage.setItem('auth_token', token);
-      localStorage.setItem('auth_id', userid);
-      api.log('[production] session saved');
-    }
-
-    if (newToken != null) {
-      setTimeout(
-        function(){
-          if (token == null || newUserid !== userid) {
-            return;
-          }
-          platform.refreshUserToken(token,newUserid,function(error,sessionData){
-            if(sessionData && sessionData.userid && sessionData.token){
-              api.log('[production] token refreshed');
-              saveSession(sessionData.userid,sessionData.token);
-            }else{
-              api.log('[production] token refresh failed: ',error);
-            }
-          });
-        },
-        10 * 60 * 1000
-      );
-    }
-  }
 
   function getPatientDetail(patientId, cb) {
     async.waterfall([
       function(callback){
         api.log('[production] getting patients team');
-        platform.getUsersTeam(patientId,token,function(teamError,team){
+        platform.getUsersTeam(patientId, function(teamError,team){
           callback(teamError,team);
         });
       },
       function(team, callback){
         api.log('[production] getting patients profile');
-        platform.findProfile(patientId,token,function(profileError,profile){
+        platform.findProfile(patientId, function(profileError,profile){
           team.profile = profile;
           callback(profileError,team);
         });
       },
       function(team, callback){
         api.log('[production] getting the patients notes');
-        platform.getNotesForTeam(team.id, token, function(notesError,notes){
+        platform.getNotesForTeam(team.id, function(notesError,notes){
           team.notes = notes;
           callback(notesError,team);
         });
@@ -86,64 +53,16 @@ module.exports = function(api, host, superagent) {
     });
   }
 
-  // ----- User -----
-  api.user.isAuthenticated = function(callback) {
-    api.log('[production] is user authenticated?');
-    api.user.loadSession(function(hasExistingSession){
-      api.log('[production] we have session data: ',hasExistingSession);
-      if(hasExistingSession){
-        //refresh token to check
-        platform.refreshUserToken(token,userid,function(error,sessionData){
-          if(error){
-            api.log.info('[production] token not refreshed, user not authenticated');
-            return callback(false);
-          }
-          api.log('[production] token checked and the user is authenticated');
-          saveSession(sessionData.userid,sessionData.token);
-          return callback(true);
-        });
-      }
-      return callback(false);
-    });
-  };
-
-  api.user.deleteSession = function(callback) {
-    token = null;
-    userid = null;
-    var localStorage = window.localStorage;
-    if (localStorage && localStorage.getItem) {
-
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_id');
-      api.log('[production] session removed');
-      return callback(true);
-    }
-    api.log.error('[production] issue removing session');
-    return callback(false);
-  };
-
-  api.user.loadSession = function(callback) {
-    var localStorage = window.localStorage;
-    if (localStorage && localStorage.getItem) {
-      token = localStorage.getItem('auth_token');
-      userid = localStorage.getItem('auth_id');
-      if (token && userid) {
-        api.log('[production] session loaded');
-        return callback(true);
-      } else {
-        api.log('[production] no session found');
-        return callback(false);
-      }
-    } else {
-      api.log.error('[production] issue loading session');
-      return callback(false);
-    }
-  };
+  api.user.isAuthenticated = function(callback){
+    return callback(platform.isLoggedIn());
+  }
 
   api.user.get = function() {
     api.log('getting logged in user');
-    loggedInUser.userid = userid;
-    return loggedInUser;
+    if(platform.isLoggedIn()){
+      return loggedInUser;
+    }
+    return false;
   };
 
   api.user.login = function(username, password,callback) {
@@ -156,9 +75,22 @@ module.exports = function(api, host, superagent) {
       if(loginData){
         api.log('[production] login success');
         loggedInUser = loginData.user;
-        saveSession(loginData.userid,loginData.token);
+        loggedInUser.userid = loginData.userid;
+        //saveSession(loginData.userid,loginData.token);
       }
       return callback();
+    });
+  };
+
+  api.user.logout = function(callback) {
+    api.log('logging out ...');
+    platform.login(function(error, logoutData){
+      if(error){
+        api.log.error(error);
+        return callback(error);
+      }
+      api.log('[production] successfully logged out');
+      return callback(null,true);
     });
   };
 
@@ -183,13 +115,13 @@ module.exports = function(api, host, superagent) {
     async.waterfall([
       function(callback){
         api.log('[production] getting team');
-        platform.getUsersTeam(userid,token,function(teamError,team){
+        platform.getUsersTeam(loggedInUser.userid, function(teamError,team){
           callback(teamError,team);
         });
       },
       function(team, callback){
         api.log('[production] getting profile for team user');
-        platform.findProfile(userid,token,function(profileError,profile){
+        platform.findProfile(loggedInUser.userid, function(profileError,profile){
           team.profile = profile;
           //set the logged in users profile also
           loggedInUser.profile = profile;
@@ -198,7 +130,7 @@ module.exports = function(api, host, superagent) {
       },
       function(team, callback){
         api.log('[production] getting notes for team');
-        platform.getNotesForTeam(team.id, token, function(notesError,notes){
+        platform.getNotesForTeam(team.id, function(notesError,notes){
           team.notes = [];
           if(notes){
             team.notes = notes;
@@ -216,7 +148,7 @@ module.exports = function(api, host, superagent) {
 
     var details = [];
 
-    platform.getUsersPatients(userid,token,function(error,userPatients){
+    platform.getUsersPatients(loggedInUser.userid, function(error,userPatients){
 
       if(userPatients.members){
 
@@ -250,7 +182,7 @@ module.exports = function(api, host, superagent) {
 
     var end = new Date();
     api.log('[production] getting all messages ... ');
-    platform.getAllMessagesForTeam(groupId,start,end,token,function(error,messages){
+    platform.getAllMessagesForTeam(groupId,start,end, function(error,messages){
       api.log('[production] got all messages');
       return callback(error, messages);
     });
@@ -258,7 +190,7 @@ module.exports = function(api, host, superagent) {
 
   api.notes.getThread = function(messageId,callback) {
     api.log('[production] getting thread ... ');
-    platform.getMessageThread(messageId,token,function(error,messages){
+    platform.getMessageThread(messageId, function(error,messages){
       api.log('[production] got thread');
       return callback(error, messages);
     });
@@ -266,7 +198,7 @@ module.exports = function(api, host, superagent) {
 
   api.notes.reply = function(comment,callback) {
     api.log('[production] adding reply ... ');
-    platform.replyToMessageThread(comment.parentmessage,comment,token,function(error,id){
+    platform.replyToMessageThread(comment.parentmessage,comment, function(error,id){
       api.log('[production] added reply');
       comment.id = id;
       return callback(error,comment);
@@ -275,7 +207,7 @@ module.exports = function(api, host, superagent) {
 
   api.notes.add = function(message,callback) {
     api.log('[production] adding thread ... ');
-    platform.startMessageThread(message.groupid,message,token,function(error,id){
+    platform.startMessageThread(message.groupid,message, function(error,id){
       api.log('[production] added thread ... ');
       message.id = id;
       return callback(error,message);
