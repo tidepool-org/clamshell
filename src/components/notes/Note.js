@@ -26,7 +26,6 @@ var Note = React.createClass({
 
   propTypes: {
     when : React.PropTypes.string,
-    image : React.PropTypes.string,
     author : React.PropTypes.string,
     note : React.PropTypes.string,
     team : React.PropTypes.string,
@@ -76,9 +75,6 @@ var Note = React.createClass({
     return this.transferPropsTo(
       /* jshint ignore:start */
       <div className='note media'>
-        <div ref='imgColumn' className='media-object pull-left'>
-          <div ref='authorImage' className={this.props.image}/>
-        </div>
         <div ref='detailColumn' className='media-body'>
           {noteHeading}
           <span ref='messageWhen' className='small note-when'>{this.props.when}</span>

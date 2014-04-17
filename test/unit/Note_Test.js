@@ -50,10 +50,6 @@ describe('Note', function() {
     document.documentElement.removeChild(container);
   });
 
-  it('should have a ref for imgColumn', function() {
-    expect(component.refs.imgColumn).to.exist;
-  });
-
   it('should have a ref for detailColumn', function() {
     expect(component.refs.detailColumn).to.exist;
   });

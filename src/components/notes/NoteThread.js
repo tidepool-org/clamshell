@@ -37,9 +37,8 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='rootNote'
-      image='note-image-large'
       key={message.id}
-      author={message.user.firstName}
+      author={dataHelper.formatFullNameFromProfile(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
@@ -51,9 +50,8 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='commentNote'
-      image='note-image'
       key={message.id}
-      author={message.user.firstName}
+      author={dataHelper.formatFullNameFromProfile(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
