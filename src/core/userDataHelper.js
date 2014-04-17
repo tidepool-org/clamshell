@@ -65,7 +65,7 @@ var userDataHelper = {
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
-      return moment.utc(timestamp).format('MMMM D [at] h:mm a');
+      return moment(timestamp).format('MMMM D [at] h:mm a');
     }
     return;
   },
@@ -83,7 +83,7 @@ var userDataHelper = {
     var message = {
       parentmessage : parentId,
       userid : user.userid,
-      username : user.profile.firstName,
+      user : user.profile,
       groupid : groupId,
       timestamp : new Date().toISOString(),
       messagetext : messageText

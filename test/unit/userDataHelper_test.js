@@ -117,6 +117,7 @@ describe('userDataHelper', function() {
     expect(message.parentmessage).to.not.exist;
     expect(message.groupid).to.equal(testGroupId);
     expect(message.timestamp).to.exist;
+    expect(message.user).to.equal(userDetails.profile);
     expect(message.messagetext).to.equal(testMessage);
   });
 
@@ -135,6 +136,7 @@ describe('userDataHelper', function() {
 
     expect(reply.userid).to.equal(userDetails.userid);
     expect(reply.parentmessage).to.equal(parentMessageId);
+    expect(reply.user).to.equal(userDetails.profile);
     expect(reply.groupid).to.equal(testGroupId);
     expect(reply.timestamp).to.exist;
     expect(reply.messagetext).to.equal(testReply);
