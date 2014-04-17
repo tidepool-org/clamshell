@@ -61,11 +61,11 @@ var ClamShellApp = React.createClass({
     return {
       routeName : app.routes.login,
       setupComplete : false,
+      loadingData : true,
       previousRoute : null,
       authenticated : null,
       loggedInUser : null,
-      userGroupsData : null,
-      selectedGroup : null,
+      selectedUser : null,
       selectedThread : null,
       notification : null
     };
@@ -79,7 +79,7 @@ var ClamShellApp = React.createClass({
     if(config.demo){
       require('./core/mock')(app.api);
     } else {
-      require('./core/platform')(app.api,config.apiHost,window.superagent);
+      require('./core/tidepool_platform')(app.api,config.apiHost,window.superagent);
     }
   },
   /**
@@ -108,6 +108,7 @@ var ClamShellApp = React.createClass({
 
     api.user.isAuthenticated(function(authenticated){
       if(authenticated){
+        this.setState({ authenticated : true });
         this.loadUserData();
       } else {
         this.setState({ routeName : app.routes.login });
@@ -119,43 +120,51 @@ var ClamShellApp = React.createClass({
    */
   loadUserData: function(){
 
-    this.setState({
-      authenticated : true,
-      loggedInUser : app.api.user.get()
-    });
+    this.setState({ loadingData : true });
 
-    api.user.loadData(function(error,teams){
+    api.user.teams.get(function(error){
       app.log('loaded user teams');
       if(error){
         this.handleError(error);
         return;
       }
-      this.showUserData(teams);
+      this.setState({
+        loadingData : false,
+        loggedInUser : app.api.user.get()
+      });
+      this.showUserData();
     }.bind(this));
 
   },
   /**
+   * Do we have other teams the logged in user is part of?
+   */
+  userHasTeams:function(){
+    var teams = this.state.loggedInUser.teams;
+    return (teams && teams.length > 0);
+  },
+  /**
+   * Have we finished loading data?
+   */
+  hasCompletedLoadingData:function(){
+    return this.state.loadingData == false;
+  },
+  /**
    * Show the logged in users data for all the teams that are a part of
    */
-  showUserData: function(userTeams){
-
-    if (userTeams.patients.length > 0) {
-      var teams = app.dataHelper.combineTeams(userTeams.team,userTeams.patients);
-      if(teams.length>1){
-        app.log('user has patients also');
-        this.setState({
-          userGroupsData: teams,
-          routeName : app.routes.messagesForAllTeams
-        });
-        return;
-      }
+  showUserData: function(){
+    if (this.userHasTeams() && this.hasCompletedLoadingData()) {
+      app.log('user has other teams also');
+      this.setState({
+        routeName : app.routes.messagesForAllTeams
+      });
+    } else if(this.hasCompletedLoadingData()){
+      app.log('just users team');
+      this.setState({
+        selectedUser : this.state.loggedInUser,
+        routeName : app.routes.messagesForSelectedTeam
+      });
     }
-    app.log('just the care team');
-    this.setState({
-      selectedGroup : userTeams.team ,
-      userGroupsData: [userTeams.team] ,
-      routeName : app.routes.messagesForSelectedTeam
-    });
   },
   //---------- Rendering Layouts ----------
   render: function () {
@@ -180,17 +189,18 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler}>
-        <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
+        <TeamPicker loggedInUser={this.state.loggedInUser} onUserPicked={this.handleUserChanged} />
       </ListNavBar>
       /* jshint ignore:end */
     );
   },
   renderMessagesForSelectedTeam:function(){
 
-    var careTeamName = this.state.selectedGroup.profile.firstName +'\'s Care team';
+    var careTeamName = app.dataHelper.formatFullNameFromProfile(this.state.selectedUser.profile);
+
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
-    if(app.dataHelper.hasMultipleTeams(this.state.userGroupsData)){
+    if(this.userHasTeams()){
       navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
     }
 
@@ -201,7 +211,7 @@ var ClamShellApp = React.createClass({
         onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
         <TeamNotes
-          groups={[this.state.selectedGroup]}
+          loggedInUser={this.state.loggedInUser}
           onThreadSelected={this.handleShowConversationThread} />
         <MessageFooter
           messagePrompt='Type a new note here ...'
@@ -222,7 +232,7 @@ var ClamShellApp = React.createClass({
         onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
         <TeamNotes
-          groups={this.state.userGroupsData}
+          loggedInUser={this.state.loggedInUser}
           onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       );
@@ -230,7 +240,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessageThread:function(){
 
-    var careTeamName = this.state.selectedGroup.profile.firstName +'\'s notes';
+    var careTeamName = this.state.selectedUser.profile.firstName +'\'s notes';
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 

@@ -17,7 +17,7 @@
     "lodash": "2.4.1",
     "moment": "2.5.1",
     "react": "0.9.0",
-    "tidepool-platform-client": "tidepool-org/platform-client"
+    "tidepool-platform-client": "git://github.com/tidepool-org/platform-client.git#jhbate/messages-no-groupid"
   },
   "devDependencies": {
     "browserify": "3.30.1",

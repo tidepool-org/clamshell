@@ -22,31 +22,74 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var React = require('react');
+var _ = require('lodash');
+
+var dataHelper = require('../../core/userDataHelper');
 
 var TeamPicker = React.createClass({
 
   propTypes: {
-    groups : React.PropTypes.array,
-    onGroupPicked : React.PropTypes.func
+    loggedInUser : React.PropTypes.object,
+    onUserPicked : React.PropTypes.func
   },
 
-  handleSelection: function(selectedGroup) {
-    this.props.onGroupPicked({groupId:selectedGroup});
+  handleSelection: function(selectedUserId) {
+    this.props.onUserPicked(selectedUserId);
+  },
+
+  buildUserDetails : function(id, profile, latestNote){
+
+    if (latestNote && latestNote.timestamp) {
+      latestNote = 'Last note '+ dataHelper.formatDisplayDate(latestNote.timestamp);
+    } else {
+      latestNote = 'No notes';
+    }
+
+    return {
+        userid : id,
+        name : dataHelper.formatFullNameFromProfile(profile),
+        latestNote : latestNote
+      };
+  },
+
+  getSelectableUsers : function(teams){
+
+    //logged in user
+    var loggedIn = this.buildUserDetails(
+      this.props.loggedInUser.userid,
+      this.props.loggedInUser.profile,
+      _.first(this.props.loggedInUser.notes)
+    );
+
+    var users = [loggedIn];
+
+    //now the team users
+    var teamUsers = _.map(this.props.loggedInUser.teams,function(team){
+      return this.buildUserDetails(
+        team.userid,
+        team.profile,
+        _.first(team.notes)
+      );
+    }.bind(this));
+
+    return users.concat(teamUsers);
   },
 
   render:function(){
 
-    var groups = this.props.groups.map(function(group,i) {
+    var selectableUsers = this.getSelectableUsers();
+
+    var groups = _.map(selectableUsers, function(selectableUser) {
       return (
-        <div key={i} ref='group' className='group media'>
+        <div key={selectableUser.userid} ref='group' className='group media'>
           <div ref='imgColumn' className='media-object pull-left'>
             <div ref='authorImage' className='group-image'/>
           </div>
-          <div ref='teamColumn' className='media-body' onClick={this.handleSelection.bind(null, group.id)}>
+          <div ref='teamColumn' className='media-body' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
             <div>
-              <strong ref='groupName' className='media-heading' >{group.profile.shortname}</strong>
+              <strong ref='groupName' className='media-heading' >{selectableUser.name}</strong>
             </div>
-            <span ref='lastGroupNote' className='small pull-left'>Last note ...</span>
+            <span ref='lastGroupNote' className='small pull-left'>{selectableUser.latestNote}</span>
           </div>
         </div>
       );

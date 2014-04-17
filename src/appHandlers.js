@@ -89,6 +89,7 @@ module.exports = function(component,app) {
    * Trigger load of user data on successful login
    */
   component.handleLoginSuccess = function(){
+    component.setState({ authenticated : true });
     component.loadUserData();
   };
 
@@ -105,7 +106,6 @@ module.exports = function(component,app) {
       messagesId = mostRecentMessageInThread.parentmessage;
     }
 
-    var team = app.dataHelper.getTeam(component.state.userGroupsData,mostRecentMessageInThread.groupid);
     app.api.notes.getThread(messagesId,function(error,thread){
 
       if(error){
@@ -114,7 +114,6 @@ module.exports = function(component,app) {
 
       component.setState({
         selectedThread : thread,
-        selectedGroup : team,
         routeName : app.routes.messageThread,
         previousRoute : component.state.routeName
       });
@@ -132,7 +131,7 @@ module.exports = function(component,app) {
     var message = app.dataHelper.createMessage(
       note.text,
       component.state.loggedInUser,
-      component.state.selectedGroup.id
+      component.state.selectedUser.userid
       );
 
     app.api.notes.add(message,function(error,addedNote){
@@ -140,10 +139,9 @@ module.exports = function(component,app) {
       if(error){
         return component.handleError(error);
       }
-      var updatedTeamNotes = component.state.selectedGroup;
-      updatedTeamNotes.notes.unshift(addedNote);
-      component.setState({selectedGroup : updatedTeamNotes});
-
+      var userToUpdate = component.state.selectedUser;
+      userToUpdate.notes.unshift(addedNote);
+      component.setState({ selectedUser : userToUpdate });
     }.bind(this));
   };
 
@@ -161,7 +159,7 @@ module.exports = function(component,app) {
     var comment = app.dataHelper.createMessage(
       note.text,
       component.state.loggedInUser,
-      component.state.selectedGroup.id,
+      component.state.selectedUser.userid,
       parentId
       );
 
@@ -177,19 +175,21 @@ module.exports = function(component,app) {
   };
 
   /**
-   * Change which group is being displayed
+   * Change which user is being displayed
    *
-   * @param {Object} selectedGroup - the group that has been selected
+   * @param {Object} selectedUser - the user that has been selected
    */
-  component.handleGroupChanged = function(selectedGroup){
-    var group = _.find(
-      component.state.userGroupsData, function(group){
-        return selectedGroup.groupId == group.id;
-      });
+  component.handleUserChanged = function(selectedUserId){
+
+    var userToDisplay = _.find(
+      component.state.loggedInUser.teams, function(team){
+        return selectedUserId == team.userid;
+      }
+    );
 
     component.setState({
       routeName : app.routes.messagesForSelectedTeam,
-      selectedGroup : group,
+      selectedUser : userToDisplay,
       previousRoute : component.state.routeName
     });
   };

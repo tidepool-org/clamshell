@@ -25,20 +25,18 @@ var _ = require('lodash');
 
 var Note = require('./Note');
 
+var dataHelper = require('../../core/userDataHelper');
+
 var TeamNotes = React.createClass({
 
   propTypes: {
-    groups: React.PropTypes.array,
+    loggedInUser: React.PropTypes.object,
     onThreadSelected: React.PropTypes.func
   },
 
-  notesForGroup:function(group){
+  buildViewableNotes:function(rawNotes){
 
-    var notes = _.filter(group.notes, function(note){
-      return (!note.parentmessage);
-    });
-
-    var items =  _.map(notes, function(note){
+    var viewableNotes = _.map(rawNotes, function(note){
         return (
           /* jshint ignore:start */
           <Note
@@ -46,28 +44,41 @@ var TeamNotes = React.createClass({
             image='note-image-large'
             onClick={this.props.onThreadSelected.bind(null, note)}
             key={note.id}
-            author={note.username}
-            numberOfComments='??'
+            author={note.user.firstName}
+            numberOfComments={dataHelper.getComments(note.id)}
             note={note.messagetext}
-            when={note.timestamp}
+            when={dataHelper.formatDisplayDate(note.timestamp)}
             showCommentLink={true}/>
           /* jshint ignore:end */
         );
       }.bind(this));
 
-    return items;
+    return viewableNotes;
+  },
+  prepareNotes : function (){
+    //users notes
+    var rawNotes = this.props.loggedInUser.notes || [];
+    //add notes from teams
+    rawNotes = rawNotes.concat(dataHelper.getNotesForTeams(this.props.loggedInUser.teams));
+    //filter
+    rawNotes = dataHelper.filterNotes(rawNotes);
+    //order them
+    rawNotes = dataHelper.sortNotes(rawNotes);
+    //return viewable notes
+    if(_.isEmpty(rawNotes)){
+      return null;
+    }
+    return this.buildViewableNotes(rawNotes);
   },
 
   render: function() {
 
-    var items = this.props.groups.map(function(group,i){
-      return this.notesForGroup(group);
-    }.bind(this));
+    var notes = this.prepareNotes();
 
     return (
         /* jshint ignore:start */
         <div className='teamnotes'>
-            {items}
+            {notes}
         </div>
         /* jshint ignore:end */
     );

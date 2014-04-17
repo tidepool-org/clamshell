@@ -19,8 +19,8 @@
   var api = {
     log: bows('Api'),
     user: {
-      team:{},
-      patients:{}
+      teams:{}
+      //patients:{}
     },
     notes:{}
   };
