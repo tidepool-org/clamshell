@@ -36,6 +36,14 @@ var userDataHelper = {
       return this.sortNotesDescending(notesInThread);
     }
   },
+  getSelectedUser:function(userId,data){
+    if(userId == data.userid){
+      return data;
+    }
+    return _.find(data.teams, function(team){
+      return userId == team.userid;
+    });
+  },
   getComments: function(parentmessageId) {
     return 'todo';
   },

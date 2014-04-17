@@ -92,6 +92,14 @@ describe('userDataHelper', function() {
     expect(userDataHelper.formatFullNameFromProfile(profile)).to.not.exist;
 
   });
+  //getSelectedUser
+  it('getSelectedUser returns the logged in user when given that userid', function() {
+    expect(userDataHelper.getSelectedUser(loggedInUserData.userid,loggedInUserData)).to.deep.equal(loggedInUserData);
+  });
+
+  it('getSelectedUser returns the team user when given that userid', function() {
+    expect(userDataHelper.getSelectedUser(team.userid,loggedInUserData)).to.deep.equal(team);
+  });
 
   it('createMessage returns message that is for a specified group', function() {
 

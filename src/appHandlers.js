@@ -112,9 +112,15 @@ module.exports = function(component,app) {
         return component.handleError(error);
       }
 
+      var userToDisplay = app.dataHelper.getSelectedUser(
+        mostRecentMessageInThread.groupid,
+        component.state.loggedInUser
+      );
+
       component.setState({
         selectedThread : thread,
         routeName : app.routes.messageThread,
+        selectedUser : userToDisplay,
         previousRoute : component.state.routeName
       });
     });
@@ -181,10 +187,9 @@ module.exports = function(component,app) {
    */
   component.handleUserChanged = function(selectedUserId){
 
-    var userToDisplay = _.find(
-      component.state.loggedInUser.teams, function(team){
-        return selectedUserId == team.userid;
-      }
+    var userToDisplay = app.dataHelper.getSelectedUser(
+      selectedUserId,
+      component.state.loggedInUser
     );
 
     component.setState({
