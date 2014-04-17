@@ -30,44 +30,40 @@ var dataHelper = require('../../core/userDataHelper');
 var TeamNotes = React.createClass({
 
   propTypes: {
-    loggedInUser: React.PropTypes.object,
-    onThreadSelected: React.PropTypes.func
+    notes : React.PropTypes.array,
+    onThreadSelected : React.PropTypes.func
   },
 
   buildViewableNotes:function(rawNotes){
 
     var viewableNotes = _.map(rawNotes, function(note){
-        return (
-          /* jshint ignore:start */
-          <Note
-            ref='teamNote'
-            image='note-image-large'
-            onClick={this.props.onThreadSelected.bind(null, note)}
-            key={note.id}
-            author={note.user.firstName}
-            numberOfComments={dataHelper.getComments(note.id)}
-            note={note.messagetext}
-            when={dataHelper.formatDisplayDate(note.timestamp)}
-            showCommentLink={true}/>
-          /* jshint ignore:end */
-        );
-      }.bind(this));
+      return (
+        /* jshint ignore:start */
+        <Note
+          ref='teamNote'
+          image='note-image-large'
+          onClick={this.props.onThreadSelected.bind(null, note)}
+          key={note.id}
+          author={note.user.firstName}
+          numberOfComments={dataHelper.getComments(note.id)}
+          note={note.messagetext}
+          when={dataHelper.formatDisplayDate(note.timestamp)}
+          showCommentLink={true}/>
+        /* jshint ignore:end */
+      );
+    }.bind(this));
 
     return viewableNotes;
   },
   prepareNotes : function (){
-    //users notes
-    var rawNotes = this.props.loggedInUser.notes || [];
-    //add notes from teams
-    rawNotes = rawNotes.concat(dataHelper.getNotesForTeams(this.props.loggedInUser.teams));
+    if(_.isEmpty(this.props.notes)){
+      return null;
+    }
     //filter
-    rawNotes = dataHelper.filterNotes(rawNotes);
+    var rawNotes = dataHelper.filterNotes(this.props.notes);
     //order them
     rawNotes = dataHelper.sortNotesDescending(rawNotes);
     //return viewable notes
-    if(_.isEmpty(rawNotes)){
-      return null;
-    }
     return this.buildViewableNotes(rawNotes);
   },
 
@@ -76,11 +72,11 @@ var TeamNotes = React.createClass({
     var notes = this.prepareNotes();
 
     return (
-        /* jshint ignore:start */
-        <div className='teamnotes'>
-            {notes}
-        </div>
-        /* jshint ignore:end */
+      /* jshint ignore:start */
+      <div className='teamnotes'>
+        {notes}
+      </div>
+      /* jshint ignore:end */
     );
   }
 });

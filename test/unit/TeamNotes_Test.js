@@ -24,6 +24,7 @@ var React = require('react');
 var TeamNotes = require('../../build/components/notes/TeamNotes');
 
 var loggedInUserData = require('../../demo/data').loggedInUser;
+var teamNotes = loggedInUserData.teams[0].notes;
 
 var handlerCalled = false;
 var propsGiven;
@@ -38,7 +39,7 @@ describe('TeamNotes component', function() {
 
   beforeEach(function() {
     //we add our component to test into a div and then render it
-    component = new TeamNotes({loggedInUser:loggedInUserData,onThreadSelected:handleThreadSelected});
+    component = new TeamNotes({notes:teamNotes,onThreadSelected:handleThreadSelected});
 
     container = document.createElement('div');
     document.documentElement.appendChild(container);

@@ -63,6 +63,12 @@ var userDataHelper = {
   getNotesForTeams : function(teams){
     return _.flatten(teams,'notes');
   },
+  getAllNotesForLoggedInUser : function(loggedIn){
+    if(_.isEmpty(loggedIn.notes)){
+      return this.getNotesForTeams(loggedIn.teams);
+    }
+    return loggedIn.notes.concat(this.getNotesForTeams(loggedIn.teams));
+  },
   formatDisplayDate : function(timestamp){
     if(timestamp){
       return moment(timestamp).format('MMMM D [at] h:mm a');

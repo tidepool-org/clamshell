@@ -158,12 +158,14 @@ var ClamShellApp = React.createClass({
       this.setState({
         routeName : app.routes.messagesForAllTeams
       });
+      return;
     } else if(this.hasCompletedLoadingData()){
       app.log('just users team');
       this.setState({
         selectedUser : this.state.loggedInUser,
         routeName : app.routes.messagesForSelectedTeam
       });
+      return;
     }
   },
   //---------- Rendering Layouts ----------
@@ -211,7 +213,7 @@ var ClamShellApp = React.createClass({
         onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
         <TeamNotes
-          loggedInUser={this.state.loggedInUser}
+          notes={this.state.selectedUser.notes}
           onThreadSelected={this.handleShowConversationThread} />
         <MessageFooter
           messagePrompt='Type a new note here ...'
@@ -232,7 +234,7 @@ var ClamShellApp = React.createClass({
         onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
         <TeamNotes
-          loggedInUser={this.state.loggedInUser}
+          notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
           onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       );

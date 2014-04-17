@@ -101,6 +101,15 @@ describe('userDataHelper', function() {
     expect(userDataHelper.getSelectedUser(team.userid,loggedInUserData)).to.deep.equal(team);
   });
 
+  it('getAllNotesForLoggedInUser returns 5 notes', function() {
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(5);
+  });
+
+  it('getAllNotesForLoggedInUser returns 6 notes when we add one for the user', function() {
+    loggedInUserData.notes.push(team.notes[3]);
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(6);
+  });
+
   it('createMessage returns message that is for a specified group', function() {
 
     var userDetails = {
