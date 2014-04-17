@@ -24,7 +24,13 @@ var React = require('react');
 
 var Note = require('./Note');
 
+var dataHelper = require('../../core/userDataHelper');
+
 var NoteThread = React.createClass({
+
+  propTypes: {
+    messages: React.PropTypes.array
+  },
 
   renderNote: function(message){
     return (
@@ -33,9 +39,9 @@ var NoteThread = React.createClass({
       ref='rootNote'
       image='note-image-large'
       key={message.id}
-      author={message.username}
+      author={message.user.firstName}
       note={message.messagetext}
-      when={message.timestamp}
+      when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
       /* jshint ignore:end */
       );
@@ -47,15 +53,18 @@ var NoteThread = React.createClass({
       ref='commentNote'
       image='note-image'
       key={message.id}
-      author={message.username}
+      author={message.user.firstName}
       note={message.messagetext}
-      when={message.timestamp}
+      when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
       /* jshint ignore:end */
       );
   },
   render: function() {
-    var items = this.props.messages.map(function(message, i) {
+
+    var sorted = dataHelper.sortNotesAscending(this.props.messages);
+
+    var items = sorted.map(function(message, i) {
       if(!message.parentmessage) {
         return this.renderNote(message);
       } else if (message.parentmessage) {

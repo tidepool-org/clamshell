@@ -25,6 +25,11 @@ var React = require('react');
 
 var Login = React.createClass({
 
+  propTypes: {
+    login: React.PropTypes.func,
+    onLoginSuccess: React.PropTypes.func
+  },
+
   getInitialState: function() {
     return {
       loggingIn: false,

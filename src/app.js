@@ -36,7 +36,6 @@ var Login = require('./components/login/Login');
 var TeamPicker = require('./components/header/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
-var UserMessage = require('./components/usermessage/UserMessage');
 /*jshint unused:false */
 
 require('./app.css');
@@ -60,16 +59,15 @@ var ClamShellApp = React.createClass({
   //starting state for the app when first used or after logout
   initializeAppState : function(){
     return {
-      routeName : app.routes.message,
-      home : null,
+      routeName : app.routes.login,
+      setupComplete : false,
+      loadingData : true,
       previousRoute : null,
       authenticated : null,
       loggedInUser : null,
-      userGroupsData : null,
-      selectedGroup : null,
+      selectedUser : null,
       selectedThread : null,
-      userMessage : null,
-      userMessageIsError : false
+      notification : null
     };
   },
   /**
@@ -81,7 +79,7 @@ var ClamShellApp = React.createClass({
     if(config.demo){
       require('./core/mock')(app.api);
     } else {
-      require('./core/platform')(app.api,config.apiHost,window.superagent);
+      require('./core/tidepool_platform')(app.api,config.apiHost,window.superagent);
     }
   },
   /**
@@ -106,8 +104,11 @@ var ClamShellApp = React.createClass({
     this.attachHandlers();
     this.attachRouter();
 
+    this.setState({setupComplete : true});
+
     api.user.isAuthenticated(function(authenticated){
       if(authenticated){
+        this.setState({ authenticated : true });
         this.loadUserData();
       } else {
         this.setState({ routeName : app.routes.login });
@@ -119,45 +120,53 @@ var ClamShellApp = React.createClass({
    */
   loadUserData: function(){
 
-    this.setState({
-      routeName : app.routes.message,
-      userMessage : 'Loading ...',
-      authenticated : true,
-      loggedInUser : app.api.user.get()
-    });
+    this.setState({ loadingData : true });
 
-    api.user.loadData(function(error,teams){
+    api.user.teams.get(function(error){
       app.log('loaded user teams');
       if(error){
         this.handleError(error);
         return;
       }
-      this.showUserData(teams);
+      this.setState({
+        loadingData : false,
+        loggedInUser : app.api.user.get()
+      });
+      this.showUserData();
     }.bind(this));
 
   },
   /**
+   * Do we have other teams the logged in user is part of?
+   */
+  userHasTeams:function(){
+    var teams = this.state.loggedInUser.teams;
+    return (teams && teams.length > 0);
+  },
+  /**
+   * Have we finished loading data?
+   */
+  hasCompletedLoadingData:function(){
+    return this.state.loadingData == false;
+  },
+  /**
    * Show the logged in users data for all the teams that are a part of
    */
-  showUserData: function(userTeams){
-
-    if (userTeams.patients.length > 0) {
-      var teams = app.dataHelper.combineTeams(userTeams.team,userTeams.patients);
-      if(teams.length>1){
-        app.log('user has patients also');
-        this.setState({
-          userGroupsData: teams,
-          routeName : app.routes.messagesForAllTeams
-        });
-        return;
-      }
+  showUserData: function(){
+    if (this.userHasTeams() && this.hasCompletedLoadingData()) {
+      app.log('user has other teams also');
+      this.setState({
+        routeName : app.routes.messagesForAllTeams
+      });
+      return;
+    } else if(this.hasCompletedLoadingData()){
+      app.log('just users team');
+      this.setState({
+        selectedUser : this.state.loggedInUser,
+        routeName : app.routes.messagesForSelectedTeam
+      });
+      return;
     }
-    app.log('just the care team');
-    this.setState({
-      selectedGroup : userTeams.team ,
-      userGroupsData: [userTeams.team] ,
-      routeName : app.routes.messagesForSelectedTeam
-    });
   },
   //---------- Rendering Layouts ----------
   render: function () {
@@ -182,29 +191,34 @@ var ClamShellApp = React.createClass({
     return (
       /* jshint ignore:start */
       <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler}>
-        <TeamPicker groups={this.state.userGroupsData} onGroupPicked={this.handleGroupChanged} />
+        <TeamPicker loggedInUser={this.state.loggedInUser} onUserPicked={this.handleUserChanged} />
       </ListNavBar>
       /* jshint ignore:end */
     );
   },
   renderMessagesForSelectedTeam:function(){
 
-    var careTeamName = this.state.selectedGroup.profile.firstName +'\'s Care team';
+    var careTeamName = app.dataHelper.formatFullNameFromProfile(this.state.selectedUser.profile);
+
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
-    if(app.dataHelper.hasMultipleTeams(this.state.userGroupsData)){
+    if(this.userHasTeams()){
       navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
     }
 
     return (
       /* jshint ignore:start */
-      <Layout>
-      {navBar}
-      <TeamNotes groups={[this.state.selectedGroup]} onThreadSelected={this.handleShowConversationThread} />
-      <MessageFooter
-        messagePrompt='Type a new note here ...'
-        btnMessage='Post'
-        onFooterAction={this.handleStartConversation}/>
+      <Layout
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
+        {navBar}
+        <TeamNotes
+          notes={this.state.selectedUser.notes}
+          onThreadSelected={this.handleShowConversationThread} />
+        <MessageFooter
+          messagePrompt='Type a new note here ...'
+          btnMessage='Post'
+          onFooterAction={this.handleStartConversation} />
       </Layout>
       /* jshint ignore:end */
       );
@@ -215,24 +229,28 @@ var ClamShellApp = React.createClass({
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
 
     return (
-      <Layout>
+      <Layout
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
-       <TeamNotes
-         groups={this.state.userGroupsData}
-         onThreadSelected={this.handleShowConversationThread} />
+        <TeamNotes
+          notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
+          onThreadSelected={this.handleShowConversationThread} />
       </Layout>
       );
     /* jshint ignore:end */
   },
   renderMessageThread:function(){
 
-    var careTeamName = 'Note in '+ this.state.selectedGroup.profile.firstName +'\'s team';
+    var careTeamName = this.state.selectedUser.profile.firstName +'\'s notes';
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
     return (
       /* jshint ignore:start */
-      <Layout>
+      <Layout
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
       {navBar}
       <NoteThread messages={this.state.selectedThread} />
       <MessageFooter
@@ -247,28 +265,21 @@ var ClamShellApp = React.createClass({
   renderLoginLayout:function(){
     return (
       /* jshint ignore:start */
-      <Layout>
-      <Login
-        onLoginSuccess={this.handleLoginSuccess}
-        login={app.api.user.login.bind()} />
+      <Layout
+        notification={this.state.notification}
+        onDismissNotification={this.handleNotificationDismissed}>
+        <Login
+          onLoginSuccess={this.handleLoginSuccess}
+          login={app.api.user.login.bind()} />
       </Layout>
       /* jshint ignore:end */
       );
   },
 
-  renderMessageLayout:function(){
-    var navBar;
-
-    if(this.state.userMessageIsError){
-      navBar = this.renderNavBar(null,'back-icon',this.handleBack);
-    }
-
+  renderStartupLayout:function(){
     return (
       /* jshint ignore:start */
-      <Layout>
-      {navBar}
-      <UserMessage message={this.state.userMessage} />
-      </Layout>
+      <Layout />
       /* jshint ignore:end */
       );
   },
@@ -287,17 +298,11 @@ var ClamShellApp = React.createClass({
       else if(app.routes.messageThread === routeName){
         return this.renderMessageThread();
       }
-      else if(app.routes.message === routeName){
-        return this.renderMessageLayout();
-      }
-
-    } else {
-      if(app.routes.login === routeName){
-        return this.renderLoginLayout();
-      } else {
-        return this.renderMessageLayout();
-      }
     }
+    if(app.routes.login === routeName && this.state.setupComplete){
+      return this.renderLoginLayout();
+    }
+    return this.renderStartupLayout();
   }
 });
 

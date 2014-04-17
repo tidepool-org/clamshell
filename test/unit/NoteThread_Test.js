@@ -21,14 +21,15 @@ var expect = chai.expect;
 var React = require('react');
 
 var NoteThread = require('../../build/components/notes/NoteThread');
-var team = require('../../demo/data').team;
+
+var loggedInUserData = require('../../demo/data').loggedInUser;
 
 describe('NoteThread component', function() {
   var component, container;
 
   beforeEach(function() {
 
-    var notes = team.notes;
+    var notes = loggedInUserData.teams[0].notes;
     //we add our component to test into a div and then render it
     component = new NoteThread({messages:notes});
 

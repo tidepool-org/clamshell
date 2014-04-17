@@ -1,3 +1,4 @@
+/** @jsx React.DOM */
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -13,16 +14,28 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
- 'use strict';
+'use strict';
 
- module.exports = function(bows) {
-  var api = {
-    log: bows('Api'),
-    user: {
-      teams:{}
-      //patients:{}
-    },
-    notes:{}
-  };
-  return api;
-};
+var React = require('react');
+
+var Notification = React.createClass({
+  propTypes: {
+    message: React.PropTypes.string
+  },
+  render: function() {
+
+    if(this.props.message){
+      return (
+        /* jshint ignore:start */
+        <div className="alert alert-warning alert-dismissable">
+          <button type="button" className="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          {this.props.message}
+        </div>
+        /* jshint ignore:end */
+      );
+    }
+    return null;
+  }
+});
+
+module.exports = Notification;

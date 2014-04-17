@@ -22,12 +22,12 @@ var React = require('react');
 
 var TeamPicker = require('../../build/components/header/TeamPicker');
 
-var team = require('../../demo/data').team;
+var loggedInUserData = require('../../demo/data').loggedInUser;
 
-var selectedGroupId;
+var selectedUsersId;
 
-var handleGroupPicked = function(content){
-  selectedGroupId = content.groupId;
+var handleUserPicked = function(selectedId){
+  selectedUsersId = selectedId;
 };
 
 describe('TeamPicker', function() {
@@ -35,7 +35,7 @@ describe('TeamPicker', function() {
 
   beforeEach(function() {
     //we add our component to test into a div and then render it
-    component = new TeamPicker({groups:[team], onGroupPicked:handleGroupPicked});
+    component = new TeamPicker({loggedInUser:loggedInUserData, onUserPicked:handleUserPicked});
     container = document.createElement('div');
     document.documentElement.appendChild(container);
     React.renderComponent(component, container);
@@ -68,7 +68,7 @@ describe('TeamPicker', function() {
 
   it('should fire the handler with the id of the choosen group', function() {
     component.refs.teamColumn.props.onClick();
-    expect(selectedGroupId).to.exist;
+    expect(selectedUsersId).to.exist;
   });
 
 });

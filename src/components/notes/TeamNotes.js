@@ -25,46 +25,58 @@ var _ = require('lodash');
 
 var Note = require('./Note');
 
+var dataHelper = require('../../core/userDataHelper');
+
 var TeamNotes = React.createClass({
 
-  notesForGroup:function(group){
+  propTypes: {
+    notes : React.PropTypes.array,
+    onThreadSelected : React.PropTypes.func
+  },
 
-    var notes = _.filter(group.notes, function(note){
-      return (!note.parentmessage);
-    });
+  buildViewableNotes:function(rawNotes){
 
-    var items =  _.map(notes, function(note){
-        return (
-          /* jshint ignore:start */
-          <Note
-            ref='teamNote'
-            image='note-image-large'
-            onClick={this.props.onThreadSelected.bind(null, note)}
-            key={note.id}
-            author={note.username}
-            numberOfComments='??'
-            note={note.messagetext}
-            when={note.timestamp}
-            showCommentLink={true}/>
-          /* jshint ignore:end */
-        );
-      }.bind(this));
+    var viewableNotes = _.map(rawNotes, function(note){
+      return (
+        /* jshint ignore:start */
+        <Note
+          ref='teamNote'
+          image='note-image-large'
+          onClick={this.props.onThreadSelected.bind(null, note)}
+          key={note.id}
+          author={note.user.firstName}
+          numberOfComments={dataHelper.getComments(note.id)}
+          note={note.messagetext}
+          when={dataHelper.formatDisplayDate(note.timestamp)}
+          showCommentLink={true}/>
+        /* jshint ignore:end */
+      );
+    }.bind(this));
 
-    return items;
+    return viewableNotes;
+  },
+  prepareNotes : function (){
+    if(_.isEmpty(this.props.notes)){
+      return null;
+    }
+    //filter
+    var rawNotes = dataHelper.filterNotes(this.props.notes);
+    //order them
+    rawNotes = dataHelper.sortNotesDescending(rawNotes);
+    //return viewable notes
+    return this.buildViewableNotes(rawNotes);
   },
 
   render: function() {
 
-    var items = this.props.groups.map(function(group,i){
-      return this.notesForGroup(group);
-    }.bind(this));
+    var notes = this.prepareNotes();
 
     return (
-        /* jshint ignore:start */
-        <div className='teamnotes'>
-            {items}
-        </div>
-        /* jshint ignore:end */
+      /* jshint ignore:start */
+      <div className='teamnotes'>
+        {notes}
+      </div>
+      /* jshint ignore:end */
     );
   }
 });

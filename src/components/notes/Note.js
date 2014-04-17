@@ -21,7 +21,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var React = require('react');
-var sundial = require('moment');
 
 var Note = React.createClass({
 
@@ -33,10 +32,6 @@ var Note = React.createClass({
     team : React.PropTypes.string,
     showCommentLink : React.PropTypes.bool,
     onGroupSelected : React.PropTypes.func
-  },
-
-  niceTime: function(time){
-    return sundial(time).calendar();
   },
 
   renderHeading : function(){
@@ -86,7 +81,7 @@ var Note = React.createClass({
         </div>
         <div ref='detailColumn' className='media-body'>
           {noteHeading}
-          <span ref='messageWhen' className='small note-when'>{this.niceTime(this.props.when)}</span>
+          <span ref='messageWhen' className='small note-when'>{this.props.when}</span>
           <p ref='messageText' className='note-message'>{this.props.note}</p>
           {commentLink}
         </div>

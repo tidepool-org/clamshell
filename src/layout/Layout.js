@@ -25,11 +25,46 @@ var React = require('react');
 
 var Layout = React.createClass({
 
+  propTypes: {
+    notification: React.PropTypes.object,
+    onDismissNotification: React.PropTypes.func
+  },
+  renderNotification: function() {
+
+    if(this.props.notification){
+
+      var message = this.props.notification.message;
+      var alertClasses = 'alert alert-dismissable alert-'+this.props.notification.type;
+
+      return (
+        /* jshint ignore:start */
+        <div className='layout-alert col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
+          <div className={alertClasses}>
+            <button type='button' className='close' onClick={this.handleDismiss}>&times;</button>
+            {message}
+          </div>
+        </div>
+        /* jshint ignore:end */
+      );
+    }
+    return null;
+  },
+  handleDismiss: function(e) {
+    e.preventDefault();
+    var dismiss = this.props.onDismissNotification;
+    if (dismiss) {
+      dismiss();
+    }
+  },
   render: function() {
+
+    var notification = this.renderNotification();
+
     return this.transferPropsTo(
       /* jshint ignore:start */
       <div className='content'>
-      {this.props.children}
+        {notification}
+        {this.props.children}
       </div>
       /* jshint ignore:end */
     );

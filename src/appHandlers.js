@@ -30,15 +30,15 @@ module.exports = function(component,app) {
    */
   component.handleLogout =function(){
     app.log('logging out');
-    app.api.user.deleteSession(function(success){
-      if(success){
-        app.log('logged out');
-        component.setState({
-          routeName: app.routes.login,
-          authenticated: false
-        });
-        return;
+    app.api.user.logout(function(error,success){
+      if(error){
+        component.handleError(error);
       }
+      component.setState({
+        routeName: app.routes.login,
+        authenticated: false
+      });
+      return;
     }.bind(this));
   };
 
@@ -60,19 +60,36 @@ module.exports = function(component,app) {
    * @param {Error} error - The error that has occured to be shown.
    */
   component.handleError =function(error){
-    app.log.error(error);
+    return component.handleNotification(error,'danger');
+  };
+
+  /**
+   * Basic handler when a message needs to be shown to the user
+   *
+   * @param message - The notification message to show
+   * @param type - The type of notification show, defaults to `info`
+   */
+  component.handleNotification =function(message,type){
+
+    type = type ? type : 'success';
+
     component.setState({
-      routeName : app.routes.message,
-      userMessage : error,
-      userMessageIsError : true,
-      previousRoute : component.state.routeName
+      notification : { message: message, type: type}
     });
   };
+
+  /**
+   * Clears the notification
+   */
+  component.handleNotificationDismissed = function(){
+    component.setState({ notification : null });
+  }
 
   /**
    * Trigger load of user data on successful login
    */
   component.handleLoginSuccess = function(){
+    component.setState({ authenticated : true });
     component.loadUserData();
   };
 
@@ -89,17 +106,21 @@ module.exports = function(component,app) {
       messagesId = mostRecentMessageInThread.parentmessage;
     }
 
-    var team = app.dataHelper.getTeam(component.state.userGroupsData,mostRecentMessageInThread.groupid);
     app.api.notes.getThread(messagesId,function(error,thread){
 
       if(error){
         return component.handleError(error);
       }
 
+      var userToDisplay = app.dataHelper.getSelectedUser(
+        mostRecentMessageInThread.groupid,
+        component.state.loggedInUser
+      );
+
       component.setState({
         selectedThread : thread,
-        selectedGroup : team,
         routeName : app.routes.messageThread,
+        selectedUser : userToDisplay,
         previousRoute : component.state.routeName
       });
     });
@@ -116,7 +137,7 @@ module.exports = function(component,app) {
     var message = app.dataHelper.createMessage(
       note.text,
       component.state.loggedInUser,
-      component.state.selectedGroup.id
+      component.state.selectedUser.userid
       );
 
     app.api.notes.add(message,function(error,addedNote){
@@ -124,10 +145,9 @@ module.exports = function(component,app) {
       if(error){
         return component.handleError(error);
       }
-      var updatedTeamNotes = component.state.selectedGroup;
-      updatedTeamNotes.notes.unshift(addedNote);
-      component.setState({selectedGroup : updatedTeamNotes});
-
+      var userToUpdate = component.state.selectedUser;
+      userToUpdate.notes.unshift(addedNote);
+      component.setState({ selectedUser : userToUpdate });
     }.bind(this));
   };
 
@@ -145,7 +165,7 @@ module.exports = function(component,app) {
     var comment = app.dataHelper.createMessage(
       note.text,
       component.state.loggedInUser,
-      component.state.selectedGroup.id,
+      component.state.selectedUser.userid,
       parentId
       );
 
@@ -161,19 +181,20 @@ module.exports = function(component,app) {
   };
 
   /**
-   * Change which group is being displayed
+   * Change which user is being displayed
    *
-   * @param {Object} selectedGroup - the group that has been selected
+   * @param {Object} selectedUser - the user that has been selected
    */
-  component.handleGroupChanged = function(selectedGroup){
-    var group = _.find(
-      component.state.userGroupsData, function(group){
-        return selectedGroup.groupId == group.id;
-      });
+  component.handleUserChanged = function(selectedUserId){
+
+    var userToDisplay = app.dataHelper.getSelectedUser(
+      selectedUserId,
+      component.state.loggedInUser
+    );
 
     component.setState({
       routeName : app.routes.messagesForSelectedTeam,
-      selectedGroup : group,
+      selectedUser : userToDisplay,
       previousRoute : component.state.routeName
     });
   };

@@ -29,7 +29,6 @@ module.exports = function() {
      */
     routes : {
       login : 'login',
-      message : 'message',
       messagesForAllTeams : 'allTeams',
       messagesForSelectedTeam : 'usersTeam',
       messageThread : 'thread'
