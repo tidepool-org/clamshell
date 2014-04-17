@@ -63,7 +63,7 @@ var TeamNotes = React.createClass({
     //filter
     rawNotes = dataHelper.filterNotes(rawNotes);
     //order them
-    rawNotes = dataHelper.sortNotes(rawNotes);
+    rawNotes = dataHelper.sortNotesDescending(rawNotes);
     //return viewable notes
     if(_.isEmpty(rawNotes)){
       return null;

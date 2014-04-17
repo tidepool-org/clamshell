@@ -24,6 +24,8 @@ var React = require('react');
 
 var Note = require('./Note');
 
+var dataHelper = require('../../core/userDataHelper');
+
 var NoteThread = React.createClass({
 
   propTypes: {
@@ -39,7 +41,7 @@ var NoteThread = React.createClass({
       key={message.id}
       author={message.user.firstName}
       note={message.messagetext}
-      when={message.timestamp}
+      when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
       /* jshint ignore:end */
       );
@@ -53,13 +55,16 @@ var NoteThread = React.createClass({
       key={message.id}
       author={message.user.firstName}
       note={message.messagetext}
-      when={message.timestamp}
+      when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
       /* jshint ignore:end */
       );
   },
   render: function() {
-    var items = this.props.messages.map(function(message, i) {
+
+    var sorted = dataHelper.sortNotesAscending(this.props.messages);
+
+    var items = sorted.map(function(message, i) {
       if(!message.parentmessage) {
         return this.renderNote(message);
       } else if (message.parentmessage) {

@@ -33,7 +33,7 @@ var userDataHelper = {
       return [parentNote];
     } else {
       notesInThread.push(parentNote);
-      return this.sortNotes(notesInThread);
+      return this.sortNotesDescending(notesInThread);
     }
   },
   getComments: function(parentmessageId) {
@@ -44,7 +44,10 @@ var userDataHelper = {
       return (!note.parentmessage);
     });
   },
-  sortNotes : function(notesToSort){
+  sortNotesDescending : function(notesToSort){
+    return this.sortNotesAscending(notesToSort).reverse();
+  },
+  sortNotesAscending : function(notesToSort){
     return _.sortBy(notesToSort, function(note) {
       return new Date(note.timestamp);
     });

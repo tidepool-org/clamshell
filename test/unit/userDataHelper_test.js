@@ -51,8 +51,14 @@ describe('userDataHelper', function() {
 
   });
 
-  it('sortNotes returns oldest note first', function() {
-    var notes = userDataHelper.sortNotes(team.notes);
+  it('sortNotesDescending returns newest note first', function() {
+    var notes = userDataHelper.sortNotesDescending(team.notes);
+    var firstNote = notes[0];
+    expect(firstNote.timestamp).to.equal('2014-01-05T23:07:40+00:00');
+  });
+
+  it('sortNotesAscending returns oldest note first', function() {
+    var notes = userDataHelper.sortNotesAscending(team.notes);
     var firstNote = notes[0];
     expect(firstNote.timestamp).to.equal('2013-12-22T23:07:40+00:00');
   });
