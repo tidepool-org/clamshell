@@ -22,7 +22,9 @@ var expect = chai.expect;
 var React = require('react');
 
 var TeamNotes = require('../../build/components/notes/TeamNotes');
-var team = require('../../demo/data').team;
+
+var loggedInUserData = require('../../demo/data').loggedInUser;
+var teamNotes = loggedInUserData.teams[0].notes;
 
 var handlerCalled = false;
 var propsGiven;
@@ -37,7 +39,7 @@ describe('TeamNotes component', function() {
 
   beforeEach(function() {
     //we add our component to test into a div and then render it
-    component = new TeamNotes({groups:[team],onThreadSelected:handleThreadSelected});
+    component = new TeamNotes({notes:teamNotes,onThreadSelected:handleThreadSelected});
 
     container = document.createElement('div');
     document.documentElement.appendChild(container);
@@ -66,19 +68,18 @@ describe('TeamNotes component', function() {
     expect(propsGiven).to.have.timestamp;
   });
 
-  it('should return two notes', function() {
-    //two notes but also replies/comments to those notes
-    var notes = component.notesForGroup(team);
-    expect(notes.length).to.equal(2);
+  it('has method to buildViewableNotes', function() {
+    expect(component.buildViewableNotes).to.exist;
   });
 
-  it('should have two notes where the key is the id for the root message of each thread', function() {
-    //call the onClick of first groupitem that is a child of our component
-    var notes = component.notesForGroup(team);
+  it('has method to prepareNotes', function() {
+    expect(component.prepareNotes).to.exist;
+  });
 
-    expect(notes[0].props.key).to.equal('9233c2ae-7bad-41f5-9295-e73f0437295b');
-    expect(notes[1].props.key).to.equal('070159bf-bd33-4998-b874-6b9c2bafe7fb');
-
+  it('prepareNotes will return all the notes, but not the comments, to be displayed', function() {
+    var notes = component.prepareNotes();
+    expect(notes).to.exist;
+    expect(notes.length).to.equal(2);
   });
 
 });

@@ -50,15 +50,6 @@ describe('Note', function() {
     document.documentElement.removeChild(container);
   });
 
-  it('should have method to format the time', function() {
-    expect(component.niceTime).to.exist;
-  });
-
-  it('should formated time will be friendly', function() {
-    var formattedTime = component.niceTime('2013-12-22T23:07:40+00:00');
-    expect(formattedTime).to.equal('12/23/2013');
-  });
-
   it('should have a ref for imgColumn', function() {
     expect(component.refs.imgColumn).to.exist;
   });

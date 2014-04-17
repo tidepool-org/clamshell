@@ -21,9 +21,9 @@ var chai = require('chai');
 var expect = chai.expect;
 
 var userDataHelper = require('../../src/core/userDataHelper');
-var teamData = require('../../demo/data');
-var team = teamData.team;
-var patients = teamData.patients;
+
+var loggedInUserData = require('../../demo/data').loggedInUser;
+var team = loggedInUserData.teams[0];
 
 describe('userDataHelper', function() {
 
@@ -41,33 +41,73 @@ describe('userDataHelper', function() {
     expect(thread.length).to.equal(4);
   });
 
-  it('getTeam returns team with the given id', function() {
+  it('filterNotes returns only notes from thread', function() {
+    var notes = userDataHelper.filterNotes(team.notes);
+    expect(notes.length).to.equal(2);
 
-    var groupToFind = '07abb942-5c77-4c87-aa94-12c08b805d7f';
+    notes.forEach(function(note) {
+      expect(note.parentmessage).to.not.exist;
+    });
 
-    var groups = patients;
-    groups.push(team);
-
-    var foundTeam = userDataHelper.getTeam(groups,groupToFind);
-    expect(foundTeam).to.exist;
-    expect(foundTeam.id).to.equal(groupToFind);
   });
 
-  it('combineTeams returns only the unique list of teams', function() {
-
-    var existingTeams = [team];
-    var combined = userDataHelper.combineTeams(team,existingTeams);
-    expect(combined).to.exist;
-    expect(combined.length).to.equal(1);
-    expect(combined[0]).to.equal(team);
+  it('sortNotesDescending returns newest note first', function() {
+    var notes = userDataHelper.sortNotesDescending(team.notes);
+    var firstNote = notes[0];
+    expect(firstNote.timestamp).to.equal('2014-01-05T23:07:40+00:00');
   });
 
-  it('combineTeams returns a combined object of the existing teams and the given team to add', function() {
+  it('sortNotesAscending returns oldest note first', function() {
+    var notes = userDataHelper.sortNotesAscending(team.notes);
+    var firstNote = notes[0];
+    expect(firstNote.timestamp).to.equal('2013-12-22T23:07:40+00:00');
+  });
 
-    var existingTeams = patients;
-    var combined = userDataHelper.combineTeams(team,existingTeams);
-    expect(combined).to.exist;
-    expect(combined.length).to.equal(2);
+  it('getNotesForTeams returns all notes for all teams', function() {
+
+    var expectedNotesCount = team.notes.length;
+
+    var allNotes = userDataHelper.getNotesForTeams(loggedInUserData.teams);
+    expect(allNotes.length).to.equal(expectedNotesCount);
+
+  });
+
+  it('formatFullNameFromProfile returns the firstName as a string from the profile', function() {
+
+    var profile = {firstName:'Foo',lastName:null};
+    expect(userDataHelper.formatFullNameFromProfile(profile)).to.equal('Foo');
+
+  });
+
+  it('formatFullNameFromProfile returns the first and last as a string from the profile', function() {
+
+    var profile = {firstName:'Foo',lastName:'Bar'};
+    expect(userDataHelper.formatFullNameFromProfile(profile)).to.equal('Foo Bar');
+
+  });
+
+  it('formatFullNameFromProfile returns nothing when profile not set', function() {
+
+    var profile = {firstName:'',lastName:null};
+    expect(userDataHelper.formatFullNameFromProfile(profile)).to.not.exist;
+
+  });
+  //getSelectedUser
+  it('getSelectedUser returns the logged in user when given that userid', function() {
+    expect(userDataHelper.getSelectedUser(loggedInUserData.userid,loggedInUserData)).to.deep.equal(loggedInUserData);
+  });
+
+  it('getSelectedUser returns the team user when given that userid', function() {
+    expect(userDataHelper.getSelectedUser(team.userid,loggedInUserData)).to.deep.equal(team);
+  });
+
+  it('getAllNotesForLoggedInUser returns 5 notes', function() {
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(5);
+  });
+
+  it('getAllNotesForLoggedInUser returns 6 notes when we add one for the user', function() {
+    loggedInUserData.notes.push(team.notes[3]);
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(6);
   });
 
   it('createMessage returns message that is for a specified group', function() {
@@ -86,6 +126,7 @@ describe('userDataHelper', function() {
     expect(message.parentmessage).to.not.exist;
     expect(message.groupid).to.equal(testGroupId);
     expect(message.timestamp).to.exist;
+    expect(message.user).to.equal(userDetails.profile);
     expect(message.messagetext).to.equal(testMessage);
   });
 
@@ -104,6 +145,7 @@ describe('userDataHelper', function() {
 
     expect(reply.userid).to.equal(userDetails.userid);
     expect(reply.parentmessage).to.equal(parentMessageId);
+    expect(reply.user).to.equal(userDetails.profile);
     expect(reply.groupid).to.equal(testGroupId);
     expect(reply.timestamp).to.exist;
     expect(reply.messagetext).to.equal(testReply);
