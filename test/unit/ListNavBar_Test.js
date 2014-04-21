@@ -22,6 +22,7 @@ var expect = chai.expect;
 var React = require('react');
 
 var ListNavBar = require('../../build/components/header/ListNavBar');
+var helpers = require('../lib/helpers');
 
 
 var handled = false;
@@ -38,20 +39,16 @@ describe('ListNavBar', function() {
 
   beforeEach(function() {
     //we add our component to test into a div and then render it
-    component = new ListNavBar({
-      title : testTitle,
-      onNavBarAction : actionHandeled
-    });
-
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
-
+    component = helpers.mountComponent(
+      ListNavBar({
+        title : testTitle,
+        onNavBarAction : actionHandeled
+      })
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should an action button', function() {

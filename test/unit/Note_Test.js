@@ -22,6 +22,8 @@ var React = require('react');
 
 var Note = require('../../build/components/notes/Note');
 
+var helpers = require('../lib/helpers');
+
 var testGroupName = 'My Test Group';
 var testAuthor = 'Jamie';
 var testNote = 'A summary of the latest note to my care group conversation thread';
@@ -31,23 +33,18 @@ describe('Note', function() {
   var component, container;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new Note({
-      name : testGroupName,
-      author : testAuthor,
-      note : testNote,
-      when : testWhenTheLatestNoteOccured
-    });
-
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
-
+    component = helpers.mountComponent(
+      Note({
+        name : testGroupName,
+        author : testAuthor,
+        note : testNote,
+        when : testWhenTheLatestNoteOccured
+      })
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should have a ref for imgColumn', function() {

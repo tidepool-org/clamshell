@@ -23,6 +23,8 @@ var React = require('react');
 
 var Login = require('../../build/components/login/Login');
 
+var helpers = require('../lib/helpers');
+
 var loggedIn = false;
 
 var handleLoginSuccess  = function(){
@@ -37,21 +39,16 @@ describe('Login', function() {
   var component, container;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new Login({
-      login : loginFake,
-      onLoginSuccess : handleLoginSuccess
-    });
-
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
-
+    component = helpers.mountComponent(
+      Login({
+        login : loginFake,
+        onLoginSuccess : handleLoginSuccess
+      })
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should have a login button', function() {
