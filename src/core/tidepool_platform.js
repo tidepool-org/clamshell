@@ -17,9 +17,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(api, host, superagent) {
-
-  var platform = require('tidepool-platform-client/index')({host:host},superagent,api.log);
+module.exports = function(api, platform) {
   var async = require('async');
   var _ = require('lodash');
 
@@ -56,7 +54,7 @@ module.exports = function(api, host, superagent) {
 
   api.user.isAuthenticated = function(callback){
     return callback(platform.isLoggedIn());
-  }
+  };
 
   /*
    * Return the logged in user
@@ -70,7 +68,7 @@ module.exports = function(api, host, superagent) {
   };
 
   /*
-   * Login the user and fetch thier data (profile and notes)
+   * Login the user and fetch their data (profile and notes)
    */
   api.user.login = function(username, password,callback) {
     api.log('logging in ...');
