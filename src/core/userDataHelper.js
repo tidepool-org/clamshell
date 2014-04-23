@@ -88,6 +88,7 @@ var userDataHelper = {
   getDateAsISOString : function(){
     var utcDate = moment.utc().format();
     var theZone = moment().zone();
+    //add mins to remove the timezone
     utcDate = moment(utcDate).add('m', theZone);
     return moment.utc(utcDate).toISOString();
   },
