@@ -120,6 +120,7 @@ var Login = React.createClass({
     var password = this.refs.pwFeild.getDOMNode().value;
 
     var validationError = this.validate(username, password);
+
     if (validationError) {
       this.setState({
         loggingIn: false,
@@ -130,13 +131,18 @@ var Login = React.createClass({
 
     this.props.login(username, password, function(err) {
       if (err) {
+
+        var errorMessage = 'An error occured while logging in.';
+        if (err.status === 401) {
+          errorMessage = 'Wrong username or password.';
+        }
+
         self.setState({
           loggingIn: false,
-          message: err.message || 'An error occured while logging in.'
+          message: errorMessage
         });
         return;
       }
-      self.setState({loggingIn: false});
       self.props.onLoginSuccess();
     });
   },
