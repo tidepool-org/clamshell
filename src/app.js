@@ -79,7 +79,10 @@ var ClamShellApp = React.createClass({
     if(config.demo){
       require('./core/mock')(app.api);
     } else {
-      require('./core/tidepool_platform')(app.api,config.apiHost,window.superagent);
+      require('./core/tidepool_platform')(
+        app.api,
+        require('tidepool-platform-client/index')({host:host},superagent,api.log)
+      );
     }
   },
   /**
