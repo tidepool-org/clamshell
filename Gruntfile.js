@@ -1,7 +1,7 @@
 // == BSD2 LICENSE ==
 // Copyright (c) 2014, Tidepool Project
 //
-// This program is free software; you can reapp_buildribute it and/or modify it under
+// This program is free software; you can redistribute it and/or modify it under
 // the terms of the associated License, which is identical to the BSD 2-Clause
 // License as published by the Open Source Initiative at opensource.org.
 //
