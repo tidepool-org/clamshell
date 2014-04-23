@@ -9,4 +9,4 @@ npm install .
 #./node_modules/.bin/grunt test
 
 #build static site
-./node_modules/.bin/grunt build
+./node_modules/.bin/grunt build-prod
