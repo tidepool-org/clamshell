@@ -71,7 +71,7 @@ var userDataHelper = {
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
-      return moment(timestamp).format('MMMM D [at] h:mm a');
+      return moment.utc(timestamp).format('MMMM D [at] h:mm a');
     }
     return;
   },
@@ -85,13 +85,19 @@ var userDataHelper = {
     }
     return;
   },
+  getDateAsISOString : function(){
+    var utcDate = moment.utc().format();
+    var theZone = moment().zone();
+    utcDate = moment(utcDate).add('m', theZone);
+    return moment.utc(utcDate).toISOString();
+  },
   createMessage : function(messageText, user, groupId, parentId){
     var message = {
       parentmessage : parentId,
       userid : user.userid,
       user : user.profile,
       groupid : groupId,
-      timestamp : new Date().toISOString(),
+      timestamp : this.getDateAsISOString(),
       messagetext : messageText
     };
     return message;
