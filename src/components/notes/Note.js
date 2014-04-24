@@ -60,7 +60,6 @@ var Note = React.createClass({
       return (
         /* jshint ignore:start */
         <div>
-          <span ref='showMessageThread' className='small pull-left note-number-comments'>{this.props.numberOfComments} Comments</span>
           <span ref='showMessageThread' className='small pull-right note-comment'>Comment</span>
         </div>
         /* jshint ignore:end */

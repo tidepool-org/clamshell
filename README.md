@@ -31,10 +31,11 @@ $ npm install .
 
 ## Quick start
 
-Once you have completed the install then build the app
+Once you have completed the install then build and run the app
 
 ```bash
-$ npm start
+$ source config/env.sh
+$ grunt run-local
 ```
 
 Open the index.html in your web browser and start using ClamShell

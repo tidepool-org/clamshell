@@ -86,14 +86,18 @@ var userDataHelper = {
     return;
   },
   createMessage : function(messageText, user, groupId, parentId){
+
+    var d = new Date();
+
     var message = {
       parentmessage : parentId,
       userid : user.userid,
       user : user.profile,
       groupid : groupId,
-      timestamp : new Date().toISOString(),
+      timestamp : d.toISOString(),
       messagetext : messageText
     };
+    
     return message;
   }
 };
