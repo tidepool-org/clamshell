@@ -95,7 +95,6 @@ var userDataHelper = {
       user : user.profile,
       groupid : groupId,
       timestamp : d.toISOString(),
-      offsetminutes: d.getTimezoneOffset(),
       messagetext : messageText
     };
     
