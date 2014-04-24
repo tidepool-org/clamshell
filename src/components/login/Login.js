@@ -80,7 +80,7 @@ var Login = React.createClass({
     if (message) {
       return (
          /* jshint ignore:start */
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message js-login-message'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message alert alert-danger'>
             {message}
           </div>
 
