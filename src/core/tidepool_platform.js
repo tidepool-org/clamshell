@@ -33,19 +33,19 @@ module.exports = function(api, platform) {
 
     async.parallel({
       userProfile: function(callback){
-        api.log('[production] getting user profile');
+        api.log('getting user profile');
         platform.findProfile(userId, function(profileError,profile){
           callback(profileError,profile);
         });
       },
       userNotes: function(callback){
-        api.log('[production] getting user notes');
+        api.log('getting user notes');
         platform.getNotesForUser(userId, null, function(notesError,notes){
           callback(notesError,notes);
         });
       }
     }, function (error, results) {
-      api.log('[production] return user details');
+      api.log('return user details');
       user.profile = results.userProfile;
       user.notes = results.userNotes;
       return cb(error,user);
@@ -78,12 +78,12 @@ module.exports = function(api, platform) {
         return callback(error);
       }
       if(loginData){
-        api.log('[production] login success');
+        api.log('login success');
         loggedInUser = loginData.user;
         loggedInUser.userid = loginData.userid;
         getUserDetail(loggedInUser.userid,function(error,data){
           if(data){
-            api.log('[production] adding users data');
+            api.log('adding users data');
             loggedInUser.notes = data.notes;
             loggedInUser.profile = data.profile;
           }
@@ -103,7 +103,7 @@ module.exports = function(api, platform) {
         api.log.error(error);
         return callback(error);
       }
-      api.log('[production] successfully logged out');
+      api.log('successfully logged out');
       return callback(null);
     });
   };
@@ -127,7 +127,7 @@ module.exports = function(api, platform) {
 
           //call back once all finished
           var done = _.after(usersIds.length, function() {
-            api.log('[production] successfully got users teams data');
+            api.log('successfully got users teams data');
             loggedInUser.teams = details;
             return cb(null);
           });
@@ -140,7 +140,7 @@ module.exports = function(api, platform) {
           });
         }
       }
-      api.log('[production] user has no other teams');
+      api.log('user has no other teams');
       return cb(null);
     });
   };
@@ -149,9 +149,9 @@ module.exports = function(api, platform) {
    * Find a specific message thread
    */
   api.notes.getThread = function(messageId,callback) {
-    api.log('[production] getting thread ... ');
+    api.log('getting message thread ... ');
     platform.getMessageThread(messageId, function(error,messages){
-      api.log('[production] got thread');
+      api.log('got message thread');
       return callback(error, messages);
     });
   };
@@ -160,9 +160,9 @@ module.exports = function(api, platform) {
    * As the logged in user reply on an existing thread
    */
   api.notes.reply = function(comment,callback) {
-    api.log('[production] adding reply ... ');
+    api.log('adding reply to message thread ... ');
     platform.replyToMessageThread(comment, function(error,id){
-      api.log('[production] added reply');
+      api.log('reply added to message thread');
       comment.id = id;
       return callback(error,comment);
     });
@@ -172,9 +172,9 @@ module.exports = function(api, platform) {
    * As the logged start a new thread
    */
   api.notes.add = function(message,callback) {
-    api.log('[production] adding thread ... ');
+    api.log('adding new message thread ... ');
     platform.startMessageThread(message, function(error,id){
-      api.log('[production] added thread ... ');
+      api.log('added message thread ... ');
       message.id = id;
       return callback(error,message);
     });
