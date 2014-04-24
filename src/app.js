@@ -81,7 +81,7 @@ var ClamShellApp = React.createClass({
     } else {
       require('./core/tidepool_platform')(
         app.api,
-        require('tidepool-platform-client/index')({host:host},superagent,api.log)
+        require('tidepool-platform-client/index')({host:config.apiHost},superagent,api.log)
       );
     }
   },
