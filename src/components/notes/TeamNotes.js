@@ -41,10 +41,9 @@ var TeamNotes = React.createClass({
         /* jshint ignore:start */
         <Note
           ref='teamNote'
-          image='note-image-large'
           onClick={this.props.onThreadSelected.bind(null, note)}
           key={note.id}
-          author={note.user.firstName}
+          author={dataHelper.formatFullNameFromProfile(note.user)}
           numberOfComments={dataHelper.getComments(note.id)}
           note={note.messagetext}
           when={dataHelper.formatDisplayDate(note.timestamp)}
