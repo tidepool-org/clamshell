@@ -44,7 +44,7 @@ var TeamNotes = React.createClass({
           image='note-image-large'
           onClick={this.props.onThreadSelected.bind(null, note)}
           key={note.id}
-          author={note.user.firstName}
+          author={this.getAuthorDisplayName(note.user)}
           numberOfComments={dataHelper.getComments(note.id)}
           note={note.messagetext}
           when={dataHelper.formatDisplayDate(note.timestamp)}
@@ -78,8 +78,10 @@ var TeamNotes = React.createClass({
       </div>
       /* jshint ignore:end */
     );
+  },
+  getAuthorDisplayName: function(user) {
+    return dataHelper.formatShortNameFromProfile(user);
   }
 });
 
 module.exports = TeamNotes;
-

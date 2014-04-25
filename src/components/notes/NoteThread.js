@@ -39,7 +39,7 @@ var NoteThread = React.createClass({
       ref='rootNote'
       image='note-image-large'
       key={message.id}
-      author={message.user.firstName}
+      author={this.getAuthorDisplayName(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
@@ -53,7 +53,7 @@ var NoteThread = React.createClass({
       ref='commentNote'
       image='note-image'
       key={message.id}
-      author={message.user.firstName}
+      author={this.getAuthorDisplayName(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
@@ -79,8 +79,10 @@ var NoteThread = React.createClass({
      </div>
      /* jshint ignore:end */
      );
+  },
+  getAuthorDisplayName: function(user) {
+    return dataHelper.formatShortNameFromProfile(user);
   }
 });
 
 module.exports = NoteThread;
-
