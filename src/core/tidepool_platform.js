@@ -117,31 +117,26 @@ module.exports = function(api, platform) {
     var details = [];
     loggedInUser.teams = [];
 
-    platform.getUsersPatients(loggedInUser.userid, function(error,linkedUsers){
+    platform.getViewableUsers(loggedInUser.userid, function(error,viewableUsers){
 
-      if(linkedUsers.members){
+      var linkedUsers = Object.keys(_.omit(viewableUsers, loggedInUser.userid));
 
-        var usersIds = _(linkedUsers.members).uniq().valueOf();
+      if (linkedUsers.length > 0) {
+        async.map(Object.keys(linkedUsers), getUserDetail, function(err, details){
+          if (err != null) {
+            api.log('Error when fetching details', loggedInUser.userid, err);
+          }
 
-        if(usersIds && usersIds.length>0){
-
-          //call back once all finished
-          var done = _.after(usersIds.length, function() {
+          if (Arrays.isArray(details) && details.length > 0) {
             api.log('successfully got users teams data');
-            loggedInUser.teams = details;
-            return cb(null);
-          });
-
-          _.forEach(usersIds, function(userId) {
-            getUserDetail(userId,function(error,userDetails){
-              details.push(userDetails);
-              done();
-            });
-          });
-        }
+          }
+          loggedInUser.teams = details;
+          return cb();
+        });
+      } else {
+        api.log('user has no other teams');
+        return cb();
       }
-      api.log('user has no other teams');
-      return cb(null);
     });
   };
 
