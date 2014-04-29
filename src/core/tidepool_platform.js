@@ -120,15 +120,13 @@ module.exports = function(api, platform) {
       var linkedUsers = Object.keys(_.omit(viewableUsers, loggedInUser.userid));
 
       if (linkedUsers.length > 0) {
-        async.map(Object.keys(linkedUsers), getUserDetail, function(err, details){
+        async.map(linkedUsers, getUserDetail, function(err, details){
           if (err != null) {
-            api.log('Error when fetching details', loggedInUser.userid, err);
+            api.log('Error when fetching details for a linked user', loggedInUser.userid, err);
+          } else if (_.isArray(details) && details.length > 0) {
+            api.log('Successfully got users teams data');
+            loggedInUser.teams = details;
           }
-
-          if (_.isArray(details) && details.length > 0) {
-            api.log('successfully got users teams data');
-          }
-          loggedInUser.teams = details;
           return cb();
         });
       } else {
