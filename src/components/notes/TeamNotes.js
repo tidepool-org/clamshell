@@ -19,6 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 var _ = require('lodash');
@@ -82,4 +83,3 @@ var TeamNotes = React.createClass({
 });
 
 module.exports = TeamNotes;
-

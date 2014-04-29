@@ -113,8 +113,6 @@ module.exports = function(api, platform) {
    * This will find the linked users profile and notes
    */
   api.user.teams.get = function(cb) {
-
-    var details = [];
     loggedInUser.teams = [];
 
     platform.getViewableUsers(loggedInUser.userid, function(error,viewableUsers){
@@ -127,7 +125,7 @@ module.exports = function(api, platform) {
             api.log('Error when fetching details', loggedInUser.userid, err);
           }
 
-          if (Arrays.isArray(details) && details.length > 0) {
+          if (_.isArray(details) && details.length > 0) {
             api.log('successfully got users teams data');
           }
           loggedInUser.teams = details;

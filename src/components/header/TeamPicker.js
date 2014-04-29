@@ -20,6 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 var _ = require('lodash');
@@ -81,6 +82,7 @@ var TeamPicker = React.createClass({
 
     var groups = _.map(selectableUsers, function(selectableUser) {
       return (
+        /* jshint ignore:start */
         <div key={selectableUser.userid} ref='group' className='group media'>
           <div ref='imgColumn' className='media-object pull-left'>
             <div ref='authorImage' className='group-image'/>
@@ -92,10 +94,12 @@ var TeamPicker = React.createClass({
             <span ref='lastGroupNote' className='small pull-left'>{selectableUser.latestNote}</span>
           </div>
         </div>
+        /* jshint ignore:end */
       );
     }.bind(this));
 
     return this.transferPropsTo(
+      /* jshint ignore:start */
       <div ref='selectGroup'>
         <div className='navbar-header'>
           <a className='btn-team-picker btn btn-default navbar-toggle' data-toggle='collapse' data-target='#groups-navbar'>
@@ -108,6 +112,7 @@ var TeamPicker = React.createClass({
           </div>
         </div>
       </div>
+      /* jshint ignore:end */
     );
   }
 

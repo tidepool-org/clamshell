@@ -20,6 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 

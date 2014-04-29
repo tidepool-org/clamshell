@@ -18,6 +18,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 module.exports = function(api) {
+  var _ = require('lodash');
 
   var demoData = require('../../demo/data');
   var loggedInUser = demoData.loggedInUser;

@@ -19,6 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 
@@ -83,4 +84,3 @@ var NoteThread = React.createClass({
 });
 
 module.exports = NoteThread;
-

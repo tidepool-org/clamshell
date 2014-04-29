@@ -211,8 +211,8 @@ var ClamShellApp = React.createClass({
       navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
     }
 
+    /* jshint ignore:start */
     return (
-      /* jshint ignore:start */
       <Layout
         notification={this.state.notification}
         onDismissNotification={this.handleNotificationDismissed}>
@@ -225,14 +225,14 @@ var ClamShellApp = React.createClass({
           btnMessage='Post'
           onFooterAction={this.handleStartConversation} />
       </Layout>
-      /* jshint ignore:end */
-      );
+    );
+    /* jshint ignore:end */
   },
   renderMessagesForAllTeams:function(){
 
-    /* jshint ignore:start */
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
 
+    /* jshint ignore:start */
     return (
       <Layout
         notification={this.state.notification}
