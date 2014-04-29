@@ -20,7 +20,6 @@
     log: bows('Api'),
     user: {
       teams:{}
-      //patients:{}
     },
     notes:{}
   };

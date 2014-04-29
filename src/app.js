@@ -50,6 +50,8 @@ var app = {
   routes : router.routes
 };
 
+window.app = app;
+
 var ClamShellApp = React.createClass({
   getInitialState: function () {
     app.log('initializing ...');
@@ -134,8 +136,8 @@ var ClamShellApp = React.createClass({
       this.setState({
         loadingData : false,
         loggedInUser : app.api.user.get()
-      });
-      this.showUserData();
+      // Call showUserData only after state has been updated
+      }, this.showUserData);
     }.bind(this));
 
   },
@@ -143,7 +145,7 @@ var ClamShellApp = React.createClass({
    * Do we have other teams the logged in user is part of?
    */
   userHasTeams:function(){
-    var teams = this.state.loggedInUser.teams;
+    var teams = this.state.loggedInUser && this.state.loggedInUser.teams;
     return (teams && teams.length > 0);
   },
   /**
@@ -156,7 +158,7 @@ var ClamShellApp = React.createClass({
    * Show the logged in users data for all the teams that are a part of
    */
   showUserData: function(){
-    if (this.userHasTeams() && this.hasCompletedLoadingData()) {
+    if (this.hasCompletedLoadingData() && this.userHasTeams()) {
       app.log('user has other teams also');
       this.setState({
         routeName : app.routes.messagesForAllTeams
