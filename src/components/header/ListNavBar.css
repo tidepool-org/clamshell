@@ -3,6 +3,11 @@
   border: none;
 }
 
+.listnavbar-action-button {
+  display: block;
+  cursor: pointer;
+}
+
 .back-icon {
   display: block;
   background: url('images/back24x24.png');

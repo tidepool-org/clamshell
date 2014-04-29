@@ -83,11 +83,11 @@ var TeamPicker = React.createClass({
     var groups = _.map(selectableUsers, function(selectableUser) {
       return (
         /* jshint ignore:start */
-        <div key={selectableUser.userid} ref='group' className='group media'>
+        <div key={selectableUser.userid} ref='group' className='group media group-clickable' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
           <div ref='imgColumn' className='media-object pull-left'>
             <div ref='authorImage' className='group-image'/>
           </div>
-          <div ref='teamColumn' className='media-body' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
+          <div ref='teamColumn' className='media-body'>
             <div>
               <strong ref='groupName' className='media-heading' >{selectableUser.name}</strong>
             </div>

@@ -32,7 +32,8 @@ var Note = React.createClass({
     note : React.PropTypes.string,
     team : React.PropTypes.string,
     showCommentLink : React.PropTypes.bool,
-    onGroupSelected : React.PropTypes.func
+    onGroupSelected : React.PropTypes.func,
+    onNoteSelected : React.PropTypes.func
   },
 
   renderHeading : function(){
@@ -72,10 +73,14 @@ var Note = React.createClass({
 
     var commentLink = this.renderCommentLink();
     var noteHeading = this.renderHeading();
+    var className = 'note media';
+    if (this.props.onNoteSelected) {
+      className = className + ' note-clickable';
+    }
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <div className='note media'>
+      <div className={className} onClick={this.props.onNoteSelected}>
         <div ref='imgColumn' className='media-object pull-left'>
           <div ref='authorImage' className={this.props.image}/>
         </div>
