@@ -37,7 +37,7 @@ var ListNavBar = React.createClass({
             <span className={this.props.actionIcon}></span>
           </a>
         </div>
-        <h4 className='navbar-text text-center col-xs-8 col-sm-9'>{this.props.title}</h4>
+        <h4 className='listnavbar-title navbar-text text-center col-xs-8 col-sm-9'>{this.props.title}</h4>
         {this.props.children}
       </div>
       /* jshint ignore:end */
