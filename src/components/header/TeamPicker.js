@@ -24,6 +24,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var _ = require('lodash');
+var $ = window.$;
 
 var dataHelper = require('../../core/userDataHelper');
 
@@ -34,7 +35,15 @@ var TeamPicker = React.createClass({
     onUserPicked : React.PropTypes.func
   },
 
+  // jQuery reference to the dropdown to show/hide via toggle button
+  $dropdown: null,
+
+  componentDidMount: function() {
+    this.$dropdown = $(this.refs.dropdown.getDOMNode());
+  },
+
   handleSelection: function(selectedUserId) {
+    this.hideDropdown();
     this.props.onUserPicked(selectedUserId);
   },
 
@@ -108,11 +117,11 @@ var TeamPicker = React.createClass({
       /* jshint ignore:start */
       <div ref='selectGroup'>
         <div className='navbar-header'>
-          <a className='btn-team-picker btn btn-default navbar-toggle' data-toggle='collapse' data-target='#groups-navbar'>
+          <a className='btn-team-picker btn btn-default navbar-toggle' onClick={this.handleToggleDropdown}>
             <span className='caret'></span>
           </a>
         </div>
-        <div className='team-picker collapse navbar-collapse' id='groups-navbar'>
+        <div ref='dropdown' className='team-picker collapse navbar-collapse' id='groups-navbar'>
           <div ref='groups' className='nav navbar-nav'>
             {users}
           </div>
@@ -120,8 +129,22 @@ var TeamPicker = React.createClass({
       </div>
       /* jshint ignore:end */
     );
-  }
+  },
 
+  handleToggleDropdown: function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    this.toggleDropdown();
+  },
+
+  toggleDropdown: function() {
+    this.$dropdown.collapse('toggle');
+  },
+
+  hideDropdown: function() {
+    this.$dropdown.collapse('hide');
+  }
 });
 
 module.exports = TeamPicker;
