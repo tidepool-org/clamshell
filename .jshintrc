@@ -15,5 +15,6 @@
   "smarttabs": false,
   "trailing": true,
   "undef": true,
-  "unused": "vars"
+  "unused": "vars",
+  "newcap" : false
 }

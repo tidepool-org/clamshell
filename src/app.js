@@ -208,7 +208,7 @@ var ClamShellApp = React.createClass({
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
     if(this.userHasTeams()){
-      navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
+      navBar = this.renderNavBarWithTeamPicker(careTeamName,'back-icon',this.handleBack);
     }
 
     /* jshint ignore:start */

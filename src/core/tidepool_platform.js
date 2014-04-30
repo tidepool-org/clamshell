@@ -46,7 +46,6 @@ module.exports = function(api, platform) {
       }
     }, function (error, results) {
       api.log('return user details');
-      appendTeamToNote
       user.profile = results.userProfile;
       user.notes = appendTeamToNote(results.userNotes,results.userProfile);
       return cb(error,user);
