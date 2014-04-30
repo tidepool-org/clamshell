@@ -22,9 +22,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 module.exports = function(component,app) {
-
-  var _ = require('lodash');
-
   /**
    * Delete the users session and set app state to be logged out
    */
@@ -83,7 +80,7 @@ module.exports = function(component,app) {
    */
   component.handleNotificationDismissed = function(){
     component.setState({ notification : null });
-  }
+  };
 
   /**
    * Trigger load of user data on successful login

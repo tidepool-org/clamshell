@@ -37,7 +37,7 @@ data.loggedInUser.teams =
 				groupid : 'user-id-456',
 				user : {firstName:'Funky',lastName:'Diabetic'},
 				timestamp : '2013-12-22T23:07:40+00:00',
-				messagetext : 'There is a bit of pressure on in the lead up to the holidays, I am finding even a bit of excerise each morning helps with the stress and '
+				messagetext : 'There is a bit of pressure on in the lead up to the holidays, I am finding even a bit of excerise each morning helps with the stress '
 			},
 			{
 				id : '72428a86-b1c8-41cd-8d62-31b57128d590',
@@ -55,7 +55,7 @@ data.loggedInUser.teams =
 				groupid : 'user-id-456',
 				user : {firstName:'Funky',lastName:'Diabetic'},
 				timestamp : '2013-12-25T23:07:40+00:00',
-				messagetext : 'I have struggled to resist the temptations of Christmas but did go for a ride early in the day that help to Balance things out.'
+				messagetext : 'I have struggled to resist the temptations of Christmas but did go for a ride early in the day that help to balance things out.'
 			},
 			{
 				id : 'bd3de6e4-d805-4ca7-a3b9-2e0eb4e221ca',
@@ -79,5 +79,3 @@ data.loggedInUser.teams =
 	}];
 
 module.exports = data;
-
-

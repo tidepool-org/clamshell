@@ -17,9 +17,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(api, host, superagent) {
-
-  var platform = require('tidepool-platform-client/index')({host:host},superagent,api.log);
+module.exports = function(api, platform) {
   var async = require('async');
   var _ = require('lodash');
 
@@ -35,28 +33,39 @@ module.exports = function(api, host, superagent) {
 
     async.parallel({
       userProfile: function(callback){
-        api.log('[production] getting user profile');
+        api.log('getting user profile');
         platform.findProfile(userId, function(profileError,profile){
           callback(profileError,profile);
         });
       },
       userNotes: function(callback){
-        api.log('[production] getting user notes');
+        api.log('getting user notes');
         platform.getNotesForUser(userId, null, function(notesError,notes){
           callback(notesError,notes);
         });
       }
     }, function (error, results) {
-      api.log('[production] return user details');
+      api.log('return user details');
+      appendTeamToNote
       user.profile = results.userProfile;
-      user.notes = results.userNotes;
+      user.notes = appendTeamToNote(results.userNotes,results.userProfile);
       return cb(error,user);
+    });
+  }
+
+  /*
+  * Add the team for each note so we can use it later
+  */
+  function appendTeamToNote(notes,team){
+    return _.map(notes, function(note) {
+      note.team = team;
+      return note;
     });
   }
 
   api.user.isAuthenticated = function(callback){
     return callback(platform.isLoggedIn());
-  }
+  };
 
   /*
    * Return the logged in user
@@ -70,7 +79,7 @@ module.exports = function(api, host, superagent) {
   };
 
   /*
-   * Login the user and fetch thier data (profile and notes)
+   * Login the user and fetch their data (profile and notes)
    */
   api.user.login = function(username, password,callback) {
     api.log('logging in ...');
@@ -80,12 +89,12 @@ module.exports = function(api, host, superagent) {
         return callback(error);
       }
       if(loginData){
-        api.log('[production] login success');
+        api.log('login success');
         loggedInUser = loginData.user;
         loggedInUser.userid = loginData.userid;
         getUserDetail(loggedInUser.userid,function(error,data){
           if(data){
-            api.log('[production] adding users data');
+            api.log('adding users data');
             loggedInUser.notes = data.notes;
             loggedInUser.profile = data.profile;
           }
@@ -105,7 +114,7 @@ module.exports = function(api, host, superagent) {
         api.log.error(error);
         return callback(error);
       }
-      api.log('[production] successfully logged out');
+      api.log('successfully logged out');
       return callback(null);
     });
   };
@@ -115,35 +124,26 @@ module.exports = function(api, host, superagent) {
    * This will find the linked users profile and notes
    */
   api.user.teams.get = function(cb) {
-
-    var details = [];
     loggedInUser.teams = [];
 
-    platform.getUsersPatients(loggedInUser.userid, function(error,linkedUsers){
+    platform.getViewableUsers(loggedInUser.userid, function(error,viewableUsers){
 
-      if(linkedUsers.members){
+      var linkedUsers = Object.keys(_.omit(viewableUsers, loggedInUser.userid));
 
-        var usersIds = _(linkedUsers.members).uniq().valueOf();
-
-        if(usersIds && usersIds.length>0){
-
-          //call back once all finished
-          var done = _.after(usersIds.length, function() {
-            api.log('[production] successfully got users teams data');
+      if (linkedUsers.length > 0) {
+        async.map(linkedUsers, getUserDetail, function(err, details){
+          if (err != null) {
+            api.log('Error when fetching details for a linked user', loggedInUser.userid, err);
+          } else if (_.isArray(details) && details.length > 0) {
+            api.log('Successfully got users teams data');
             loggedInUser.teams = details;
-            return cb(null);
-          });
-
-          _.forEach(usersIds, function(userId) {
-            getUserDetail(userId,function(error,userDetails){
-              details.push(userDetails);
-              done();
-            });
-          });
-        }
+          }
+          return cb();
+        });
+      } else {
+        api.log('user has no other teams');
+        return cb();
       }
-      api.log('[production] user has no other teams');
-      return cb(null);
     });
   };
 
@@ -151,9 +151,9 @@ module.exports = function(api, host, superagent) {
    * Find a specific message thread
    */
   api.notes.getThread = function(messageId,callback) {
-    api.log('[production] getting thread ... ');
+    api.log('getting message thread ... ');
     platform.getMessageThread(messageId, function(error,messages){
-      api.log('[production] got thread');
+      api.log('got message thread');
       return callback(error, messages);
     });
   };
@@ -162,9 +162,9 @@ module.exports = function(api, host, superagent) {
    * As the logged in user reply on an existing thread
    */
   api.notes.reply = function(comment,callback) {
-    api.log('[production] adding reply ... ');
+    api.log('adding reply to message thread ... ');
     platform.replyToMessageThread(comment, function(error,id){
-      api.log('[production] added reply');
+      api.log('reply added to message thread');
       comment.id = id;
       return callback(error,comment);
     });
@@ -174,9 +174,9 @@ module.exports = function(api, host, superagent) {
    * As the logged start a new thread
    */
   api.notes.add = function(message,callback) {
-    api.log('[production] adding thread ... ');
+    api.log('adding new message thread ... ');
     platform.startMessageThread(message, function(error,id){
-      api.log('[production] added thread ... ');
+      api.log('added message thread ... ');
       message.id = id;
       return callback(error,message);
     });

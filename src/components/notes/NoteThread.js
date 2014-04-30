@@ -19,6 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 
@@ -39,7 +40,7 @@ var NoteThread = React.createClass({
       ref='rootNote'
       image='note-image-large'
       key={message.id}
-      author={message.user.firstName}
+      author={dataHelper.formatShortName(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
@@ -53,7 +54,7 @@ var NoteThread = React.createClass({
       ref='commentNote'
       image='note-image'
       key={message.id}
-      author={message.user.firstName}
+      author={dataHelper.formatShortName(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
       showCommentLink={false}/>
@@ -83,4 +84,3 @@ var NoteThread = React.createClass({
 });
 
 module.exports = NoteThread;
-

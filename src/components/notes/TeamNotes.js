@@ -19,6 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 var _ = require('lodash');
@@ -42,13 +43,14 @@ var TeamNotes = React.createClass({
         <Note
           ref='teamNote'
           image='note-image-large'
-          onClick={this.props.onThreadSelected.bind(null, note)}
           key={note.id}
-          author={note.user.firstName}
+          author={dataHelper.formatShortName(note.user)}
+          team={dataHelper.formatShortName(note.team)}
           numberOfComments={dataHelper.getComments(note.id)}
           note={note.messagetext}
           when={dataHelper.formatDisplayDate(note.timestamp)}
-          showCommentLink={true}/>
+          showCommentLink={true}
+          onNoteSelected={this.props.onThreadSelected.bind(null, note)}/>
         /* jshint ignore:end */
       );
     }.bind(this));
@@ -82,4 +84,3 @@ var TeamNotes = React.createClass({
 });
 
 module.exports = TeamNotes;
-

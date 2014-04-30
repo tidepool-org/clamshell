@@ -19,6 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 
@@ -31,7 +32,8 @@ var Note = React.createClass({
     note : React.PropTypes.string,
     team : React.PropTypes.string,
     showCommentLink : React.PropTypes.bool,
-    onGroupSelected : React.PropTypes.func
+    onGroupSelected : React.PropTypes.func,
+    onNoteSelected : React.PropTypes.func
   },
 
   renderHeading : function(){
@@ -40,9 +42,8 @@ var Note = React.createClass({
 
     if(this.props.team){
       noteTeam = (
-        <span className='pull-right'>
-          <span className='note-for-team'> > </span>
-          <a onClick={this.props.onGroupSelected} className='note-link' ref='careTeam'>{this.props.team}</a>
+        <span className='note-for-team'>
+          <span> > {this.props.team}</span>
         </span>
       );
     }
@@ -60,7 +61,6 @@ var Note = React.createClass({
       return (
         /* jshint ignore:start */
         <div>
-          <span ref='showMessageThread' className='small pull-left note-number-comments'>{this.props.numberOfComments} Comments</span>
           <span ref='showMessageThread' className='small pull-right note-comment'>Comment</span>
         </div>
         /* jshint ignore:end */
@@ -72,10 +72,14 @@ var Note = React.createClass({
 
     var commentLink = this.renderCommentLink();
     var noteHeading = this.renderHeading();
+    var className = 'note media';
+    if (this.props.onNoteSelected) {
+      className = className + ' note-clickable';
+    }
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <div className='note media'>
+      <div className={className} onClick={this.props.onNoteSelected}>
         <div ref='imgColumn' className='media-object pull-left'>
           <div ref='authorImage' className={this.props.image}/>
         </div>
@@ -92,4 +96,3 @@ var Note = React.createClass({
 });
 
 module.exports = Note;
-

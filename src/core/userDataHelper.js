@@ -75,7 +75,13 @@ var userDataHelper = {
     }
     return;
   },
-  formatFullNameFromProfile : function(userProfile){
+  formatShortName : function(userProfile){
+    if(userProfile && userProfile.firstName){
+      return userProfile.firstName;
+    }
+    return;
+  },
+  formatFullName : function(userProfile){
     if(userProfile && userProfile.firstName){
       var fullname = userProfile.firstName;
       if(userProfile.lastName){
@@ -86,14 +92,18 @@ var userDataHelper = {
     return;
   },
   createMessage : function(messageText, user, groupId, parentId){
+
+    var d = new Date();
+
     var message = {
       parentmessage : parentId,
       userid : user.userid,
       user : user.profile,
       groupid : groupId,
-      timestamp : new Date().toISOString(),
+      timestamp : d.toISOString(),
       messagetext : messageText
     };
+    
     return message;
   }
 };

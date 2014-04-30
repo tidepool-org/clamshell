@@ -20,6 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 
@@ -37,8 +38,8 @@ var Login = React.createClass({
     };
   },
   renderLogos: function(){
+    /* jshint ignore:start */
     return (
-      /* jshint ignore:start */
       <div className='logos'>
         <div className='col-xs-offset-1 col-sm-offset-2 row'>
           <div className='tidepool-logo' />
@@ -47,12 +48,14 @@ var Login = React.createClass({
           <div className='blip-logo' />
         </div>
       </div>
-      /* jshint ignore:end */
     );
+    /* jshint ignore:end */
   },
   renderSignInForm: function(){
+    var submitButtonText = this.state.loggingIn ? 'Logging in...' : 'Log in';
+
+    /* jshint ignore:start */
     return (
-      /* jshint ignore:start */
       <form className='login-form form-horizontal' role='form'>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
@@ -66,20 +69,19 @@ var Login = React.createClass({
         </div>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <a type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>Sign in</a>
+            <a type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>{submitButtonText}</a>
           </div>
         </div>
       </form>
-      /* jshint ignore:end */
-      );
+    );
+    /* jshint ignore:end */
   },
   renderMessage: function() {
     var message = this.state.message;
     if (message) {
-
       return (
          /* jshint ignore:start */
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message js-login-message'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message alert alert-danger'>
             {message}
           </div>
 
@@ -119,6 +121,7 @@ var Login = React.createClass({
     var password = this.refs.pwFeild.getDOMNode().value;
 
     var validationError = this.validate(username, password);
+
     if (validationError) {
       this.setState({
         loggingIn: false,
@@ -129,13 +132,18 @@ var Login = React.createClass({
 
     this.props.login(username, password, function(err) {
       if (err) {
+
+        var errorMessage = 'An error occured while logging in.';
+        if (err.status === 401) {
+          errorMessage = 'Wrong username or password.';
+        }
+
         self.setState({
           loggingIn: false,
-          message: err.message || 'An error occured while logging in.'
+          message: errorMessage
         });
         return;
       }
-      self.setState({loggingIn: false});
       self.props.onLoginSuccess();
     });
   },

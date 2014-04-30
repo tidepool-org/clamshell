@@ -4,6 +4,10 @@
   background: #ffffff;
 }
 
+.note-clickable {
+  cursor: pointer;
+}
+
 .note-comment{
   background-image: url('images/comment16x16.png');
   background-repeat: no-repeat;

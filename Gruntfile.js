@@ -5,7 +5,7 @@
 // the terms of the associated License, which is identical to the BSD 2-Clause
 // License as published by the Open Source Initiative at opensource.org.
 //
-// This program is distributed in the hope that it will be useful, but WITHOUT
+// This program is app_buildributed in the hope that it will be useful, but WITHOUT
 // ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 // FOR A PARTICULAR PURPOSE. See the License for more details.
 //
@@ -33,15 +33,19 @@ module.exports = function(grunt) {
         },
         my_target: {
           files: {
-            'build/clamshell.min.js': ['app_build/clamshell.js']
+            'app_build/clamshell.min.js': ['app_build/clamshell.js']
           }
         }
       },
       shell: {
         buildApp: {
-          // load config and start app at same time
           command: [
             './node_modules/.bin/webpack --debug src/main.js app_build/clamshell.js'
+          ]
+        },
+        runApp: {
+          command: [
+            'exec node clamshellServer'
           ]
         },
         testBuild: {
@@ -72,6 +76,28 @@ module.exports = function(grunt) {
           files: {
             'app_build/appConfig.js': ['appConfig.js']
           }
+        },
+        parseProd: {
+          options: {
+            data: {
+              version : packageJson.version,
+              production : true
+            }
+          },
+          files: {
+            'app_build/index.html': ['index.html']
+          }
+        },
+        parseDev: {
+          options: {
+            data: {
+              version : packageJson.version,
+              production : false
+            }
+          },
+          files: {
+            'app_build/index.html': ['index.html']
+          }
         }
       }
     });
@@ -88,8 +114,10 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', ['test']);
   // Standard tasks
-  grunt.registerTask('build', ['shell:buildApp','uglify']);
-  grunt.registerTask('parseConfig', ['template:parseConfig']);
+  grunt.registerTask('build-dev', ['shell:buildApp','template:parseDev']);
+  grunt.registerTask('build-prod', ['shell:buildApp','uglify','template:parseProd']);
+  grunt.registerTask('parse-config', ['template:parseConfig']);
+  grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
   grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
 
 };

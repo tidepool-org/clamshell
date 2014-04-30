@@ -13,14 +13,13 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
- 'use strict';
+'use strict';
 
- module.exports = function(bows) {
+module.exports = function(bows) {
   var api = {
     log: bows('Api'),
     user: {
       teams:{}
-      //patients:{}
     },
     notes:{}
   };

@@ -20,6 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 var _ = require('lodash');
@@ -47,7 +48,7 @@ var TeamPicker = React.createClass({
 
     return {
         userid : id,
-        name : dataHelper.formatFullNameFromProfile(profile),
+        name : dataHelper.formatFullName(profile),
         latestNote : latestNote
       };
   },
@@ -81,21 +82,24 @@ var TeamPicker = React.createClass({
 
     var groups = _.map(selectableUsers, function(selectableUser) {
       return (
-        <div key={selectableUser.userid} ref='group' className='group media'>
+        /* jshint ignore:start */
+        <div key={selectableUser.userid} ref='group' className='group media group-clickable' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
           <div ref='imgColumn' className='media-object pull-left'>
             <div ref='authorImage' className='group-image'/>
           </div>
-          <div ref='teamColumn' className='media-body' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
+          <div ref='teamColumn' className='media-body'>
             <div>
               <strong ref='groupName' className='media-heading' >{selectableUser.name}</strong>
             </div>
             <span ref='lastGroupNote' className='small pull-left'>{selectableUser.latestNote}</span>
           </div>
         </div>
+        /* jshint ignore:end */
       );
     }.bind(this));
 
     return this.transferPropsTo(
+      /* jshint ignore:start */
       <div ref='selectGroup'>
         <div className='navbar-header'>
           <a className='btn-team-picker btn btn-default navbar-toggle' data-toggle='collapse' data-target='#groups-navbar'>
@@ -108,6 +112,7 @@ var TeamPicker = React.createClass({
           </div>
         </div>
       </div>
+      /* jshint ignore:end */
     );
   }
 
