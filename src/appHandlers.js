@@ -44,8 +44,10 @@ module.exports = function(component,app) {
    */
   component.handleBack =function(){
     var previousRoute = component.state.previousRoute;
-    if(!previousRoute){
-      app.warn('route was not set for some reason');
+    var currentRoute = component.state.routeName;
+    
+    if(!previousRoute || previousRoute === currentRoute){
+      
       previousRoute = app.routes.messagesForAllTeams;
     }
     component.setState({routeName:previousRoute});
