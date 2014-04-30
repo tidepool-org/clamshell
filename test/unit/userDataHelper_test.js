@@ -72,24 +72,38 @@ describe('userDataHelper', function() {
 
   });
 
-  it('formatFullNameFromProfile returns the firstName as a string from the profile', function() {
+  it('formatFullName returns the firstName as a string from the profile', function() {
 
     var profile = {firstName:'Foo',lastName:null};
-    expect(userDataHelper.formatFullNameFromProfile(profile)).to.equal('Foo');
+    expect(userDataHelper.formatFullName(profile)).to.equal('Foo');
 
   });
 
-  it('formatFullNameFromProfile returns the first and last as a string from the profile', function() {
+  it('formatFullName returns the first and last as a string from the profile', function() {
 
     var profile = {firstName:'Foo',lastName:'Bar'};
-    expect(userDataHelper.formatFullNameFromProfile(profile)).to.equal('Foo Bar');
+    expect(userDataHelper.formatFullName(profile)).to.equal('Foo Bar');
 
   });
 
-  it('formatFullNameFromProfile returns nothing when profile not set', function() {
+  it('formatFullName returns nothing when profile not set', function() {
 
     var profile = {firstName:'',lastName:null};
-    expect(userDataHelper.formatFullNameFromProfile(profile)).to.not.exist;
+    expect(userDataHelper.formatFullName(profile)).to.not.exist;
+
+  });
+
+  it('formatShortName returns the first name as a string from the profile', function() {
+
+    var profile = {firstName:'Foo',lastName:'Bar'};
+    expect(userDataHelper.formatShortName(profile)).to.equal('Foo');
+
+  });
+
+  it('formatShortName returns nothing when the firstName is not set', function() {
+
+    var profile = {firstName:'',lastName:'Bar'};
+    expect(userDataHelper.formatShortName(profile)).to.not.exist;
 
   });
   //getSelectedUser

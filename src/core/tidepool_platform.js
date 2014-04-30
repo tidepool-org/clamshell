@@ -46,9 +46,20 @@ module.exports = function(api, platform) {
       }
     }, function (error, results) {
       api.log('return user details');
+      appendTeamToNote
       user.profile = results.userProfile;
-      user.notes = results.userNotes;
+      user.notes = appendTeamToNote(results.userNotes,results.userProfile);
       return cb(error,user);
+    });
+  }
+
+  /*
+  * Add the team for each note so we can use it later
+  */
+  function appendTeamToNote(notes,team){
+    return _.map(notes, function(note) {
+      note.team = team;
+      return note;
     });
   }
 
