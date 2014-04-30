@@ -22,6 +22,8 @@ var React = require('react');
 
 var TeamPicker = require('../../build/components/header/TeamPicker');
 
+var helpers = require('../lib/helpers');
+
 var loggedInUserData = require('../../demo/data').loggedInUser;
 
 var selectedUsersId;
@@ -34,16 +36,13 @@ describe('TeamPicker', function() {
   var component, container;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new TeamPicker({loggedInUser:loggedInUserData, onUserPicked:handleUserPicked});
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
+    component = helpers.mountComponent(
+     TeamPicker({loggedInUser:loggedInUserData, onUserPicked:handleUserPicked})
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should have a group drop down', function() {
