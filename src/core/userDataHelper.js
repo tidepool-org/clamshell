@@ -75,7 +75,13 @@ var userDataHelper = {
     }
     return;
   },
-  formatFullNameFromProfile : function(userProfile){
+  formatShortName : function(userProfile){
+    if(userProfile && userProfile.firstName){
+      return userProfile.firstName;
+    }
+    return;
+  },
+  formatFullName : function(userProfile){
     if(userProfile && userProfile.firstName){
       var fullname = userProfile.firstName;
       if(userProfile.lastName){

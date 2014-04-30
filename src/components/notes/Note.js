@@ -42,9 +42,8 @@ var Note = React.createClass({
 
     if(this.props.team){
       noteTeam = (
-        <span className='pull-right'>
-          <span className='note-for-team'> > </span>
-          <a onClick={this.props.onGroupSelected} className='note-link' ref='careTeam'>{this.props.team}</a>
+        <span className='note-for-team'>
+          <span> > {this.props.team}</span>
         </span>
       );
     }

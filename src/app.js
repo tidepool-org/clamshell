@@ -203,7 +203,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessagesForSelectedTeam:function(){
 
-    var careTeamName = app.dataHelper.formatFullNameFromProfile(this.state.selectedUser.profile);
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
 
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
@@ -247,7 +247,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessageThread:function(){
 
-    var careTeamName = this.state.selectedUser.profile.firstName +'\'s notes';
+    var careTeamName = app.dataHelper.formatShortName(this.state.selectedUser.profile) +'\'s notes';
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
