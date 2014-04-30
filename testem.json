@@ -1,6 +1,11 @@
 {
     "framework": "mocha",
-    "serve_files": [ "build/browserified.js" ],
+    "serve_files": [
+      "thirdparty/jquery/jquery.min.js",
+      "thirdparty/superagent/superagent.js",
+      "thirdparty/bootstrap/js/bootstrap.min.js",
+      "build/browserified.js"
+    ],
     "src_files": [
       "build/**/*.js",
       "build/**/*.css",
