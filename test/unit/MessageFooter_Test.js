@@ -18,9 +18,10 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var MessageFooter = require('../../build/components/footer/MessageFooter');
+var helpers = require('../lib/helpers');
+
 var submittedMessage;
 
 var getSubmittedMessage = function(content){
@@ -28,19 +29,16 @@ var getSubmittedMessage = function(content){
 };
 
 describe('MessageFooter', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new MessageFooter({onFooterAction:getSubmittedMessage});
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
+    component = helpers.mountComponent(
+      MessageFooter({onFooterAction:getSubmittedMessage})
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should exist', function() {

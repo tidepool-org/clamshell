@@ -18,30 +18,25 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var NoteThread = require('../../build/components/notes/NoteThread');
 
+var helpers = require('../lib/helpers');
+
 var loggedInUserData = require('../../demo/data').loggedInUser;
+var notes = loggedInUserData.teams[0].notes;
 
 describe('NoteThread component', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
-
-    var notes = loggedInUserData.teams[0].notes;
-    //we add our component to test into a div and then render it
-    component = new NoteThread({messages:notes});
-
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
-
+    component = helpers.mountComponent(
+     NoteThread({messages:notes})
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should have messages', function() {

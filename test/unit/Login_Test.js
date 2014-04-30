@@ -19,9 +19,10 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var Login = require('../../build/components/login/Login');
+
+var helpers = require('../lib/helpers');
 
 var loggedIn = false;
 
@@ -34,24 +35,19 @@ var loginFake  = function(username,password,cb){
 };
 
 describe('Login', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new Login({
-      login : loginFake,
-      onLoginSuccess : handleLoginSuccess
-    });
-
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
-
+    component = helpers.mountComponent(
+      Login({
+        login : loginFake,
+        onLoginSuccess : handleLoginSuccess
+      })
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should have a login button', function() {
@@ -76,7 +72,7 @@ describe('Login', function() {
   });
 
   it('should use login handler when submit clicked', function() {
-    
+
     var fakeUn = 'fake.user@go.org';
     var fakePw = 'f@k31t';
 

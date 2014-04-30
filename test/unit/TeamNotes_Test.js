@@ -19,9 +19,10 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var TeamNotes = require('../../build/components/notes/TeamNotes');
+
+var helpers = require('../lib/helpers');
 
 var loggedInUserData = require('../../demo/data').loggedInUser;
 var teamNotes = loggedInUserData.teams[0].notes;
@@ -35,21 +36,16 @@ var handleThreadSelected = function(props, key){
 };
 
 describe('TeamNotes component', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new TeamNotes({notes:teamNotes,onThreadSelected:handleThreadSelected});
-
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
-
+    component = helpers.mountComponent(
+     TeamNotes({notes:teamNotes,onThreadSelected:handleThreadSelected})
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it.skip('should call handler for group selection when a note is clicked', function() {

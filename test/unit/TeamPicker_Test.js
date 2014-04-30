@@ -18,9 +18,10 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var TeamPicker = require('../../build/components/header/TeamPicker');
+
+var helpers = require('../lib/helpers');
 
 var loggedInUserData = require('../../demo/data').loggedInUser;
 
@@ -31,19 +32,16 @@ var handleUserPicked = function(selectedId){
 };
 
 describe('TeamPicker', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
-    //we add our component to test into a div and then render it
-    component = new TeamPicker({loggedInUser:loggedInUserData, onUserPicked:handleUserPicked});
-    container = document.createElement('div');
-    document.documentElement.appendChild(container);
-    React.renderComponent(component, container);
+    component = helpers.mountComponent(
+     TeamPicker({loggedInUser:loggedInUserData, onUserPicked:handleUserPicked})
+    );
   });
 
   afterEach(function() {
-    React.unmountComponentAtNode(container);
-    document.documentElement.removeChild(container);
+    helpers.unmountComponent();
   });
 
   it('should have a group drop down', function() {
