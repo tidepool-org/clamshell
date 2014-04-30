@@ -39,8 +39,8 @@ var Note = React.createClass({
   renderHeading : function(){
     /* jshint ignore:start */
     var noteTeam;
-
-    if(this.props.team){
+    //show if they differ - there is no point in showing My Group > MyGroup
+    if(this.props.team && this.props.team != this.props.author){
       noteTeam = (
         <span className='note-for-team'>
           <span> > {this.props.team}</span>
