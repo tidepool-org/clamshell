@@ -247,7 +247,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessageThread:function(){
 
-    var careTeamName = app.dataHelper.formatShortName(this.state.selectedUser.profile) +'\'s notes';
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
