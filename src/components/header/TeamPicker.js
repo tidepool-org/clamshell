@@ -47,10 +47,10 @@ var TeamPicker = React.createClass({
     }
 
     return {
-        userid : id,
-        name : dataHelper.formatFullName(profile),
-        latestNote : latestNote
-      };
+      userid : id,
+      name : dataHelper.formatFullName(profile),
+      latestNote : latestNote
+    };
   },
 
   getSelectableUsers : function(teams){
@@ -76,11 +76,10 @@ var TeamPicker = React.createClass({
     return users.concat(teamUsers);
   },
 
-  render:function(){
-
+  buildSelectableUsers : function(){
     var selectableUsers = this.getSelectableUsers();
 
-    var groups = _.map(selectableUsers, function(selectableUser) {
+    var users = _.map(selectableUsers, function(selectableUser) {
       return (
         /* jshint ignore:start */
         <div key={selectableUser.userid} ref='group' className='group media group-clickable' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
@@ -98,6 +97,13 @@ var TeamPicker = React.createClass({
       );
     }.bind(this));
 
+    return users;
+  },
+
+  render:function(){
+
+    var users = this.buildSelectableUsers();
+
     return this.transferPropsTo(
       /* jshint ignore:start */
       <div ref='selectGroup'>
@@ -108,7 +114,7 @@ var TeamPicker = React.createClass({
         </div>
         <div className='team-picker collapse navbar-collapse' id='groups-navbar'>
           <div ref='groups' className='nav navbar-nav'>
-            {groups}
+            {users}
           </div>
         </div>
       </div>
