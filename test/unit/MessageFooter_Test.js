@@ -18,7 +18,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var MessageFooter = require('../../build/components/footer/MessageFooter');
 var helpers = require('../lib/helpers');
@@ -30,7 +29,7 @@ var getSubmittedMessage = function(content){
 };
 
 describe('MessageFooter', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(

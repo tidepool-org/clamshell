@@ -19,7 +19,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var TeamNotes = require('../../build/components/notes/TeamNotes');
 
@@ -37,7 +36,7 @@ var handleThreadSelected = function(props, key){
 };
 
 describe('TeamNotes component', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(

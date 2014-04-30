@@ -18,7 +18,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var NoteThread = require('../../build/components/notes/NoteThread');
 
@@ -28,7 +27,7 @@ var loggedInUserData = require('../../demo/data').loggedInUser;
 var notes = loggedInUserData.teams[0].notes;
 
 describe('NoteThread component', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(

@@ -30,7 +30,7 @@ var testNote = 'A summary of the latest note to my care group conversation threa
 var testWhenTheLatestNoteOccured = 'Dec 24';
 
 describe('Note', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(

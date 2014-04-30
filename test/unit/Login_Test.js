@@ -19,7 +19,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var Login = require('../../build/components/login/Login');
 
@@ -36,7 +35,7 @@ var loginFake  = function(username,password,cb){
 };
 
 describe('Login', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(
@@ -73,7 +72,7 @@ describe('Login', function() {
   });
 
   it('should use login handler when submit clicked', function() {
-    
+
     var fakeUn = 'fake.user@go.org';
     var fakePw = 'f@k31t';
 

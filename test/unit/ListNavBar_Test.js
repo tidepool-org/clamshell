@@ -19,7 +19,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
-var React = require('react');
 
 var ListNavBar = require('../../build/components/header/ListNavBar');
 var helpers = require('../lib/helpers');
@@ -35,7 +34,7 @@ var testTitle = 'My Test NavBar';
 
 
 describe('ListNavBar', function() {
-  var component, container;
+  var component;
 
   beforeEach(function() {
     //we add our component to test into a div and then render it
