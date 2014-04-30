@@ -37,16 +37,18 @@ var Note = React.createClass({
   },
 
   renderHeading : function(){
-    /* jshint ignore:start */
     var noteTeam;
     //show if they differ - there is no point in showing My Group > MyGroup
-    if(this.props.team && this.props.team != this.props.author){
+    if(this.props.team && this.props.team !== this.props.author){
+      /* jshint ignore:start */
       noteTeam = (
         <span className='note-for-team'>
           <span> > {this.props.team}</span>
         </span>
       );
+      /* jshint ignore:end */
     }
+    /* jshint ignore:start */
     return (
       <div>
         <strong ref='messageAuthorAndGroup' className='note-header media-heading'> {this.props.author}</strong>
