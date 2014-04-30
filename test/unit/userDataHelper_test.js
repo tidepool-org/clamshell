@@ -43,7 +43,7 @@ describe('userDataHelper', function() {
 
   it('filterNotes returns only notes from thread', function() {
     var notes = userDataHelper.filterNotes(team.notes);
-    expect(notes.length).to.equal(2);
+    expect(notes.length).to.equal(3);
 
     notes.forEach(function(note) {
       expect(note.parentmessage).to.not.exist;
@@ -54,7 +54,7 @@ describe('userDataHelper', function() {
   it('sortNotesDescending returns newest note first', function() {
     var notes = userDataHelper.sortNotesDescending(team.notes);
     var firstNote = notes[0];
-    expect(firstNote.timestamp).to.equal('2014-01-05T23:07:40+00:00');
+    expect(firstNote.timestamp).to.equal('2014-01-08T23:07:40+00:00');
   });
 
   it('sortNotesAscending returns oldest note first', function() {
@@ -115,13 +115,13 @@ describe('userDataHelper', function() {
     expect(userDataHelper.getSelectedUser(team.userid,loggedInUserData)).to.deep.equal(team);
   });
 
-  it('getAllNotesForLoggedInUser returns 5 notes', function() {
-    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(5);
+  it('getAllNotesForLoggedInUser returns 6 notes', function() {
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(6);
   });
 
-  it('getAllNotesForLoggedInUser returns 6 notes when we add one for the user', function() {
+  it('getAllNotesForLoggedInUser returns 7 notes when we add one for the user', function() {
     loggedInUserData.notes.push(team.notes[3]);
-    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(6);
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(7);
   });
 
   it('createMessage returns message that is for a specified group', function() {

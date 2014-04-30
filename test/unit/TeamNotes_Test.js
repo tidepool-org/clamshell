@@ -76,7 +76,7 @@ describe('TeamNotes component', function() {
   it('prepareNotes will return all the notes, but not the comments, to be displayed', function() {
     var notes = component.prepareNotes();
     expect(notes).to.exist;
-    expect(notes.length).to.equal(2);
+    expect(notes.length).to.equal(3);
   });
 
 });
