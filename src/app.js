@@ -152,7 +152,7 @@ var ClamShellApp = React.createClass({
    * Have we finished loading data?
    */
   hasCompletedLoadingData:function(){
-    return this.state.loadingData == false;
+    return this.state.loadingData;
   },
   /**
    * Show the logged in users data for all the teams that are a part of

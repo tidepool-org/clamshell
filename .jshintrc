@@ -16,5 +16,7 @@
   "trailing": true,
   "undef": true,
   "unused": "vars",
-  "newcap" : false
+  "newcap" : false,
+  "eqeqeq": true,
+  "eqnull": true
 }

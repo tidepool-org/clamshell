@@ -37,11 +37,11 @@ var userDataHelper = {
     }
   },
   getSelectedUser:function(userId,data){
-    if(userId == data.userid){
+    if(userId === data.userid){
       return data;
     }
     return _.find(data.teams, function(team){
-      return userId == team.userid;
+      return userId === team.userid;
     });
   },
   getComments: function(parentmessageId) {
@@ -103,7 +103,7 @@ var userDataHelper = {
       timestamp : d.toISOString(),
       messagetext : messageText
     };
-    
+
     return message;
   }
 };
