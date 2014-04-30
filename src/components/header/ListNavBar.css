@@ -8,6 +8,12 @@
   cursor: pointer;
 }
 
+.listnavbar-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .back-icon {
   display: block;
   background: url('images/back24x24.png');
