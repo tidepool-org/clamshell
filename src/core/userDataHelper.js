@@ -31,7 +31,7 @@ var userDataHelper = {
     return _.first(loggedIn.teams);
   },
   hasMultipleSelectableTeams: function(loggedIn){
-    var otherTeamsCount = !_.isEmpty(loggedIn.teams) && loggedIn.teams.length;
+    var otherTeamsCount = _.size(loggedIn.teams);
     return (otherTeamsCount > 1 || (otherTeamsCount > 0 && loggedIn.isPWD));
   },
   getParentMessageId: function(thread) {
