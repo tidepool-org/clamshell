@@ -31,14 +31,31 @@ $ npm install .
 
 ## Quick start
 
-Once you have completed the install then build and run the app
+After having completed the install, first make a copy of the sample config file:
 
 ```bash
-$ source config/env.sh
-$ grunt run-local
+$ cp config/sample.sh config/demo.sh
 ```
 
-Open the index.html in your web browser and start using ClamShell
+In the new config file, edit the environment variable to run in "demo" mode: `DEMO="true"`.
+
+(If instead you're running against a local instance of the Tidepool platform, just make a copy of `sample.sh` named, for example, `local.sh` and use that one in the following instructions.)
+
+In a first terminal, run the following to build the app, as well as watch files for changes and trigger a rebuild when necessary:
+
+```bash
+$ source config/demo.sh
+$ grunt develop
+```
+
+In a second terminal, start the app server:
+
+```bash
+$ source config/demo.sh
+$ grunt server
+```
+
+Navigate your browser to `http://localhost:3001/`.
 
 ## Development
 

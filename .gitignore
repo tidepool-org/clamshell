@@ -1,4 +1,5 @@
-config
+config/*
+!config/sample.sh
 app_build
 build
 
