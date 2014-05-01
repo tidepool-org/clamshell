@@ -19,6 +19,7 @@ var data = {
 	loggedInUser : {
 		userid : 'user-id-123',
 		profile : { firstName: 'Foo',lastName:'A really long long long last name'},
+		isPWD : false,
 		notes : [],//has none
 		teams : []
 	}

@@ -142,13 +142,6 @@ var ClamShellApp = React.createClass({
 
   },
   /**
-   * Do we have other teams the logged in user is part of?
-   */
-  userHasTeams:function(){
-    var teams = this.state.loggedInUser && this.state.loggedInUser.teams;
-    return (teams && teams.length > 0);
-  },
-  /**
    * Have we finished loading data?
    */
   hasCompletedLoadingData:function(){
@@ -158,16 +151,17 @@ var ClamShellApp = React.createClass({
    * Show the logged in users data for all the teams that are a part of
    */
   showUserData: function(){
-    if (this.hasCompletedLoadingData() && this.userHasTeams()) {
-      app.log('user has other teams also');
+    if (this.hasCompletedLoadingData() && app.dataHelper.hasMultipleSelectableTeams(this.state.loggedInUser)) {
+      app.log('logged in user has multiple teams to choose from');
       this.setState({
         routeName : app.routes.messagesForAllTeams
       });
       return;
     } else if(this.hasCompletedLoadingData()){
-      app.log('just users team');
+      app.log('logged in user has only one team');
+      var user = app.dataHelper.getUserWithData(this.state.loggedInUser);
       this.setState({
-        selectedUser : this.state.loggedInUser,
+        selectedUser : user,
         routeName : app.routes.messagesForSelectedTeam
       });
       return;
@@ -207,7 +201,7 @@ var ClamShellApp = React.createClass({
 
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
-    if(this.userHasTeams()){
+    if(app.dataHelper.hasMultipleSelectableTeams(this.state.loggedInUser)){
       navBar = this.renderNavBarWithTeamPicker(careTeamName,'back-icon',this.handleBack);
     }
 

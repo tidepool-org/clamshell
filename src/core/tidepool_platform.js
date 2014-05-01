@@ -95,7 +95,11 @@ module.exports = function(api, platform) {
           if(data){
             api.log('adding users data');
             loggedInUser.notes = data.notes;
+            //if there are a 'patient'
+            loggedInUser.isPWD = _.isEmpty(data.profile.patient);
             loggedInUser.profile = data.profile;
+          }else {
+            loggedInUser.isPWD = false;
           }
           return callback(error);
         });

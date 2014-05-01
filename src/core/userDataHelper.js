@@ -20,6 +20,20 @@ var _ = require('lodash');
 var moment = require('moment');
 
 var userDataHelper = {
+  hasTeams: function(loggedIn){
+    var teams = loggedIn && loggedIn.teams;
+    return (!_.isEmpty(teams) && teams.length > 0);
+  },
+  getUserWithData: function(loggedIn){
+    if(loggedIn.isPWD || _.isEmpty(loggedIn.teams)){
+      return loggedIn;
+    }
+    return _.first(loggedIn.teams);
+  },
+  hasMultipleSelectableTeams: function(loggedIn){
+    var otherTeamsCount = !_.isEmpty(loggedIn.teams) && loggedIn.teams.length;
+    return (otherTeamsCount > 1 || (otherTeamsCount > 0 && loggedIn.isPWD));
+  },
   getParentMessageId: function(thread) {
     var parentNote = _.findWhere(thread, { parentmessage : null });
     return parentNote.id;

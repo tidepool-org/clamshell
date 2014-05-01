@@ -69,4 +69,9 @@ describe('TeamPicker', function() {
     expect(selectedUsersId).to.exist;
   });
 
+  it('should only show people with data', function() {
+    var selectableUsers = component.getSelectableUsers(loggedInUserData);
+    expect(selectableUsers.length).to.equal(1);
+  });
+
 });

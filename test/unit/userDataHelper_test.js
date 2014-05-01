@@ -19,6 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var chai = require('chai');
 var expect = chai.expect;
+var _ = require('lodash');
 
 var userDataHelper = require('../../src/core/userDataHelper');
 
@@ -122,6 +123,36 @@ describe('userDataHelper', function() {
   it('getAllNotesForLoggedInUser returns 7 notes when we add one for the user', function() {
     loggedInUserData.notes.push(team.notes[3]);
     expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(7);
+  });
+
+  it('hasTeams should be true for a user with .teams[]', function() {
+    expect(userDataHelper.hasTeams(loggedInUserData)).to.be.true;
+  });
+
+  it('hasTeams should be false for a user with no teams', function() {
+    var loggedInUserWithNoTeams = _.clone(loggedInUserData, true);
+    loggedInUserWithNoTeams.teams = null;
+    expect(userDataHelper.hasTeams(loggedInUserWithNoTeams)).to.be.false;
+  });
+
+  it('hasMultipleSelectableTeams should be false when the loggedInUser is NOT a person with data', function() {
+    expect(userDataHelper.hasMultipleSelectableTeams(loggedInUserData)).to.be.false;
+  });
+
+  it('hasMultipleSelectableTeams should be true when the loggedInUser is a person with data', function() {
+    var loggedInUserWithOwnData = _.clone(loggedInUserData, true);
+    loggedInUserWithOwnData.isPWD = true;
+    expect(userDataHelper.hasMultipleSelectableTeams(loggedInUserWithOwnData)).to.be.true;
+  });
+
+  it('getInitialSelectedUser returns the logged if they are a person with data', function() {
+    var loggedInUserWithOwnData = _.clone(loggedInUserData, true);
+    loggedInUserWithOwnData.isPWD = true;
+    expect(userDataHelper.getUserWithData(loggedInUserWithOwnData)).to.deep.equal(loggedInUserWithOwnData);
+  });
+
+  it('getInitialSelectedUser returns the fist person with data from the looged in users teams', function() {
+    expect(userDataHelper.getUserWithData(loggedInUserData)).to.deep.equal(team);
   });
 
   it('createMessage returns message that is for a specified group', function() {

@@ -64,14 +64,19 @@ var TeamPicker = React.createClass({
 
   getSelectableUsers : function(teams){
 
-    //logged in user
-    var loggedIn = this.buildUserDetails(
-      this.props.loggedInUser.userid,
-      this.props.loggedInUser.profile,
-      _.first(this.props.loggedInUser.notes)
-    );
+    //logged in user is they are a PWD
+    var users = [];
 
-    var users = [loggedIn];
+    if(this.props.loggedInUser.isPWD){
+
+      var loggedIn = this.buildUserDetails(
+        this.props.loggedInUser.userid,
+        this.props.loggedInUser.profile,
+        _.first(this.props.loggedInUser.notes)
+      );
+
+      users.push(loggedIn);
+    }
 
     //now the team users
     var teamUsers = _.map(this.props.loggedInUser.teams,function(team){
