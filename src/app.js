@@ -31,7 +31,7 @@ var router = require('./appRouter')();
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/header/ListNavBar');
-var MessageFooter = require('./components/footer/MessageFooter');
+var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
 var TeamPicker = require('./components/header/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
@@ -49,6 +49,8 @@ var app = {
   dataHelper : require('./core/userDataHelper'),
   routes : router.routes
 };
+
+window.app = app;
 
 var ClamShellApp = React.createClass({
   getInitialState: function () {
@@ -81,7 +83,7 @@ var ClamShellApp = React.createClass({
     } else {
       require('./core/tidepool_platform')(
         app.api,
-        require('tidepool-platform-client/index')({host:config.apiHost},superagent,api.log)
+        require('tidepool-platform-client')({host:config.apiHost},api.log)
       );
     }
   },
@@ -134,8 +136,8 @@ var ClamShellApp = React.createClass({
       this.setState({
         loadingData : false,
         loggedInUser : app.api.user.get()
-      });
-      this.showUserData();
+      // Call showUserData only after state has been updated
+      }, this.showUserData);
     }.bind(this));
 
   },
@@ -143,20 +145,20 @@ var ClamShellApp = React.createClass({
    * Do we have other teams the logged in user is part of?
    */
   userHasTeams:function(){
-    var teams = this.state.loggedInUser.teams;
+    var teams = this.state.loggedInUser && this.state.loggedInUser.teams;
     return (teams && teams.length > 0);
   },
   /**
    * Have we finished loading data?
    */
   hasCompletedLoadingData:function(){
-    return this.state.loadingData == false;
+    return !this.state.loadingData;
   },
   /**
    * Show the logged in users data for all the teams that are a part of
    */
   showUserData: function(){
-    if (this.userHasTeams() && this.hasCompletedLoadingData()) {
+    if (this.hasCompletedLoadingData() && this.userHasTeams()) {
       app.log('user has other teams also');
       this.setState({
         routeName : app.routes.messagesForAllTeams
@@ -201,36 +203,36 @@ var ClamShellApp = React.createClass({
   },
   renderMessagesForSelectedTeam:function(){
 
-    var careTeamName = app.dataHelper.formatFullNameFromProfile(this.state.selectedUser.profile);
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
 
     var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
 
     if(this.userHasTeams()){
-      navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
+      navBar = this.renderNavBarWithTeamPicker(careTeamName,'back-icon',this.handleBack);
     }
 
+    /* jshint ignore:start */
     return (
-      /* jshint ignore:start */
       <Layout
         notification={this.state.notification}
         onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
-        <TeamNotes
-          notes={this.state.selectedUser.notes}
-          onThreadSelected={this.handleShowConversationThread} />
-        <MessageFooter
+        <MessageForm
           messagePrompt='Type a new note here ...'
           btnMessage='Post'
           onFooterAction={this.handleStartConversation} />
+        <TeamNotes
+          notes={this.state.selectedUser.notes}
+          onThreadSelected={this.handleShowConversationThread} />
       </Layout>
-      /* jshint ignore:end */
-      );
+    );
+    /* jshint ignore:end */
   },
   renderMessagesForAllTeams:function(){
 
-    /* jshint ignore:start */
     var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
 
+    /* jshint ignore:start */
     return (
       <Layout
         notification={this.state.notification}
@@ -244,9 +246,7 @@ var ClamShellApp = React.createClass({
     /* jshint ignore:end */
   },
   renderMessageThread:function(){
-
-    var selectedUserName = app.dataHelper.formatShortNameFromProfile(this.state.selectedUser.profile);
-    var careTeamName = selectedUserName + '\'s notes';
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
@@ -257,7 +257,7 @@ var ClamShellApp = React.createClass({
         onDismissNotification={this.handleNotificationDismissed}>
       {navBar}
       <NoteThread messages={this.state.selectedThread} />
-      <MessageFooter
+      <MessageForm
         messagePrompt='Type a comment here ...'
         btnMessage='Post'
         onFooterAction={this.handleAddingToConversation} />

@@ -59,8 +59,18 @@ module.exports = function(api, platform) {
     }, function (error, results) {
       api.log('return user details');
       user.profile = results.userProfile;
-      user.notes = results.userNotes;
+      user.notes = appendTeamToNote(results.userNotes,results.userProfile);
       return cb(error,user);
+    });
+  }
+
+  /*
+  * Add the team for each note so we can use it later
+  */
+  function appendTeamToNote(notes,team){
+    return _.map(notes, function(note) {
+      note.team = team;
+      return note;
     });
   }
 
@@ -125,35 +135,26 @@ module.exports = function(api, platform) {
    * This will find the linked users profile and notes
    */
   api.user.teams.get = function(cb) {
-
-    var details = [];
     loggedInUser.teams = [];
 
-    platform.getUsersPatients(loggedInUser.userid, function(error,linkedUsers){
+    platform.getViewableUsers(loggedInUser.userid, function(error,viewableUsers){
 
-      if(linkedUsers.members){
+      var linkedUsers = Object.keys(_.omit(viewableUsers, loggedInUser.userid));
 
-        var usersIds = _(linkedUsers.members).uniq().valueOf();
-
-        if(usersIds && usersIds.length>0){
-
-          //call back once all finished
-          var done = _.after(usersIds.length, function() {
-            api.log('successfully got users teams data');
+      if (linkedUsers.length > 0) {
+        async.map(linkedUsers, getUserDetail, function(err, details){
+          if (err != null) {
+            api.log('Error when fetching details for a linked user', loggedInUser.userid, err);
+          } else if (_.isArray(details) && details.length > 0) {
+            api.log('Successfully got users teams data');
             loggedInUser.teams = details;
-            return cb(null);
-          });
-
-          _.forEach(usersIds, function(userId) {
-            getUserDetail(userId,function(error,userDetails){
-              details.push(userDetails);
-              done();
-            });
-          });
-        }
+          }
+          return cb();
+        });
+      } else {
+        api.log('user has no other teams');
+        return cb();
       }
-      api.log('user has no other teams');
-      return cb(null);
     });
   };
 

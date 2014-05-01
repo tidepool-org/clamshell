@@ -18,12 +18,28 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 module.exports = function(api) {
+  var _ = require('lodash');
 
-  var team = require('../../demo/data').team;
-  var patients = require('../../demo/data').patients;
+  var demoData = require('../../demo/data');
+  var loggedInUser = demoData.loggedInUser;
+  var allMessages = loggedInUser.notes
+    .concat(_.flatten(loggedInUser.teams, 'notes'));
 
   var token = null;
   var demoToken = '123456789';
+
+  loadSession();
+
+  function loadSession() {
+    var localStorage = window.localStorage;
+    if (localStorage && localStorage.getItem) {
+      var savedToken = localStorage.getItem('demoAuthToken');
+      if (savedToken) {
+        saveSession(savedToken);
+        api.log('[mock] user has saved session');
+      }
+    }
+  }
 
   function saveSession(newToken) {
     token = newToken;
@@ -33,45 +49,74 @@ module.exports = function(api) {
     }
   }
 
+  function destroySession() {
+    token = null;
+    var localStorage = window.localStorage;
+    if (localStorage && localStorage.removeItem) {
+      localStorage.removeItem('demoAuthToken');
+    }
+  }
+
   // ----- User -----
 
-  api.user.isAuthenticated = function() {
-    return Boolean(token);
+  api.user.isAuthenticated = function(callback) {
+    return callback(Boolean(token));
   };
 
+  api.user.get = function() {
+    api.log('[mock] getting logged in user');
+    if(token){
+      return loggedInUser;
+    }
+    return false;
+  };
+
+
   api.user.login = function(username, password,callback) {
+    api.log('[mock] logging in ...');
     saveSession(demoToken);
-    console.log('[demo] Login success');
+    api.log('[mock] login success');
     callback();
   };
 
-  api.user.team.get = function(callback) {
-    callback(null,team);
+  api.user.logout = function(callback) {
+    api.log('[mock] logging out ...');
+    destroySession();
+    api.log('[mock] successfully logged out');
+    return callback(null);
   };
 
-  api.user.patients.get = function(userId,callback) {
-    return callback(null,patients);
+  api.user.teams.get = function(callback) {
+    // Already attached to `loggedInUser.teams`
+    api.log('[mock] successfully got users teams data');
+    return callback();
   };
 
   // ----- Messages -----
-  api.notes.get = function(groupId,callback) {
-    return callback(null,team.messages);
-  };
-
   api.notes.getThread = function(messageId,callback) {
-    return callback(null,team.messages);
+    api.log('[mock] getting message thread ... ');
+    var messages = _.filter(allMessages, function(message) {
+      return (message.id === messageId || message.parentmessage === messageId);
+    });
+    api.log('[mock] got message thread');
+    return callback(null,messages);
   };
 
-  api.notes.reply = function(messageId,comment,callback) {
+  api.notes.reply = function(comment,callback) {
+    api.log('[mock] adding reply to message thread ... ');
     var id = 'mock_reply_'+Math.floor((Math.random()*1000)+1);
-    console.log('reply id ',id);
-    return callback(null,id);
+    comment.id = id;
+    allMessages.push(comment);
+    api.log('[mock] reply added to message thread');
+    return callback(null,comment);
   };
 
-  api.notes.add = function(groupId,message,callback) {
+  api.notes.add = function(message,callback) {
+    api.log('[mock] adding new message thread ... ');
     var id = 'mock_note_'+Math.floor((Math.random()*1000)+1);
-    console.log('note id ',id);
-    return callback(null,id);
+    api.log('[mock] added message thread ... ');
+    message.id = id;
+    allMessages.push(message);
+    return callback(null,message);
   };
-
 };

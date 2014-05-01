@@ -20,9 +20,11 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 var _ = require('lodash');
+var $ = window.$;
 
 var dataHelper = require('../../core/userDataHelper');
 
@@ -33,7 +35,15 @@ var TeamPicker = React.createClass({
     onUserPicked : React.PropTypes.func
   },
 
+  // jQuery reference to the dropdown to show/hide via toggle button
+  $dropdown: null,
+
+  componentDidMount: function() {
+    this.$dropdown = $(this.refs.dropdown.getDOMNode());
+  },
+
   handleSelection: function(selectedUserId) {
+    this.hideDropdown();
     this.props.onUserPicked(selectedUserId);
   },
 
@@ -46,10 +56,10 @@ var TeamPicker = React.createClass({
     }
 
     return {
-        userid : id,
-        name : dataHelper.formatFullNameFromProfile(profile),
-        latestNote : latestNote
-      };
+      userid : id,
+      name : dataHelper.formatFullName(profile),
+      latestNote : latestNote
+    };
   },
 
   getSelectableUsers : function(teams){
@@ -75,42 +85,66 @@ var TeamPicker = React.createClass({
     return users.concat(teamUsers);
   },
 
-  render:function(){
-
+  buildSelectableUsers : function(){
     var selectableUsers = this.getSelectableUsers();
 
-    var groups = _.map(selectableUsers, function(selectableUser) {
+    var users = _.map(selectableUsers, function(selectableUser) {
       return (
-        <div key={selectableUser.userid} ref='group' className='group media'>
+        /* jshint ignore:start */
+        <div key={selectableUser.userid} ref='group' className='group media group-clickable' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
           <div ref='imgColumn' className='media-object pull-left'>
             <div ref='authorImage' className='group-image'/>
           </div>
-          <div ref='teamColumn' className='media-body' onClick={this.handleSelection.bind(null, selectableUser.userid)}>
+          <div ref='teamColumn' className='media-body'>
             <div>
               <strong ref='groupName' className='media-heading' >{selectableUser.name}</strong>
             </div>
             <span ref='lastGroupNote' className='small pull-left'>{selectableUser.latestNote}</span>
           </div>
         </div>
+        /* jshint ignore:end */
       );
     }.bind(this));
 
+    return users;
+  },
+
+  render:function(){
+
+    var users = this.buildSelectableUsers();
+
     return this.transferPropsTo(
+      /* jshint ignore:start */
       <div ref='selectGroup'>
         <div className='navbar-header'>
-          <a className='btn-team-picker btn btn-default navbar-toggle' data-toggle='collapse' data-target='#groups-navbar'>
+          <a className='btn-team-picker btn btn-default navbar-toggle' onClick={this.handleToggleDropdown}>
             <span className='caret'></span>
           </a>
         </div>
-        <div className='team-picker collapse navbar-collapse' id='groups-navbar'>
+        <div ref='dropdown' className='team-picker collapse navbar-collapse' id='groups-navbar'>
           <div ref='groups' className='nav navbar-nav'>
-            {groups}
+            {users}
           </div>
         </div>
       </div>
+      /* jshint ignore:end */
     );
-  }
+  },
 
+  handleToggleDropdown: function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    this.toggleDropdown();
+  },
+
+  toggleDropdown: function() {
+    this.$dropdown.collapse('toggle');
+  },
+
+  hideDropdown: function() {
+    this.$dropdown.collapse('hide');
+  }
 });
 
 module.exports = TeamPicker;

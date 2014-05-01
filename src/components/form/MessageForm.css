@@ -1,0 +1,17 @@
+/* message form */
+.messageform
+.navbar-form {
+	padding: 0px;
+  margin-left : 10px;
+  margin-right : 10px;
+  border: none;
+}
+
+.messageform {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.messageform.navbar-inverse {
+	background-image: none;
+}

@@ -37,11 +37,11 @@ var userDataHelper = {
     }
   },
   getSelectedUser:function(userId,data){
-    if(userId == data.userid){
+    if(userId === data.userid){
       return data;
     }
     return _.find(data.teams, function(team){
-      return userId == team.userid;
+      return userId === team.userid;
     });
   },
   getComments: function(parentmessageId) {
@@ -75,17 +75,31 @@ var userDataHelper = {
     }
     return;
   },
-  formatFullNameFromProfile : function(userProfile){
-    if(userProfile && userProfile.fullName){
-      return userProfile.fullName;
-    }
-    return 'Anonymous user';
-  },
-  formatShortNameFromProfile : function(userProfile){
+  formatShortName : function(userProfile){
     if(userProfile && userProfile.shortName){
       return userProfile.shortName;
     }
+
+    if(userProfile && userProfile.firstName){
+      return userProfile.firstName;
+    }
+
     return 'Anonymous';
+  },
+  formatFullName : function(userProfile){
+    if(userProfile && userProfile.fullName){
+      return userProfile.fullName;
+    }
+
+    if(userProfile && userProfile.firstName){
+      var fullname = userProfile.firstName;
+      if(userProfile.lastName){
+        fullname += ' '+userProfile.lastName;
+      }
+      return fullname;
+    }
+
+    return 'Anonymous user';
   },
   createMessage : function(messageText, user, groupId, parentId){
 

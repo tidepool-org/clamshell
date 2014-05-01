@@ -20,6 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 
 'use strict';
+/* jshint unused: false */
 
 var React = require('react');
 
@@ -37,8 +38,8 @@ var Login = React.createClass({
     };
   },
   renderLogos: function(){
+    /* jshint ignore:start */
     return (
-      /* jshint ignore:start */
       <div className='logos'>
         <div className='col-xs-offset-1 col-sm-offset-2 row'>
           <div className='tidepool-logo' />
@@ -47,14 +48,14 @@ var Login = React.createClass({
           <div className='blip-logo' />
         </div>
       </div>
-      /* jshint ignore:end */
     );
+    /* jshint ignore:end */
   },
   renderSignInForm: function(){
     var submitButtonText = this.state.loggingIn ? 'Logging in...' : 'Log in';
 
+    /* jshint ignore:start */
     return (
-      /* jshint ignore:start */
       <form className='login-form form-horizontal' role='form'>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
@@ -72,8 +73,8 @@ var Login = React.createClass({
           </div>
         </div>
       </form>
-      /* jshint ignore:end */
-      );
+    );
+    /* jshint ignore:end */
   },
   renderMessage: function() {
     var message = this.state.message;
