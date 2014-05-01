@@ -159,7 +159,7 @@ var ClamShellApp = React.createClass({
       return;
     } else if(this.hasCompletedLoadingData()){
       app.log('logged in user has only one team');
-      var user = app.dataHelper.getUserWithData(this.state.loggedInUser);
+      var user = app.dataHelper.getDefaultPersonWithData(this.state.loggedInUser);
       this.setState({
         selectedUser : user,
         routeName : app.routes.messagesForSelectedTeam

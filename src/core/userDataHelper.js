@@ -24,7 +24,11 @@ var userDataHelper = {
     var teams = loggedIn && loggedIn.teams;
     return (!_.isEmpty(teams) && teams.length > 0);
   },
-  getUserWithData: function(loggedIn){
+  /*
+   * For a logged in user, return the "default" person with data to show
+   * i.e. the logged-in user herself if PWD, or the first team if not
+   */
+  getDefaultPersonWithData: function(loggedIn){
     if(loggedIn.isPWD || _.isEmpty(loggedIn.teams)){
       return loggedIn;
     }

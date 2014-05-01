@@ -145,14 +145,14 @@ describe('userDataHelper', function() {
     expect(userDataHelper.hasMultipleSelectableTeams(loggedInUserWithOwnData)).to.be.true;
   });
 
-  it('getInitialSelectedUser returns the logged if they are a person with data', function() {
+  it('getDefaultPersonWithData returns the logged if they are a person with data', function() {
     var loggedInUserWithOwnData = _.clone(loggedInUserData, true);
     loggedInUserWithOwnData.isPWD = true;
-    expect(userDataHelper.getUserWithData(loggedInUserWithOwnData)).to.deep.equal(loggedInUserWithOwnData);
+    expect(userDataHelper.getDefaultPersonWithData(loggedInUserWithOwnData)).to.deep.equal(loggedInUserWithOwnData);
   });
 
-  it('getInitialSelectedUser returns the fist person with data from the looged in users teams', function() {
-    expect(userDataHelper.getUserWithData(loggedInUserData)).to.deep.equal(team);
+  it('getDefaultPersonWithData returns the fist person with data from the looged in users teams', function() {
+    expect(userDataHelper.getDefaultPersonWithData(loggedInUserData)).to.deep.equal(team);
   });
 
   it('createMessage returns message that is for a specified group', function() {
