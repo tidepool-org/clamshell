@@ -28,7 +28,7 @@ var btnDisabled = 'btn btn-default disabled';
 var btnEnabled = 'btn btn-default';
 
 //Form for adding Comments
-var MessageFooter = React.createClass({
+var MessageForm = React.createClass({
 
   getInitialState: function() {
     return {btnState: btnDisabled};
@@ -74,7 +74,7 @@ var MessageFooter = React.createClass({
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <nav className='messagefooter navbar navbar-inverse navbar-fixed-bottom'>
+      <nav className='messageform navbar navbar-inverse'>
         {messageForm}
       </nav>
       /* jshint ignore:end */
@@ -82,4 +82,4 @@ var MessageFooter = React.createClass({
   }
 });
 
-module.exports = MessageFooter;
+module.exports = MessageForm;

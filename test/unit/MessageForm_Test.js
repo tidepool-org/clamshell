@@ -19,7 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var MessageFooter = require('../../build/components/footer/MessageFooter');
+var MessageForm = require('../../build/components/form/MessageForm');
 var helpers = require('../lib/helpers');
 
 var submittedMessage;
@@ -28,12 +28,12 @@ var getSubmittedMessage = function(content){
   submittedMessage = content.text;
 };
 
-describe('MessageFooter', function() {
+describe('MessageForm', function() {
   var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(
-      MessageFooter({onFooterAction:getSubmittedMessage})
+      MessageForm({onFooterAction:getSubmittedMessage})
     );
   });
 

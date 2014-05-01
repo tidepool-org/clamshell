@@ -21,7 +21,7 @@ body {
 
 @import url("./layout/Layout.css");
 
-@import url("./components/footer/MessageFooter.css");
+@import url("./components/form/MessageForm.css");
 @import url("./components/header/ListNavBar.css");
 @import url("./components/header/TeamPicker.css");
 @import url("./components/login/Login.css");

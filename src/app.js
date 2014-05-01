@@ -31,7 +31,7 @@ var router = require('./appRouter')();
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/header/ListNavBar');
-var MessageFooter = require('./components/footer/MessageFooter');
+var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
 var TeamPicker = require('./components/header/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
@@ -217,13 +217,13 @@ var ClamShellApp = React.createClass({
         notification={this.state.notification}
         onDismissNotification={this.handleNotificationDismissed}>
         {navBar}
-        <TeamNotes
-          notes={this.state.selectedUser.notes}
-          onThreadSelected={this.handleShowConversationThread} />
-        <MessageFooter
+        <MessageForm
           messagePrompt='Type a new note here ...'
           btnMessage='Post'
           onFooterAction={this.handleStartConversation} />
+        <TeamNotes
+          notes={this.state.selectedUser.notes}
+          onThreadSelected={this.handleShowConversationThread} />
       </Layout>
     );
     /* jshint ignore:end */
@@ -247,7 +247,7 @@ var ClamShellApp = React.createClass({
   },
   renderMessageThread:function(){
 
-    var careTeamName = app.dataHelper.formatShortName(this.state.selectedUser.profile) +'\'s notes';
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
@@ -258,7 +258,7 @@ var ClamShellApp = React.createClass({
         onDismissNotification={this.handleNotificationDismissed}>
       {navBar}
       <NoteThread messages={this.state.selectedThread} />
-      <MessageFooter
+      <MessageForm
         messagePrompt='Type a comment here ...'
         btnMessage='Post'
         onFooterAction={this.handleAddingToConversation} />

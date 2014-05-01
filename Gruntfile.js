@@ -50,6 +50,7 @@ module.exports = function(grunt) {
         },
         testBuild: {
           command: [
+            'rm -r build',
             './node_modules/.bin/jsx src/ build/',
             './node_modules/.bin/browserify test/**/*.js -o build/browserified.js'
           ].join('&&'),
@@ -118,6 +119,6 @@ module.exports = function(grunt) {
   grunt.registerTask('build-prod', ['shell:buildApp','uglify','template:parseProd']);
   grunt.registerTask('parse-config', ['template:parseConfig']);
   grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
-  grunt.registerTask('test', ['shell:testBuild','shell:testRun']);
+  grunt.registerTask('test', ['jshint','shell:testBuild','shell:testRun']);
 
 };
