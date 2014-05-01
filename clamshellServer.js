@@ -36,13 +36,13 @@ function setupDiscovery(){
 
   if (envConfig.httpsPort != null) {
     servicePort = envConfig.httpPort;
-    serviceDescriptor['host'] = envConfig.publishHost + ':' + envConfig.httpsPort;
-    serviceDescriptor['protocol'] = 'https';
+    serviceDescriptor.host = envConfig.publishHost + ':' + envConfig.httpsPort;
+    serviceDescriptor.protocol = 'https';
   }
   else if (envConfig.httpPort != null) {
     servicePort = envConfig.httpPort;
-    serviceDescriptor['host'] = envConfig.publishHost + ':' + envConfig.httpPort;
-    serviceDescriptor['protocol'] = 'http';
+    serviceDescriptor.host = envConfig.publishHost + ':' + envConfig.httpPort;
+    serviceDescriptor.protocol = 'http';
   }
 }
 
