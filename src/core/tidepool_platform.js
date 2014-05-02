@@ -17,7 +17,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(api, platform) {
+module.exports = function(api, platform, config) {
   var async = require('async');
   var _ = require('lodash');
 
@@ -85,7 +85,7 @@ module.exports = function(api, platform) {
     platform.login({
       username:username,
       password:password,
-      longtermkey: 'ylabkougcfvjizsxqepdwmhrtn'
+      longtermkey: config.longtermkey
     }, function(error, loginData) {
       if (error) {
         api.log.error(error);
