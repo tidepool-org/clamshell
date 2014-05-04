@@ -45,8 +45,9 @@ module.exports = function(grunt) {
         },
         runApp: {
           command: [
-            'exec node clamshellServer'
-          ]
+            'exec node clamshellServer',
+            'echo running on port $HOST'
+          ].join('&&')
         },
         testBuild: {
           command: [
@@ -70,8 +71,44 @@ module.exports = function(grunt) {
           options: {
             data: {
               version : packageJson.version,
-              demo : process.env.DEMO,
-              api_host : process.env.API_HOST
+              demo : process.env.DEMO ,
+              api_host : process.env.API_HOST || 'https://devel-api.tidepool.io'
+            }
+          },
+          files: {
+            'app_build/appConfig.js': ['appConfig.js']
+          }
+        },
+        parseDemoConfig: {
+          options: {
+            data: {
+              version : packageJson.version,
+              demo : true ,
+              api_host : 'https://devel-api.tidepool.io'
+            }
+          },
+          files: {
+            'app_build/appConfig.js': ['appConfig.js']
+          }
+        },
+        parseAppLocalConfig: {
+          options: {
+            data: {
+              version : packageJson.version,
+              demo : false ,
+              api_host : 'https://devel-api.tidepool.io'
+            }
+          },
+          files: {
+            'app_build/appConfig.js': ['appConfig.js']
+          }
+        },
+        parseAllLocalConfig: {
+          options: {
+            data: {
+              version : packageJson.version,
+              demo : false ,
+              api_host : 'http://localhost:8009'
             }
           },
           files: {
@@ -118,7 +155,11 @@ module.exports = function(grunt) {
   grunt.registerTask('build-dev', ['shell:buildApp','template:parseDev']);
   grunt.registerTask('build-prod', ['shell:buildApp','uglify','template:parseProd']);
   grunt.registerTask('parse-config', ['template:parseConfig']);
-  grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
+  // Development
+  grunt.registerTask('run-app-local', ['build-dev','template:parseAppLocalConfig','shell:runApp']);
+  grunt.registerTask('run-all-local', ['build-dev','template:parseAllLocalConfig','shell:runApp']);
+  grunt.registerTask('run-demo', ['build-dev','template:parseDemoConfig','shell:runApp']);
+  grunt.registerTask('run', ['build-dev','parse-config','shell:runApp']);
   grunt.registerTask('test', ['jshint','shell:testBuild','shell:testRun']);
 
 };
