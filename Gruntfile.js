@@ -76,7 +76,8 @@ module.exports = function(grunt) {
             data: {
               version : packageJson.version,
               demo : process.env.DEMO,
-              api_host : process.env.API_HOST
+              api_host : process.env.API_HOST,
+              longtermkey : process.env.LONGTERM_KEY
             }
           },
           files: {
