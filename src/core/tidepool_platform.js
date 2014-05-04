@@ -33,22 +33,21 @@ module.exports = function(api, platform) {
 
     async.parallel({
       userProfile: function(callback){
-        api.log('getting user profile');
-        platform.findProfile(userId, function(profileError,profile){
-          callback(profileError,profile);
-        });
+        api.log('getting profile ...');
+        platform.findProfile(userId, callback);
       },
       userNotes: function(callback){
-        api.log('getting user notes');
-        platform.getNotesForUser(userId, null, function(notesError,notes){
-          callback(notesError,notes);
-        });
+        api.log('getting notes ... ');
+        platform.getNotesForUser(userId, null, callback);
       }
     }, function (error, results) {
-      api.log('return user details');
-      user.profile = results.userProfile;
-      user.notes = appendTeamToNote(results.userNotes,results.userProfile);
-      return cb(error,user);
+      if(error){
+        return cb(error);
+      }
+      api.log('have user details');
+      user.profile = results.userProfile || {};
+      user.notes = appendTeamToNote(results.userNotes,results.userProfile) || [];
+      return cb(null,user);
     });
   }
 
@@ -56,10 +55,12 @@ module.exports = function(api, platform) {
   * Add the team for each note so we can use it later
   */
   function appendTeamToNote(notes,team){
-    return _.map(notes, function(note) {
-      note.team = team;
-      return note;
-    });
+    if(notes && team){
+      return _.map(notes, function(note) {
+        note.team = team;
+        return note;
+      });
+    }
   }
 
   api.user.isAuthenticated = function(callback){
@@ -75,6 +76,23 @@ module.exports = function(api, platform) {
       return loggedInUser;
     }
     return false;
+  };
+
+  /*
+   * Refresh the logged in user
+   */
+  api.user.refresh = function(cb) {
+    api.log('refreshing data ...');
+    getUserDetail(loggedInUser.userid,function(err,details){
+      if (err != null) {
+        api.log('Error when refreshing details for the logged in user', loggedInUser.userid, err);
+      } else if (_.isArray(details) && details.length > 0) {
+        api.log('refreshed logged in user');
+        loggedInUser.notes = details.notes;
+        loggedInUser.profile = details.profile;
+      }
+      return cb();
+    });
   };
 
   /*
@@ -147,14 +165,32 @@ module.exports = function(api, platform) {
   };
 
   /*
+   * Refresh any teams
+   */
+  api.user.teams.refresh = function(cb){
+    if(_.isEmpty(loggedInUser.teams)){
+      return cb();
+    }
+
+    var teamIds = _.pluck(loggedInUser.teams, 'userid');
+
+    async.map(teamIds, getUserDetail, function(err, details){
+      if (err != null) {
+        api.log('Error when refreshing details for a linked user', loggedInUser.userid, err);
+      } else if (_.isArray(details) && details.length > 0) {
+        api.log('Successfully refreshed users teams data');
+        loggedInUser.teams = details;
+      }
+      return cb();
+    });
+  };
+
+  /*
    * Find a specific message thread
    */
   api.notes.getThread = function(messageId,callback) {
     api.log('getting message thread ... ');
-    platform.getMessageThread(messageId, function(error,messages){
-      api.log('got message thread');
-      return callback(error, messages);
-    });
+    platform.getMessageThread(messageId, callback);
   };
 
   /*

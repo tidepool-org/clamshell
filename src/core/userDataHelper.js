@@ -44,6 +44,12 @@ var userDataHelper = {
       return userId === team.userid;
     });
   },
+  getTeamIds:function(data){
+    if(_.isEmpty(data.teams)){
+      return [];
+    }
+    return _.pluck(data.teams, 'userid');
+  },
   getComments: function(parentmessageId) {
     return 'todo';
   },

@@ -71,7 +71,6 @@ module.exports = function(api) {
     return false;
   };
 
-
   api.user.login = function(username, password,callback) {
     api.log('[mock] logging in ...');
     saveSession(demoToken);
@@ -86,9 +85,23 @@ module.exports = function(api) {
     return callback(null);
   };
 
+  api.user.refresh = function(callback) {
+    api.log('[mock] refresh data ...');
+    loggedInUser = demoData.loggedInUser;
+    api.log('[mock] refreshed data');
+    return callback();
+  };
+
+  // ----- Teams -----
   api.user.teams.get = function(callback) {
     // Already attached to `loggedInUser.teams`
     api.log('[mock] successfully got users teams data');
+    return callback();
+  };
+
+  api.user.teams.refresh = function(callback){
+    // Already attached to `loggedInUser.teams`
+    api.log('[mock] successfully refreshed users teams data');
     return callback();
   };
 
