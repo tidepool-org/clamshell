@@ -73,7 +73,7 @@ var ClamShellApp = React.createClass({
     };
   },
   /**
-   * Data integrration for the app
+   * Data integration for the app
    */
   attachPlatform : function(){
     app.log('attaching to platform ...');
@@ -83,7 +83,8 @@ var ClamShellApp = React.createClass({
     } else {
       require('./core/tidepool_platform')(
         app.api,
-        require('tidepool-platform-client')({host:config.apiHost},api.log)
+        require('tidepool-platform-client')({host:config.apiHost}, api.log),
+        config
       );
     }
   },

@@ -19,7 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var migrations = require('./apimigrations');
 
-module.exports = function(api, platform) {
+module.exports = function(api, platform, config) {
   var async = require('async');
   var _ = require('lodash');
 
@@ -34,8 +34,9 @@ module.exports = function(api, platform) {
     var user = { userid : userId };
 
     async.parallel({
-      userProfile: function(callback){
+      userProfile: function(callback) {
         api.log('getting user profile');
+
         platform.findProfile(userId, function(profileError,profile){
           if (profileError) {
             return callback(profileError);
@@ -50,31 +51,31 @@ module.exports = function(api, platform) {
           callback(profileError,profile);
         });
       },
-      userNotes: function(callback){
+      userNotes: function(callback) {
         api.log('getting user notes');
-        platform.getNotesForUser(userId, null, function(notesError,notes){
-          callback(notesError,notes);
+        platform.getNotesForUser(userId, null, function(notesError, notes) {
+          callback(notesError, notes);
         });
       }
     }, function (error, results) {
       api.log('return user details');
       user.profile = results.userProfile;
-      user.notes = appendTeamToNote(results.userNotes,results.userProfile);
-      return cb(error,user);
+      user.notes = appendTeamToNote(results.userNotes, results.userProfile);
+      return cb(error, user);
     });
   }
 
   /*
   * Add the team for each note so we can use it later
   */
-  function appendTeamToNote(notes,team){
+  function appendTeamToNote(notes, team) {
     return _.map(notes, function(note) {
       note.team = team;
       return note;
     });
   }
 
-  api.user.isAuthenticated = function(callback){
+  api.user.isAuthenticated = function(callback) {
     return callback(platform.isLoggedIn());
   };
 
@@ -83,7 +84,7 @@ module.exports = function(api, platform) {
    */
   api.user.get = function() {
     api.log('getting logged in user');
-    if(platform.isLoggedIn()){
+    if (platform.isLoggedIn()) {
       return loggedInUser;
     }
     return false;
@@ -92,19 +93,23 @@ module.exports = function(api, platform) {
   /*
    * Login the user and fetch their data (profile and notes)
    */
-  api.user.login = function(username, password,callback) {
+  api.user.login = function(username, password, callback) {
     api.log('logging in ...');
-    platform.login({username:username,password:password},function(error, loginData){
-      if(error){
+    platform.login({
+      username:username,
+      password:password,
+      longtermkey: config.longtermkey
+    }, function(error, loginData) {
+      if (error) {
         api.log.error(error);
         return callback(error);
       }
-      if(loginData){
+      if (loginData) {
         api.log('login success');
         loggedInUser = loginData.user;
         loggedInUser.userid = loginData.userid;
-        getUserDetail(loggedInUser.userid,function(error,data){
-          if(data){
+        getUserDetail(loggedInUser.userid, function(error, data) {
+          if (data) {
             api.log('adding users data');
             loggedInUser.notes = data.notes;
             loggedInUser.profile = data.profile;
@@ -120,8 +125,8 @@ module.exports = function(api, platform) {
    */
   api.user.logout = function(callback) {
     api.log('logging out ...');
-    platform.logout(function(error, logoutData){
-      if(error){
+    platform.logout(function(error, logoutData) {
+      if (error) {
         api.log.error(error);
         return callback(error);
       }
@@ -137,12 +142,12 @@ module.exports = function(api, platform) {
   api.user.teams.get = function(cb) {
     loggedInUser.teams = [];
 
-    platform.getViewableUsers(loggedInUser.userid, function(error,viewableUsers){
+    platform.getViewableUsers(loggedInUser.userid, function(error, viewableUsers) {
 
       var linkedUsers = Object.keys(_.omit(viewableUsers, loggedInUser.userid));
 
       if (linkedUsers.length > 0) {
-        async.map(linkedUsers, getUserDetail, function(err, details){
+        async.map(linkedUsers, getUserDetail, function(err, details) {
           if (err != null) {
             api.log('Error when fetching details for a linked user', loggedInUser.userid, err);
           } else if (_.isArray(details) && details.length > 0) {
@@ -161,9 +166,9 @@ module.exports = function(api, platform) {
   /*
    * Find a specific message thread
    */
-  api.notes.getThread = function(messageId,callback) {
+  api.notes.getThread = function(messageId, callback) {
     api.log('getting message thread ... ');
-    platform.getMessageThread(messageId, function(error,messages){
+    platform.getMessageThread(messageId, function(error, messages) {
       api.log('got message thread');
       return callback(error, messages);
     });
@@ -172,24 +177,24 @@ module.exports = function(api, platform) {
   /*
    * As the logged in user reply on an existing thread
    */
-  api.notes.reply = function(comment,callback) {
+  api.notes.reply = function(comment, callback) {
     api.log('adding reply to message thread ... ');
-    platform.replyToMessageThread(comment, function(error,id){
+    platform.replyToMessageThread(comment, function(error, id) {
       api.log('reply added to message thread');
       comment.id = id;
-      return callback(error,comment);
+      return callback(error, comment);
     });
   };
 
   /*
    * As the logged start a new thread
    */
-  api.notes.add = function(message,callback) {
+  api.notes.add = function(message, callback) {
     api.log('adding new message thread ... ');
-    platform.startMessageThread(message, function(error,id){
+    platform.startMessageThread(message, function(error, id) {
       api.log('added message thread ... ');
       message.id = id;
-      return callback(error,message);
+      return callback(error, message);
     });
   };
 };

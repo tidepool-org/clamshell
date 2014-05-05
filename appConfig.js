@@ -26,5 +26,6 @@ window.appConfig = {
       return mockValue === 'true';
     }
   })(),
-  apiHost: '<%= api_host %>' || 'https://devel-api.tidepool.io'
+  apiHost: '<%= api_host %>' || 'https://devel-api.tidepool.io',
+  longtermkey: '<%= longtermkey %>' || 'abcdefghikjlmnopqrstuvwxyz'
 };
