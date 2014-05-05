@@ -84,7 +84,7 @@ var userDataHelper = {
       return userProfile.firstName;
     }
 
-    return 'Anonymous';
+    return null;
   },
   formatFullName : function(userProfile){
     if(userProfile && userProfile.fullName){
@@ -99,7 +99,7 @@ var userDataHelper = {
       return fullname;
     }
 
-    return 'Anonymous user';
+    return null;
   },
   createMessage : function(messageText, user, groupId, parentId){
 

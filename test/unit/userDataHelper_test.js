@@ -79,10 +79,10 @@ describe('userDataHelper', function() {
 
   });
 
-  it('formatFullName returns anonymous user when profile not set', function() {
+  it('formatFullName returns nothing when profile not set', function() {
 
     var profile = {};
-    expect(userDataHelper.formatFullName(profile)).to.equal('Anonymous user');
+    expect(userDataHelper.formatFullName(profile)).to.not.exist;
 
   });
 
@@ -93,10 +93,10 @@ describe('userDataHelper', function() {
 
   });
 
-  it('formatShortName returns anonymous when shortName is not set', function() {
+  it('formatShortName returns nothing when shortName is not set', function() {
 
     var profile = {};
-    expect(userDataHelper.formatShortName(profile)).to.equal('Anonymous');
+    expect(userDataHelper.formatShortName(profile)).to.not.exist;
 
   });
   //getSelectedUser
