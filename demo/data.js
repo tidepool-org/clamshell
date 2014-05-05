@@ -18,7 +18,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var data = {
 	loggedInUser : {
 		userid : 'user-id-123',
-		profile : { firstName: 'Foo',lastName:'A really long long long last name'},
+		profile : { fullName: 'Foo A really long long long last name',shortName:'Foo'},
 		notes : [],//has none
 		teams : []
 	}
@@ -28,15 +28,15 @@ var data = {
 data.loggedInUser.teams =
 	[{
 		userid : 'user-id-456',
-		profile : {firstName:'Funky',lastName:'The Type One Diabetic'},
+		profile : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 		notes : [
 			{
 				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				parentmessage : null,
 				userid : 'user-id-456',
 				groupid : 'user-id-456',
-				user : {firstName:'Funky',lastName:'The Type One Diabetic'},
-				team : {firstName:'Funky',lastName:'The Type One Diabetic'},
+				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
+				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 				timestamp : '2013-12-22T23:07:40+00:00',
 				messagetext : 'There is a bit of pressure on in the lead up to the holidays, I am finding even a bit of excerise each morning helps with the stress '
 			},
@@ -45,8 +45,8 @@ data.loggedInUser.teams =
 				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				userid : 'user-id-456',
 				groupid : 'user-id-456',
-				user : {firstName:'Funky',lastName:'The Type One Diabetic'},
-				team : {firstName:'Funky',lastName:'The Type One Diabetic'},
+				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
+				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 				timestamp : '2013-12-24T23:07:40+00:00',
 				messagetext : 'Will try and apply my stress / life balance measures to xmas day tomorrow and see how it goes.'
 			},
@@ -55,8 +55,8 @@ data.loggedInUser.teams =
 				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				userid : 'user-id-456',
 				groupid : 'user-id-456',
-				user : {firstName:'Funky',lastName:'The Type One Diabetic'},
-				team : {firstName:'Funky',lastName:'The Type One Diabetic'},
+				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
+				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 				timestamp : '2013-12-25T23:07:40+00:00',
 				messagetext : 'I have struggled to resist the temptations of Christmas but did go for a ride early in the day that help to balance things out.'
 			},
@@ -65,8 +65,8 @@ data.loggedInUser.teams =
 				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
 				userid : 'user-id-123', //Doc
 				groupid : 'user-id-456',
-				user : { firstName: 'Foo',lastName:'A really long long long last name'},
-				team : {firstName:'Funky',lastName:'The Type One Diabetic'},
+				user : {fullName: 'Foo A really long long long last name',shortName:'Foo'},
+				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 				timestamp : '2014-01-04T23:07:40+00:00',
 				messagetext : 'It sounds like you coped well over the Christmas / New Years period given the temptations'
 			},
@@ -75,8 +75,8 @@ data.loggedInUser.teams =
 				userid : 'user-id-456',
 				parentmessage : null,
 				groupid : 'user-id-456',
-				user : {firstName:'Funky',lastName:'The Type One Diabetic'},
-				team : {firstName:'Funky',lastName:'The Type One Diabetic'},
+				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
+				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 				timestamp : '2014-01-05T23:07:40+00:00',
 				messagetext : 'Big hypo yesterday. I went for a longer than normal ride. I ate well during but didn\'t have lunch until late after the ride. Maybe a good snack just after???'
 			},
@@ -85,8 +85,8 @@ data.loggedInUser.teams =
 				parentmessage : null,
 				userid : 'user-id-123', //Doc
 				groupid : 'user-id-456',
-				user : { firstName: 'Foo',lastName:'A really long long long last name'},
-				team : {firstName:'Funky',lastName:'The Type One Diabetic'},
+				user : {fullName: 'Foo A really long long long last name',shortName:'Foo'},
+				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
 				timestamp : '2014-01-08T23:07:40+00:00',
 				messagetext : 'How are things going?'
 			},

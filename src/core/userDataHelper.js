@@ -76,12 +76,21 @@ var userDataHelper = {
     return;
   },
   formatShortName : function(userProfile){
+    if(userProfile && userProfile.shortName){
+      return userProfile.shortName;
+    }
+
     if(userProfile && userProfile.firstName){
       return userProfile.firstName;
     }
-    return;
+
+    return null;
   },
   formatFullName : function(userProfile){
+    if(userProfile && userProfile.fullName){
+      return userProfile.fullName;
+    }
+
     if(userProfile && userProfile.firstName){
       var fullname = userProfile.firstName;
       if(userProfile.lastName){
@@ -89,7 +98,8 @@ var userDataHelper = {
       }
       return fullname;
     }
-    return;
+
+    return null;
   },
   createMessage : function(messageText, user, groupId, parentId){
 

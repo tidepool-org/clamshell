@@ -17,6 +17,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
+var migrations = require('./apimigrations');
+
 module.exports = function(api, platform, config) {
   var async = require('async');
   var _ = require('lodash');
@@ -34,8 +36,19 @@ module.exports = function(api, platform, config) {
     async.parallel({
       userProfile: function(callback) {
         api.log('getting user profile');
-        platform.findProfile(userId, function(profileError, profile) {
-          callback(profileError, profile);
+
+        platform.findProfile(userId, function(profileError,profile){
+          if (profileError) {
+            return callback(profileError);
+          }
+
+          var migration = migrations.profileFullName;
+          if (migration.isRequired(profile)) {
+            api.log('Migrating user [' + userId + '] profile to "fullName"');
+            profile = migration.migrate(profile);
+          }
+
+          callback(profileError,profile);
         });
       },
       userNotes: function(callback) {
