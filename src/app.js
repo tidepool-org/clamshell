@@ -63,7 +63,7 @@ var ClamShellApp = React.createClass({
   //starting state for the app when first used or after logout
   initializeAppState : function(){
     return {
-      routeName : app.routes.login,
+      routeName : null,
       setupComplete : false,
       loadingData : true,
       previousRoute : null,
@@ -77,7 +77,7 @@ var ClamShellApp = React.createClass({
   /**
    * Data integration for the app
    */
-  attachPlatform : function(){
+  attachPlatform : function(cb){
     app.log('attaching to platform ...');
 
     if(config.demo){
@@ -97,6 +97,7 @@ var ClamShellApp = React.createClass({
           tidepoolApi,
           config
         );
+        return cb();
       });
     }
   },
@@ -118,19 +119,25 @@ var ClamShellApp = React.createClass({
 
     app.log('setup ...');
 
-    this.attachPlatform();
-    this.attachHandlers();
-    this.attachRouter();
+    this.attachPlatform(function(){
+      this.attachHandlers();
+      this.attachRouter();
 
-    this.setState({setupComplete : true});
+      api.user.isAuthenticated(function(authenticated){
+        if(authenticated){
+          this.setState({ authenticated : true, setupComplete : true });
+          api.user.refresh(function(error){
+            if(error){
+              this.handleError(error);
+              return;
+            }
+            this.loadUserData();
+          }.bind(this));
 
-    api.user.isAuthenticated(function(authenticated){
-      if(authenticated){
-        this.setState({ authenticated : true });
-        this.loadUserData();
-      } else {
-        this.setState({ routeName : app.routes.login });
-      }
+        } else {
+          this.setState({ routeName : app.routes.login, setupComplete : true });
+        }
+      }.bind(this));
     }.bind(this));
   },
   /**

@@ -70,7 +70,7 @@ var Login = React.createClass({
         <div className='checkbox'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
             <label>
-              <input type='checkbox' ref='rememberMe' /> Remember Me
+              <input type='checkbox' ref='rememberMe' /> Remember me
             </label>
           </div>
         </div>
@@ -88,7 +88,7 @@ var Login = React.createClass({
     if (message) {
       return (
          /* jshint ignore:start */
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 alert-error'>
             {message}
           </div>
 
