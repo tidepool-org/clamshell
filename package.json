@@ -17,7 +17,7 @@
     "lodash": "2.4.1",
     "moment": "2.5.1",
     "react": "0.10.0",
-    "tidepool-platform-client": "0.3.2"
+    "tidepool-platform-client": "tidepool-org/platform-client#remember-me"
   },
   "devDependencies": {
     "browserify": "3.30.1",
