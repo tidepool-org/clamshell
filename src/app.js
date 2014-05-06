@@ -90,11 +90,14 @@ var ClamShellApp = React.createClass({
         localStore : window.localStorage
       });
 
-      require('./core/tidepool_platform')(
-        app.api,
-        tidepoolApi,
-        config
-      );
+      tidepoolApi.initialize(function() {
+        app.log('Initialized API');
+        require('./core/tidepool_platform')(
+          app.api,
+          tidepoolApi,
+          config
+        );
+      });
     }
   },
   /**
