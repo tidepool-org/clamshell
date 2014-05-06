@@ -13,19 +13,32 @@ FOR A PARTICULAR PURPOSE. See the License for more details.
 You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
- */
+*/
+
 'use strict';
 
-window.appConfig = {
-  version: '<%= version %>' || '',
-  demo: (function(){
-    var mockValue = '<%= demo %>';
-    if (mockValue === '') {
-      return false;
-    } else {
-      return mockValue === 'true';
+// Tools to migrate to new API data models or endpoints
+
+var _ = require('lodash');
+
+var migrations = {};
+
+// Migrate from user profile `firstName`, `lastName` attributes
+// to `fullName` and `shortName`
+migrations.profileFullName = {
+  isRequired: function(profile) {
+    if (!profile.fullName) {
+      return true;
     }
-  })(),
-  apiHost: '<%= api_host %>' || 'https://devel-api.tidepool.io',
-  longtermkey: '<%= longtermkey %>' || 'abcdefghikjlmnopqrstuvwxyz'
+    return false;
+  },
+
+  migrate: function(profile) {
+    profile.fullName = profile.firstName + ' ' + profile.lastName;
+    profile.shortName = profile.firstName;
+    profile = _.omit(profile, 'firstName', 'lastName');
+    return profile;
+  }
 };
+
+module.exports = migrations;

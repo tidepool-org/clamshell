@@ -22,6 +22,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var React = require('react');
+// Attach React to window to activate "React DevTools" Chrome extension
+window.React = React;
 var bows = require('bows');
 
 var config = window.appConfig;
@@ -73,7 +75,7 @@ var ClamShellApp = React.createClass({
     };
   },
   /**
-   * Data integrration for the app
+   * Data integration for the app
    */
   attachPlatform : function(){
     app.log('attaching to platform ...');
@@ -83,7 +85,8 @@ var ClamShellApp = React.createClass({
     } else {
       require('./core/tidepool_platform')(
         app.api,
-        require('tidepool-platform-client')({host:config.apiHost},api.log)
+        require('tidepool-platform-client')({host:config.apiHost}, api.log),
+        config
       );
     }
   },
@@ -246,7 +249,6 @@ var ClamShellApp = React.createClass({
     /* jshint ignore:end */
   },
   renderMessageThread:function(){
-
     var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
 
     var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);

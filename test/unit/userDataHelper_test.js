@@ -72,37 +72,30 @@ describe('userDataHelper', function() {
 
   });
 
-  it('formatFullName returns the firstName as a string from the profile', function() {
+  it('formatFullName returns the fullName as a string from the profile', function() {
 
-    var profile = {firstName:'Foo',lastName:null};
-    expect(userDataHelper.formatFullName(profile)).to.equal('Foo');
-
-  });
-
-  it('formatFullName returns the first and last as a string from the profile', function() {
-
-    var profile = {firstName:'Foo',lastName:'Bar'};
+    var profile = {fullName:'Foo Bar'};
     expect(userDataHelper.formatFullName(profile)).to.equal('Foo Bar');
 
   });
 
   it('formatFullName returns nothing when profile not set', function() {
 
-    var profile = {firstName:'',lastName:null};
+    var profile = {};
     expect(userDataHelper.formatFullName(profile)).to.not.exist;
 
   });
 
-  it('formatShortName returns the first name as a string from the profile', function() {
+  it('formatShortName returns the shortName as a string from the profile', function() {
 
-    var profile = {firstName:'Foo',lastName:'Bar'};
+    var profile = {shortName:'Foo'};
     expect(userDataHelper.formatShortName(profile)).to.equal('Foo');
 
   });
 
-  it('formatShortName returns nothing when the firstName is not set', function() {
+  it('formatShortName returns nothing when shortName is not set', function() {
 
-    var profile = {firstName:'',lastName:'Bar'};
+    var profile = {};
     expect(userDataHelper.formatShortName(profile)).to.not.exist;
 
   });
@@ -128,7 +121,7 @@ describe('userDataHelper', function() {
 
     var userDetails = {
       userid : '12345678',
-      profile : { firstName : 'Bob' }
+      profile : { fullName : 'Sponge Bob' }
     };
 
     var testMessage = 'whoomp there it is';
@@ -148,7 +141,7 @@ describe('userDataHelper', function() {
 
     var userDetails = {
       userid : '12345678',
-      profile : { firstName : 'Bob' }
+      profile : { fullName : 'Sponge Bob' }
     };
 
     var testReply = 'Tag Team in 1993';

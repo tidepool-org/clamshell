@@ -43,6 +43,11 @@ module.exports = function(grunt) {
             './node_modules/.bin/webpack --debug src/main.js app_build/clamshell.js'
           ]
         },
+        watchApp: {
+          command: [
+            './node_modules/.bin/webpack --watch --debug src/main.js app_build/clamshell.js'
+          ]
+        },
         runApp: {
           command: [
             'exec node clamshellServer',
@@ -72,7 +77,8 @@ module.exports = function(grunt) {
             data: {
               version : packageJson.version,
               demo : process.env.DEMO ,
-              api_host : process.env.API_HOST || 'https://devel-api.tidepool.io'
+              api_host : process.env.API_HOST || 'https://devel-api.tidepool.io',
+              longtermkey : process.env.LONGTERM_KEY
             }
           },
           files: {
@@ -160,6 +166,7 @@ module.exports = function(grunt) {
   grunt.registerTask('run-all-local', ['build-dev','template:parseAllLocalConfig','shell:runApp']);
   grunt.registerTask('run-demo', ['build-dev','template:parseDemoConfig','shell:runApp']);
   grunt.registerTask('run', ['build-dev','parse-config','shell:runApp']);
-  grunt.registerTask('test', ['jshint','shell:testBuild','shell:testRun']);
+  grunt.registerTask('server', ['shell:runApp']);
 
+  grunt.registerTask('test', ['jshint','shell:testBuild','shell:testRun']);
 };
