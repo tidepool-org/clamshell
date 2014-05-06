@@ -115,8 +115,11 @@ var Login = React.createClass({
       );
   },
 
-  handleLogin: function() {
-    var self = this;
+  handleLogin: function(e) {
+
+    if(e){
+      e.preventDefault();
+    }
 
     if (this.state.loggingIn) {
       return;
@@ -151,14 +154,14 @@ var Login = React.createClass({
           errorMessage = 'Wrong username or password.';
         }
 
-        self.setState({
+        this.setState({
           loggingIn: false,
           message: errorMessage
         });
         return;
       }
-      self.props.onLoginSuccess();
-    });
+      this.props.onLoginSuccess();
+    }.bind(this));
   },
 
   validate: function(user) {
