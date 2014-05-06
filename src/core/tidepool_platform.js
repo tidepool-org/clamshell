@@ -102,10 +102,7 @@ module.exports = function(api, platform, config) {
       user.longtermkey = config.longtermkey;
     }
 
-    platform.login({
-      user : user,
-      options : options
-    }, function(error, loginData) {
+    platform.login( user, options, function(error, loginData) {
       if (error) {
         api.log.error(error);
         return callback(error);
