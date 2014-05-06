@@ -59,12 +59,19 @@ var Login = React.createClass({
       <form className='login-form form-horizontal' role='form'>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <input type='email' ref='emailFeild' id='inputEmail3' className='form-control' placeholder='Email' />
+            <input type='email' ref='emailField' id='inputEmail3' className='form-control' placeholder='Email' />
           </div>
         </div>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <input type='password' ref='pwFeild' className='form-control' id='inputPassword3' placeholder='Password' />
+            <input type='password' ref='pwField' className='form-control' id='inputPassword3' placeholder='Password' />
+          </div>
+        </div>
+        <div className='checkbox'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
+            <label>
+              <input type='checkbox' ref='rememberMe' /> Remember Me
+            </label>
           </div>
         </div>
         <div className='form-group'>
@@ -81,7 +88,7 @@ var Login = React.createClass({
     if (message) {
       return (
          /* jshint ignore:start */
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message alert alert-danger'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message'>
             {message}
           </div>
 
@@ -117,10 +124,16 @@ var Login = React.createClass({
 
     this.setState({loggingIn: true});
 
-    var username = this.refs.emailFeild.getDOMNode().value;
-    var password = this.refs.pwFeild.getDOMNode().value;
+    var user = {
+      username : this.refs.emailField.getDOMNode().value,
+      password : this.refs.pwField.getDOMNode().value
+    };
 
-    var validationError = this.validate(username, password);
+    var options = {
+      remember : this.refs.rememberMe.state.checked
+    };
+
+    var validationError = this.validate(user);
 
     if (validationError) {
       this.setState({
@@ -130,7 +143,7 @@ var Login = React.createClass({
       return;
     }
 
-    this.props.login(username, password, function(err) {
+    this.props.login(user, options, function(err) {
       if (err) {
 
         var errorMessage = 'An error occured while logging in.';
@@ -148,16 +161,16 @@ var Login = React.createClass({
     });
   },
 
-  validate: function(username, password) {
-    if (!username && !password) {
+  validate: function(user) {
+    if (!user.username && !user.password) {
       return 'Missing email and password.';
     }
 
-    if (!username) {
+    if (!user.username) {
       return 'Missing email.';
     }
 
-    if (!password) {
+    if (!user.password) {
       return 'Missing password.';
     }
   }

@@ -71,12 +71,14 @@ module.exports = function(api) {
     return false;
   };
 
-
-  api.user.login = function(username, password,callback) {
+  api.user.login = function(user, options, callback) {
     api.log('[mock] logging in ...');
+    if(_.isEmpty(user.username) || _.isEmpty(user.password)){
+      return callback('missing user details');
+    }
     saveSession(demoToken);
     api.log('[mock] login success');
-    callback();
+    return callback();
   };
 
   api.user.logout = function(callback) {

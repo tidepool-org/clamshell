@@ -93,21 +93,28 @@ module.exports = function(api, platform, config) {
   /*
    * Login the user and fetch their data (profile and notes)
    */
-  api.user.login = function(username, password, callback) {
+  api.user.login = function(user, options, callback) {
     api.log('logging in ...');
+
+    //are we using a long term key?
+    if(!_.isEmpty(config.longtermkey)){
+      api.log('set the longterm app key');
+      user.longtermkey = config.longtermkey;
+    }
+
     platform.login({
-      username:username,
-      password:password,
-      longtermkey: config.longtermkey
+      user : user,
+      options : options
     }, function(error, loginData) {
       if (error) {
         api.log.error(error);
         return callback(error);
       }
-      if (loginData) {
+      if (!_.isEmpty(loginData)) {
         api.log('login success');
         loggedInUser = loginData.user;
         loggedInUser.userid = loginData.userid;
+        //load all details for the user
         getUserDetail(loggedInUser.userid, function(error, data) {
           if (data) {
             api.log('adding users data');

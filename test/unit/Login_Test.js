@@ -30,8 +30,8 @@ var handleLoginSuccess  = function(){
   loggedIn = true;
 };
 
-var loginFake  = function(username,password,cb){
-  cb(username,password);
+var loginFake  = function(user,cb){
+  cb(user.username,user.password);
 };
 
 describe('Login', function() {
@@ -55,14 +55,27 @@ describe('Login', function() {
     expect(loginBtn).to.exist;
   });
 
-  it('should take a users email', function() {
-    var email = component.refs.emailFeild;
+  it('takes a users email and is of type email', function() {
+    var email = component.refs.emailField;
     expect(email).to.exist;
+    expect(email.props.type).to.equal('email');
   });
 
-  it('should take a users password', function() {
-    var pw = component.refs.pwFeild;
+  it('takes a users password and is of type password', function() {
+    var pw = component.refs.pwField;
     expect(pw).to.exist;
+    expect(pw.props.type).to.equal('password');
+  });
+
+  it('allows to select a remember me which is a checkbox', function() {
+    var rememberMe = component.refs.rememberMe;
+    expect(rememberMe).to.exist;
+    expect(rememberMe.props.type).to.equal('checkbox');
+  });
+
+  it('remember me is false by default', function() {
+    var rememberMe = component.refs.rememberMe;
+    expect(rememberMe.state.checked).to.be.false;
   });
 
   it('should fire onLoginSuccess handler when called', function() {
@@ -73,32 +86,60 @@ describe('Login', function() {
 
   it('should use login handler when submit clicked', function() {
 
+
     var fakeUn = 'fake.user@go.org';
     var fakePw = 'f@k31t';
 
-    component.props.login(fakeUn,fakePw,function(givenUser,givenPw){
+    var user = {
+      username : fakeUn,
+      password : fakePw
+    };
+
+    component.props.login(user,function(givenUser,givenPw){
       expect(givenPw).to.equal(fakePw);
       expect(givenUser).to.equal(fakeUn);
     });
   });
 
   it('should fail validation and return a message with no email', function() {
-    var err = component.validate('','pa55w0rd');
+
+    var user = {
+      username : '',
+      password : 'pa55w0rd'
+    };
+
+    var err = component.validate(user);
     expect(err).to.equal('Missing email.');
   });
 
   it('should fail validation and return a message with no pw', function() {
-    var err = component.validate('test.user@test.com','');
+
+    var user = {
+      username : 'test.user@test.com',
+      password : ''
+    };
+
+    var err = component.validate(user);
     expect(err).to.equal('Missing password.');
   });
 
   it('should fail validation and return a message with no pw and email', function() {
-    var err = component.validate('','');
+    var user = {
+      username : '',
+      password : ''
+    };
+
+    var err = component.validate(user);
     expect(err).to.equal('Missing email and password.');
   });
 
   it('should pass validation when given details', function() {
-    var err = component.validate('test.user@test.com','pa55w0rd');
+    var user = {
+      username : 'test.user@test.com',
+      password : 'pa55w0rd'
+    };
+
+    var err = component.validate(user);
     expect(err).to.be.empty;
   });
 
