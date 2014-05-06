@@ -50,9 +50,11 @@ describe('Login', function() {
     helpers.unmountComponent();
   });
 
-  it('should have a login button', function() {
+  it('should have a login button of type submit', function() {
     var loginBtn = component.refs.loginBtn;
     expect(loginBtn).to.exist;
+    console.log(loginBtn);
+    expect(loginBtn.props.type).to.equal('submit');
   });
 
   it('takes a users email and is of type email', function() {

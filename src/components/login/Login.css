@@ -27,6 +27,7 @@
 .login-form
 .btn {
   border:none;
+  cursor: pointer;
 }
 
 .login-message {

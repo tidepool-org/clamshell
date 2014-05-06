@@ -76,7 +76,7 @@ var Login = React.createClass({
         </div>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <a type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>{submitButtonText}</a>
+            <button type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>{submitButtonText}</button>
           </div>
         </div>
       </form>
