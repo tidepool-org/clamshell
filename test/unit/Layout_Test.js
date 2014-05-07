@@ -73,8 +73,39 @@ describe('Layout', function() {
         notification : {message:'testing 123',type:'info'}
       }));
 
+    var dismissBtn = notificationLayoutNoDismiss.getDismissButton();
 
-    expect(notificationLayoutNoDismiss.refs.dismissBtn).to.not.exist;
+    expect(dismissBtn).to.not.exist;
+  });
+
+  it('will set the notification classes to be of the notification type given', function() {
+    var notificationLayoutNoDismiss = helpers.mountComponent(
+      Layout({
+        notification : {message:'testing 123',type:'info'}
+      }));
+
+    var classes = notificationLayoutNoDismiss.getNotificationClasses();
+
+    expect(classes).to.contain('layout-notification-info');
+  });
+
+  it('will defauilt the notification classes to alert if none is set', function() {
+    var notificationLayoutNoDismiss = helpers.mountComponent(
+      Layout({
+        notification : {message:'testing 123',type:''}
+      }));
+
+    var classes = notificationLayoutNoDismiss.getNotificationClasses();
+
+    expect(classes).to.contain('layout-notification-alert');
+  });
+
+  it('has no notification classes if a notification is not set', function() {
+    var emptyLayout = helpers.mountComponent(Layout());
+
+    var classes = emptyLayout.getNotificationClasses();
+
+    expect(classes).to.not.exist;
   });
 
 });

@@ -301,9 +301,15 @@ var ClamShellApp = React.createClass({
   },
 
   renderStartupLayout:function(){
+
+    var navBar = this.renderNavBar('','logout-icon',this.handleLogout);
+
     return (
       /* jshint ignore:start */
-      <Layout notification={{message : 'Loading ...', type : 'info'}} />
+      <Layout
+        notification={{message : 'Loading ...', type : 'alert'}} >
+        {navBar}
+      </Layout>
       /* jshint ignore:end */
       );
   },

@@ -40,18 +40,26 @@ var Layout = React.createClass({
     }
     return dismiss;
   },
+  getNotificationClasses:function(){
+    var classes;
+    if(this.props.notification){
+      var theType = this.props.notification.type ? this.props.notification.type : 'alert';
+      classes = 'layout-notification-inner layout-notification-' + theType;
+    }
+    return classes;
+  },
   renderNotification: function() {
 
     if(this.props.notification){
 
       var message = this.props.notification.message;
-      var alertClasses = 'alert alert-dismissable alert-'+this.props.notification.type;
+      var notificationClasses = this.getNotificationClasses();
       var dismiss = this.getDismissButton();
 
       return (
         /* jshint ignore:start */
-        <div className='layout-alert col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-          <div className={alertClasses}>
+        <div className='layout-notification col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
+          <div className={notificationClasses}>
             {dismiss}
             {message}
           </div>
