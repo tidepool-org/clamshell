@@ -34,7 +34,7 @@ module.exports = function(api, platform, config) {
       loggedInUser.userid = info.userid;
     }
     if(info && info.details){
-      loggedInUser.notes = info.details.notes || []
+      loggedInUser.notes = info.details.notes || [];
       loggedInUser.profile = info.details.profile || {};
     }
   }
@@ -111,7 +111,7 @@ module.exports = function(api, platform, config) {
       api.log('refreshing logged in user ...');
       platform.getCurrentUser(function(currentUserError,currentUser){
         if(currentUserError){
-          return cb(userDetailError);
+          return cb(currentUserError);
         }
         setLoggedInUser({userid : currentUser.userid});
         getUserDetail(loggedInUser.userid, function(userDetailError, userDetail) {

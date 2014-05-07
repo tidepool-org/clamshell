@@ -303,7 +303,7 @@ var ClamShellApp = React.createClass({
   renderStartupLayout:function(){
     return (
       /* jshint ignore:start */
-      <Layout />
+      <Layout notification={{message : 'Loading ...', type : 'info'}} />
       /* jshint ignore:end */
       );
   },

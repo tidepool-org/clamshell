@@ -2,4 +2,5 @@
   text-align: center;
   box-shadow: none;
   background-image:none;
+  z-index: 1050;
 }

@@ -30,18 +30,29 @@ var Layout = React.createClass({
     notification: React.PropTypes.object,
     onDismissNotification: React.PropTypes.func
   },
+  getDismissButton:function(){
+    var dismiss;
+
+    if(this.props.onDismissNotification){
+      /* jshint ignore:start */
+      dismiss = (<button type='button' refs='dismissBtn' className='close' onClick={this.handleDismiss}>&times;</button>);
+      /* jshint ignore:end */
+    }
+    return dismiss;
+  },
   renderNotification: function() {
 
     if(this.props.notification){
 
       var message = this.props.notification.message;
       var alertClasses = 'alert alert-dismissable alert-'+this.props.notification.type;
+      var dismiss = this.getDismissButton();
 
       return (
         /* jshint ignore:start */
         <div className='layout-alert col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
           <div className={alertClasses}>
-            <button type='button' className='close' onClick={this.handleDismiss}>&times;</button>
+            {dismiss}
             {message}
           </div>
         </div>
