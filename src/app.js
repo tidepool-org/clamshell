@@ -42,12 +42,10 @@ var NoteThread = require('./components/notes/NoteThread');
 
 require('./app.css');
 
-//core functionality
-var api = require('./core/api')(bows);
-
 var app = {
   log : bows('App'),
-  api : api,
+  api : require('./core/api')(bows),
+  loggedInUser : require('./core/loggedInUser'),
   dataHelper : require('./core/userDataHelper'),
   routes : router.routes
 };
@@ -81,12 +79,21 @@ var ClamShellApp = React.createClass({
     app.log('attaching to platform ...');
 
     if(config.demo){
-      require('./core/mock')(app.api);
+
+      var mockApi = require('./core/mock')(
+        app.api, app.loggedInUser
+      );
+
+      mockApi.initialize(function(){
+        app.log('Initialized Mock API');
+        return cb();
+      });
+
     } else {
 
       var tidepoolApi = require('tidepool-platform-client')({
         host:config.apiHost,
-        log: api.log,
+        log: app.log,
         localStore : window.localStorage
       });
 
@@ -94,6 +101,7 @@ var ClamShellApp = React.createClass({
         app.log('Initialized API');
         require('./core/tidepool_platform')(
           app.api,
+          app.loggedInUser,
           tidepoolApi,
           config
         );
@@ -123,10 +131,10 @@ var ClamShellApp = React.createClass({
       this.attachHandlers();
       this.attachRouter();
 
-      api.user.isAuthenticated(function(authenticated){
+      app.api.user.isAuthenticated(function(authenticated){
         if(authenticated){
           this.setState({ authenticated : true, setupComplete : true });
-          api.user.refresh(function(error){
+          app.api.user.refresh(function(error){
             if(error){
               this.handleError(error);
               return;
@@ -147,7 +155,7 @@ var ClamShellApp = React.createClass({
 
     this.setState({ loadingData : true });
 
-    api.user.teams.get(function(error){
+    app.api.user.teams.get(function(error){
       app.log('loaded user teams');
       if(error){
         this.handleError(error);

@@ -19,11 +19,14 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var migrations = require('./apimigrations');
 
-module.exports = function(api, platform, config) {
+module.exports = function(api, user,  platform, config) {
   var async = require('async');
   var _ = require('lodash');
 
-  var loggedInUser = {};
+  /*
+   * Basic schema for a logged in user
+   */
+  var loggedInUser = user;
 
   /*
    * Set info for the logged in user

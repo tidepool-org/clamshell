@@ -17,18 +17,14 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(api) {
+module.exports = function(api, user) {
   var _ = require('lodash');
 
-  var demoData = require('../../demo/data');
-  var loggedInUser = demoData.loggedInUser;
-  var allMessages = loggedInUser.notes
-    .concat(_.flatten(loggedInUser.teams, 'notes'));
+  var loggedInUser = user;
+  var allMessages;
 
   var token = null;
-  var demoToken = '123456789';
-
-  loadSession();
+  var demoToken = '123456..99..100';
 
   function loadSession() {
     var localStorage = window.localStorage;
@@ -57,6 +53,11 @@ module.exports = function(api) {
     }
   }
 
+  function loadUserData(data){
+    loggedInUser = data.loggedInUser;
+    allMessages = loggedInUser.notes.concat(_.flatten(loggedInUser.teams, 'notes'));
+  }
+
   // ----- User -----
 
   api.user.isAuthenticated = function(callback) {
@@ -77,7 +78,15 @@ module.exports = function(api) {
       return callback('missing user details');
     }
     saveSession(demoToken);
+    loadUserData(require('../../demo/data'));
     api.log('[mock] login success');
+    return callback();
+  };
+
+  api.user.refresh = function(callback){
+    api.log('[mock] refresh in ...');
+    saveSession(demoToken);
+    loadUserData(require('../../demo/data'));
     return callback();
   };
 
@@ -120,5 +129,11 @@ module.exports = function(api) {
     message.id = id;
     allMessages.push(message);
     return callback(null,message);
+  };
+  return{
+    initialize : function(cb){
+      loadSession();
+      return cb();
+    }
   };
 };
