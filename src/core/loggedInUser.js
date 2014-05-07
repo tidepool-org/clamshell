@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 /**
  * Copyright (c) 2014, Tidepool Project
  *
@@ -16,26 +15,11 @@
 
 'use strict';
 
-var React = require('react');
-
-var Notification = React.createClass({
-  propTypes: {
-    message: React.PropTypes.string
-  },
-  render: function() {
-
-    if(this.props.message){
-      return (
-        /* jshint ignore:start */
-        <div className="alert alert-warning alert-dismissable">
-          <button type="button" className="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-          {this.props.message}
-        </div>
-        /* jshint ignore:end */
-      );
-    }
-    return null;
-  }
-});
-
-module.exports = Notification;
+module.exports = function() {
+  return {
+    userid : null,
+    profile : {},
+    notes : [],
+    teams : []
+  };
+};

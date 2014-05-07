@@ -42,12 +42,9 @@ var NoteThread = require('./components/notes/NoteThread');
 
 require('./app.css');
 
-//core functionality
-var api = require('./core/api')(bows);
-
 var app = {
   log : bows('App'),
-  api : api,
+  api : require('./core/api')(bows),
   dataHelper : require('./core/userDataHelper'),
   routes : router.routes
 };
@@ -63,7 +60,7 @@ var ClamShellApp = React.createClass({
   //starting state for the app when first used or after logout
   initializeAppState : function(){
     return {
-      routeName : app.routes.login,
+      routeName : null,
       setupComplete : false,
       loadingData : true,
       previousRoute : null,
@@ -77,17 +74,40 @@ var ClamShellApp = React.createClass({
   /**
    * Data integration for the app
    */
-  attachPlatform : function(){
+  attachPlatform : function(cb){
     app.log('attaching to platform ...');
 
+    var userSchema = require('./core/loggedInUser');
+
     if(config.demo){
-      require('./core/mock')(app.api);
-    } else {
-      require('./core/tidepool_platform')(
-        app.api,
-        require('tidepool-platform-client')({host:config.apiHost}, api.log),
-        config
+
+      var mockApi = require('./core/mock')(
+        app.api, userSchema
       );
+
+      mockApi.initialize(function(){
+        app.log('Initialized Mock API');
+        return cb();
+      });
+
+    } else {
+
+      var tidepoolApi = require('tidepool-platform-client')({
+        host:config.apiHost,
+        log: app.log,
+        localStore : window.localStorage
+      });
+
+      tidepoolApi.initialize(function() {
+        app.log('Initialized API');
+        require('./core/tidepool_platform')(
+          app.api,
+          userSchema,
+          tidepoolApi,
+          config
+        );
+        return cb();
+      });
     }
   },
   /**
@@ -108,19 +128,25 @@ var ClamShellApp = React.createClass({
 
     app.log('setup ...');
 
-    this.attachPlatform();
-    this.attachHandlers();
-    this.attachRouter();
+    this.attachPlatform(function(){
+      this.attachHandlers();
+      this.attachRouter();
 
-    this.setState({setupComplete : true});
+      app.api.user.isAuthenticated(function(authenticated){
+        if(authenticated){
+          this.setState({ authenticated : true, setupComplete : true });
+          app.api.user.refresh(function(error){
+            if(error){
+              this.handleError(error);
+              return;
+            }
+            this.loadUserData();
+          }.bind(this));
 
-    api.user.isAuthenticated(function(authenticated){
-      if(authenticated){
-        this.setState({ authenticated : true });
-        this.loadUserData();
-      } else {
-        this.setState({ routeName : app.routes.login });
-      }
+        } else {
+          this.setState({ routeName : app.routes.login, setupComplete : true });
+        }
+      }.bind(this));
     }.bind(this));
   },
   /**
@@ -130,7 +156,7 @@ var ClamShellApp = React.createClass({
 
     this.setState({ loadingData : true });
 
-    api.user.teams.get(function(error){
+    app.api.user.teams.get(function(error){
       app.log('loaded user teams');
       if(error){
         this.handleError(error);
@@ -284,9 +310,15 @@ var ClamShellApp = React.createClass({
   },
 
   renderStartupLayout:function(){
+
+    var navBar = this.renderNavBar('','logout-icon',this.handleLogout);
+
     return (
       /* jshint ignore:start */
-      <Layout />
+      <Layout
+        notification={{message : 'Loading ...', type : 'alert'}} >
+        {navBar}
+      </Layout>
       /* jshint ignore:end */
       );
   },

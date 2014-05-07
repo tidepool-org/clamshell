@@ -59,17 +59,24 @@ var Login = React.createClass({
       <form className='login-form form-horizontal' role='form'>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <input type='email' ref='emailFeild' id='inputEmail3' className='form-control' placeholder='Email' />
+            <input type='email' ref='emailField' id='inputEmail3' className='form-control' placeholder='Email' />
           </div>
         </div>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <input type='password' ref='pwFeild' className='form-control' id='inputPassword3' placeholder='Password' />
+            <input type='password' ref='pwField' className='form-control' id='inputPassword3' placeholder='Password' />
+          </div>
+        </div>
+        <div className='checkbox'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
+            <label>
+              <input type='checkbox' ref='rememberMe' /> Remember me
+            </label>
           </div>
         </div>
         <div className='form-group'>
           <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <a type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>{submitButtonText}</a>
+            <button type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>{submitButtonText}</button>
           </div>
         </div>
       </form>
@@ -81,7 +88,7 @@ var Login = React.createClass({
     if (message) {
       return (
          /* jshint ignore:start */
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 login-message alert alert-danger'>
+          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 alert-error'>
             {message}
           </div>
 
@@ -108,8 +115,11 @@ var Login = React.createClass({
       );
   },
 
-  handleLogin: function() {
-    var self = this;
+  handleLogin: function(e) {
+
+    if(e){
+      e.preventDefault();
+    }
 
     if (this.state.loggingIn) {
       return;
@@ -117,10 +127,16 @@ var Login = React.createClass({
 
     this.setState({loggingIn: true});
 
-    var username = this.refs.emailFeild.getDOMNode().value;
-    var password = this.refs.pwFeild.getDOMNode().value;
+    var user = {
+      username : this.refs.emailField.getDOMNode().value,
+      password : this.refs.pwField.getDOMNode().value
+    };
 
-    var validationError = this.validate(username, password);
+    var options = {
+      remember : this.refs.rememberMe.state.checked
+    };
+
+    var validationError = this.validate(user);
 
     if (validationError) {
       this.setState({
@@ -130,7 +146,7 @@ var Login = React.createClass({
       return;
     }
 
-    this.props.login(username, password, function(err) {
+    this.props.login(user, options, function(err) {
       if (err) {
 
         var errorMessage = 'An error occured while logging in.';
@@ -138,26 +154,26 @@ var Login = React.createClass({
           errorMessage = 'Wrong username or password.';
         }
 
-        self.setState({
+        this.setState({
           loggingIn: false,
           message: errorMessage
         });
         return;
       }
-      self.props.onLoginSuccess();
-    });
+      this.props.onLoginSuccess();
+    }.bind(this));
   },
 
-  validate: function(username, password) {
-    if (!username && !password) {
+  validate: function(user) {
+    if (!user.username && !user.password) {
       return 'Missing email and password.';
     }
 
-    if (!username) {
+    if (!user.username) {
       return 'Missing email.';
     }
 
-    if (!password) {
+    if (!user.password) {
       return 'Missing password.';
     }
   }

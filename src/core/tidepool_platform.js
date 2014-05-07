@@ -18,16 +18,33 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var migrations = require('./apimigrations');
+var _ = require('lodash');
 
-module.exports = function(api, platform, config) {
+module.exports = function(api, userSchema, platform, config) {
   var async = require('async');
   var _ = require('lodash');
 
-  var loggedInUser = {};
+  /*
+   * Basic schema for a logged in user
+   */
+  var loggedInUser = _.cloneDeep(userSchema);
+
+  /*
+   * Set info for the logged in user
+   */
+  function setLoggedInUser(info){
+    if(info && info.userid){
+      //loggedInUser.user = info.user.user;
+      loggedInUser.userid = info.userid;
+    }
+    if(info && info.details){
+      loggedInUser.notes = info.details.notes || [];
+      loggedInUser.profile = info.details.profile || {};
+    }
+  }
 
   /*
    * For a given user get the profile and notes for that user.
-   *
    */
   function getUserDetail(userId, cb) {
 
@@ -91,28 +108,56 @@ module.exports = function(api, platform, config) {
   };
 
   /*
+   * Refresh the current user
+   */
+  api.user.refresh = function(cb){
+    if(platform.isLoggedIn()){
+      api.log('refreshing logged in user ...');
+      platform.getCurrentUser(function(currentUserError,currentUser){
+        if(currentUserError){
+          return cb(currentUserError);
+        }
+        setLoggedInUser({userid : currentUser.userid});
+        getUserDetail(loggedInUser.userid, function(userDetailError, userDetail) {
+          if(userDetailError){
+            return cb(userDetailError);
+          }
+          if (userDetail) {
+            api.log('refreshing users data');
+            setLoggedInUser({details : userDetail});
+          }
+          return cb();
+        });
+      });
+    }
+  };
+
+  /*
    * Login the user and fetch their data (profile and notes)
    */
-  api.user.login = function(username, password, callback) {
+  api.user.login = function(user, options, callback) {
     api.log('logging in ...');
-    platform.login({
-      username:username,
-      password:password,
-      longtermkey: config.longtermkey
-    }, function(error, loginData) {
+
+    //are we using a long term key?
+    if(!_.isEmpty(config.longtermkey)){
+      api.log('set the longterm app key');
+      user.longtermkey = config.longtermkey;
+    }
+
+    platform.login( user, options, function(error, loginData) {
       if (error) {
         api.log.error(error);
         return callback(error);
       }
-      if (loginData) {
+      if (!_.isEmpty(loginData)) {
         api.log('login success');
-        loggedInUser = loginData.user;
-        loggedInUser.userid = loginData.userid;
+
+        setLoggedInUser({userid : loginData.userid});
+        //load all details for the user
         getUserDetail(loggedInUser.userid, function(error, data) {
           if (data) {
             api.log('adding users data');
-            loggedInUser.notes = data.notes;
-            loggedInUser.profile = data.profile;
+            setLoggedInUser({details : data});
           }
           return callback(error);
         });

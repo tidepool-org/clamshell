@@ -19,6 +19,14 @@ body {
   transition: none;
 }
 
+.alert-error {
+  color: #a94442;
+}
+
+.alert-info {
+  color: #a94442;
+}
+
 @import url("./layout/Layout.css");
 
 @import url("./components/form/MessageForm.css");
