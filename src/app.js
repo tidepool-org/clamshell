@@ -45,7 +45,6 @@ require('./app.css');
 var app = {
   log : bows('App'),
   api : require('./core/api')(bows),
-  loggedInUser : require('./core/loggedInUser'),
   dataHelper : require('./core/userDataHelper'),
   routes : router.routes
 };
@@ -78,10 +77,12 @@ var ClamShellApp = React.createClass({
   attachPlatform : function(cb){
     app.log('attaching to platform ...');
 
+    var userSchema = require('./core/loggedInUser');
+
     if(config.demo){
 
       var mockApi = require('./core/mock')(
-        app.api, app.loggedInUser
+        app.api, userSchema
       );
 
       mockApi.initialize(function(){
@@ -101,7 +102,7 @@ var ClamShellApp = React.createClass({
         app.log('Initialized API');
         require('./core/tidepool_platform')(
           app.api,
-          app.loggedInUser,
+          userSchema,
           tidepoolApi,
           config
         );

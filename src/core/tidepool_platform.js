@@ -18,15 +18,16 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var migrations = require('./apimigrations');
+var _ = require('lodash');
 
-module.exports = function(api, user,  platform, config) {
+module.exports = function(api, userSchema, platform, config) {
   var async = require('async');
   var _ = require('lodash');
 
   /*
    * Basic schema for a logged in user
    */
-  var loggedInUser = user;
+  var loggedInUser = _.cloneDeep(userSchema);
 
   /*
    * Set info for the logged in user

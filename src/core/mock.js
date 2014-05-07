@@ -17,10 +17,10 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-module.exports = function(api, user) {
+module.exports = function(api, userSchema) {
   var _ = require('lodash');
 
-  var loggedInUser = user;
+  var loggedInUser = _.cloneDeep(userSchema);
   var allMessages;
 
   var token = null;
