@@ -39,15 +39,31 @@ module.exports = function(component,app) {
     }.bind(this));
   };
 
+  component.handleRefresh =function(){
+    app.log('refreshing ...');
+    component.setState({ loadingData : true });
+
+    app.api.user.refresh(function(){
+      app.log('user refreshed');
+      app.api.user.teams.refresh(function(){
+        app.log('refreshing teams');
+        component.setState({
+          loadingData : false
+          // Call showUserData only after state has been updated
+          }, component.showUserData);
+        });
+    });
+  };
+
   /**
    * Set app state to handle the back command
    */
   component.handleBack =function(){
     var previousRoute = component.state.previousRoute;
     var currentRoute = component.state.routeName;
-    
+
     if(!previousRoute || previousRoute === currentRoute){
-      
+
       previousRoute = app.routes.messagesForAllTeams;
     }
     component.setState({routeName:previousRoute});

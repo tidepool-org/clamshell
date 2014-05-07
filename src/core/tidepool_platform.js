@@ -53,26 +53,26 @@ module.exports = function(api, platform, config) {
       },
       userNotes: function(callback) {
         api.log('getting user notes');
-        platform.getNotesForUser(userId, null, function(notesError, notes) {
-          callback(notesError, notes);
-        });
+        platform.getNotesForUser(userId, null, callback);
       }
     }, function (error, results) {
       api.log('return user details');
-      user.profile = results.userProfile;
+      user.profile = results.userProfile || {};
       user.notes = appendTeamToNote(results.userNotes, results.userProfile);
-      return cb(error, user);
+      return cb(null, user);
     });
   }
 
   /*
   * Add the team for each note so we can use it later
   */
-  function appendTeamToNote(notes, team) {
-    return _.map(notes, function(note) {
-      note.team = team;
-      return note;
-    });
+  function appendTeamToNote(notes,team){
+    if(notes && team){
+      return _.map(notes, function(note) {
+        note.team = team;
+        return note;
+      });
+    }
   }
 
   api.user.isAuthenticated = function(callback) {
@@ -88,6 +88,23 @@ module.exports = function(api, platform, config) {
       return loggedInUser;
     }
     return false;
+  };
+
+  /*
+   * Refresh the logged in user
+   */
+  api.user.refresh = function(cb) {
+    api.log('refreshing data ...');
+    getUserDetail(loggedInUser.userid,function(err,details){
+      if (err != null) {
+        api.log('Error when refreshing details for the logged in user', loggedInUser.userid, err);
+      } else if (_.isArray(details) && details.length > 0) {
+        api.log('refreshed logged in user');
+        loggedInUser.notes = details.notes;
+        loggedInUser.profile = details.profile;
+      }
+      return cb();
+    });
   };
 
   /*
@@ -164,14 +181,32 @@ module.exports = function(api, platform, config) {
   };
 
   /*
+   * Refresh any teams
+   */
+  api.user.teams.refresh = function(cb){
+    if(_.isEmpty(loggedInUser.teams)){
+      return cb();
+    }
+
+    var teamIds = _.pluck(loggedInUser.teams, 'userid');
+
+    async.map(teamIds, getUserDetail, function(err, details){
+      if (err != null) {
+        api.log('Error when refreshing details for a linked user', loggedInUser.userid, err);
+      } else if (_.isArray(details) && details.length > 0) {
+        api.log('Successfully refreshed users teams data');
+        loggedInUser.teams = details;
+      }
+      return cb();
+    });
+  };
+
+  /*
    * Find a specific message thread
    */
   api.notes.getThread = function(messageId, callback) {
     api.log('getting message thread ... ');
-    platform.getMessageThread(messageId, function(error, messages) {
-      api.log('got message thread');
-      return callback(error, messages);
-    });
+    platform.getMessageThread(messageId, callback);
   };
 
   /*

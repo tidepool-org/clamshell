@@ -31,6 +31,31 @@ $ npm install .
 
 ## Quick start
 
+<<<<<<< HEAD
+Once you have completed the install you can quickly run locally using one of the three modes below:
+
+Run the app using demo data
+
+```bash
+$ grunt run-demo
+```
+
+Run the app locally againt the deployed devel services
+
+```bash
+$ source config/env.sh
+$ grunt run-app-local
+```
+
+Run the app locally with a [full local deployment](https://github.com/tidepool-org/tools/blob/master/runservers)
+
+```bash
+$ source config/env.sh
+$ grunt run-all-local
+```
+
+Open the app locally at http://localhost:3004
+=======
 After having completed the install, first make a copy of the sample config file:
 
 ```bash
@@ -56,6 +81,7 @@ $ grunt server
 ```
 
 Navigate your browser to `http://localhost:3001/`.
+>>>>>>> master
 
 ## Development
 

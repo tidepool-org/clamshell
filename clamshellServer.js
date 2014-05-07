@@ -53,7 +53,7 @@ function publishService(){
 
 function setupLocal(){
   log.info('setting up local service with no service discovery');
-  servicePort;
+  servicePort = 3004;
   if (envConfig.httpsPort != null) {
     servicePort = envConfig.httpPort;
   }
