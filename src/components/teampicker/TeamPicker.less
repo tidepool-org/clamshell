@@ -1,0 +1,93 @@
+/**
+ * Copyright (c) 2014, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ */
+
+@import (reference) "../../core/core.less";
+
+// For padding, margins, inside the user "box"
+@teampicker-user-spacing-unit: 8px;
+
+.teampicker-user {
+  // For select icon absolute positioning
+  position: relative;
+  margin-bottom: 10px;
+  padding: @teampicker-user-spacing-unit;
+
+  border: 1px solid @gray-border-light;
+  border-radius: 2px;
+  background: #fff;
+}
+
+a.teampicker-user {
+  display: block;
+  color: @gray-text-dark;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: @gray-text-dark;
+    text-decoration: none;
+  }
+}
+
+.teampicker-user-info {
+  &:extend(.clearfix all);
+}
+
+@teampicker-user-picture-size: 32px;
+.teampicker-user-picture {
+  float: left;
+  margin-right: @teampicker-user-spacing-unit;
+
+  background-image: url('images/profile32x32.png');
+  background-repeat: no-repeat;
+  background-size: @teampicker-user-picture-size;
+  width: @teampicker-user-picture-size;
+  height: @teampicker-user-picture-size;
+}
+
+@teampicker-user-select-icon-size: 12px;
+@teampicker-user-select-icon-horizontal-spacing: @teampicker-user-spacing-unit;
+
+.teampicker-user-details {
+  // Makes text stay aligned on the right
+  // and doesn't wrap under floating picture
+  display: table-cell;
+
+  // Leave room for select icon
+  padding-right: (@teampicker-user-select-icon-size + 2*@teampicker-user-select-icon-horizontal-spacing);
+}
+
+.teampicker-user-name {
+  font-size: @font-size-medium;
+}
+
+.teampicker-user-last-note {
+  font-size: @font-size-small;
+  color: @gray-text-light;
+}
+
+
+.teampicker-user-select-icon {
+  position: absolute;
+  top: 50%;
+  right: @teampicker-user-select-icon-horizontal-spacing;
+  margin-top: -(@teampicker-user-select-icon-size/2);
+
+  // TODO: replace with right arrow
+  background: @gray-bg-dark;
+  background-size: @teampicker-user-select-icon-size;
+  width: @teampicker-user-select-icon-size;
+  height: @teampicker-user-select-icon-size;
+}
