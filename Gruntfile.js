@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         },
         watchApp: {
           command: [
-            './node_modules/.bin/webpack --watch --debug src/main.js app_build/clamshell.js'
+            './node_modules/.bin/webpack --watch --debug --devtool=source-map src/main.js app_build/clamshell.js'
           ]
         },
         runApp: {
