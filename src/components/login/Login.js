@@ -24,6 +24,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./Login.less');
+
 var Login = React.createClass({
 
   propTypes: {
@@ -40,13 +42,9 @@ var Login = React.createClass({
   renderLogos: function(){
     /* jshint ignore:start */
     return (
-      <div className='logos'>
-        <div className='col-xs-offset-1 col-sm-offset-2 row'>
-          <div className='tidepool-logo' />
-        </div>
-        <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 row'>
-          <div className='blip-logo' />
-        </div>
+      <div className='login-logos'>
+        <div className='login-tidepool-logo'></div>
+        <div className='login-blip-logo'></div>
       </div>
     );
     /* jshint ignore:end */
@@ -56,28 +54,22 @@ var Login = React.createClass({
 
     /* jshint ignore:start */
     return (
-      <form className='login-form form-horizontal' role='form'>
-        <div className='form-group'>
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <input type='email' ref='emailField' id='inputEmail3' className='form-control' placeholder='Email' />
-          </div>
+      <form className='login-form'>
+        <div className='login-form-group'>
+          <input type='email' className='login-form-control' ref='emailField' id='email' placeholder='Email' />
         </div>
-        <div className='form-group'>
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <input type='password' ref='pwField' className='form-control' id='inputPassword3' placeholder='Password' />
-          </div>
+        <div className='login-form-group'>
+          <input type='password' className='login-form-control' ref='pwField' id='password' placeholder='Password' />
         </div>
-        <div className='checkbox'>
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <label>
-              <input type='checkbox' ref='rememberMe' /> Remember me
-            </label>
-          </div>
+        <div className='login-form-group-checkbox'>
+          <label htmlFor='remember'>
+            <input type='checkbox' ref='rememberMe' id='remember' /> Remember me
+          </label>
         </div>
-        <div className='form-group'>
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-            <button type='submit' className='btn btn-default pull-right' ref='loginBtn' onClick={this.handleLogin}>{submitButtonText}</button>
-          </div>
+        <div className='login-form-action-group'>
+          <button type='submit' className='login-form-button' ref='loginBtn' onClick={this.handleLogin}>
+            {submitButtonText}
+          </button>
         </div>
       </form>
     );
@@ -87,13 +79,12 @@ var Login = React.createClass({
     var message = this.state.message;
     if (message) {
       return (
-         /* jshint ignore:start */
-          <div className='col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4 alert-error'>
-            {message}
-          </div>
-
-      /* jshint ignore:end */
-        );
+        /* jshint ignore:start */
+        <div className='login-message login-message-error'>
+          {message}
+        </div>
+        /* jshint ignore:end */
+      );
     }
     return null;
   },
@@ -107,9 +98,9 @@ var Login = React.createClass({
     return (
        /* jshint ignore:start */
       <div className='login'>
-      {logos}
-      {login}
-      {message}
+        {logos}
+        {login}
+        {message}
       </div>
        /* jshint ignore:end */
       );
