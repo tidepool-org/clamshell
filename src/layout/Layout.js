@@ -24,67 +24,84 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./Layout.less');
+
 var Layout = React.createClass({
-
   propTypes: {
-    notification: React.PropTypes.object,
-    onDismissNotification: React.PropTypes.func
+    notification: React.PropTypes.renderable,
+    header: React.PropTypes.renderable,
+    menu: React.PropTypes.renderable
   },
-  getDismissButton:function(){
-    var dismiss;
 
-    if(this.props.onDismissNotification){
+  render: function() {
+    var notification = this.renderNotification();
+    var header = this.renderHeader();
+    var menu = this.renderMenu();
+
+    var contentClassName = 'layout-content layout-content-overflow-scroll';
+    if (this.props.header) {
+      contentClassName = contentClassName + ' layout-content-has-header';
+    }
+
+    return (
       /* jshint ignore:start */
-      dismiss = (<button type='button' refs='dismissBtn' className='close' onClick={this.handleDismiss}>&times;</button>);
-      /* jshint ignore:end */
-    }
-    return dismiss;
-  },
-  getNotificationClasses:function(){
-    var classes;
-    if(this.props.notification){
-      var theType = this.props.notification.type ? this.props.notification.type : 'alert';
-      classes = 'layout-notification-inner layout-notification-' + theType;
-    }
-    return classes;
-  },
-  renderNotification: function() {
-
-    if(this.props.notification){
-
-      var message = this.props.notification.message;
-      var notificationClasses = this.getNotificationClasses();
-      var dismiss = this.getDismissButton();
-
-      return (
-        /* jshint ignore:start */
-        <div className='layout-notification col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-          <div className={notificationClasses}>
-            {dismiss}
-            {message}
+      <div className='layout'>
+        {notification}
+        {header}
+        {menu}
+        <div className={contentClassName}>
+          <div className='layout-content-scroll'>
+            {this.props.children}
           </div>
         </div>
-        /* jshint ignore:end */
-      );
-    }
-    return null;
+      </div>
+      /* jshint ignore:end */
+    );
   },
-  handleDismiss: function(e) {
-    e.preventDefault();
-    var dismiss = this.props.onDismissNotification;
-    if (dismiss) {
-      dismiss();
+
+  renderNotification: function() {
+    var notification = this.props.notification;
+
+    if (!notification) {
+      return null;
     }
-  },
-  render: function() {
 
-    var notification = this.renderNotification();
-
-    return this.transferPropsTo(
+    return (
       /* jshint ignore:start */
-      <div className='content'>
+      <div className='layout-notification'>
         {notification}
-        {this.props.children}
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderHeader: function() {
+    var header = this.props.header;
+
+    if (!header) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='layout-header'>
+        {header}
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderMenu: function() {
+    var menu = this.props.menu;
+
+    if (!menu) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='layout-menu'>
+        {menu}
       </div>
       /* jshint ignore:end */
     );
