@@ -93,9 +93,11 @@ var ClamShellApp = React.createClass({
     } else {
 
       var tidepoolApi = require('tidepool-platform-client')({
-        host:config.apiHost,
+        host: config.apiHost,
         log: app.log,
-        localStore : window.localStorage
+        localStore: window.localStorage,
+        metricsSource: 'clamshell',
+        metricsVersion: config.version
       });
 
       tidepoolApi.initialize(function() {
