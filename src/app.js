@@ -35,11 +35,10 @@ var router = require('./appRouter')();
 
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
-var ListNavBar = require('./components/header/ListNavBar');
 var Header = require('./components/header/Header');
 var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
-var TeamPicker = require('./components/header/TeamPicker');
+var TeamPicker = require('./components/teampicker/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
 /*jshint unused:false */
@@ -70,7 +69,8 @@ var ClamShellApp = React.createClass({
       loggedInUser : null,
       selectedUser : null,
       selectedThread : null,
-      notification : null
+      notification : null,
+      showingMenu : false
     };
   },
 
@@ -233,32 +233,22 @@ var ClamShellApp = React.createClass({
     return this.renderStartup();
   },
 
-  renderNavBar:function(title, icon, actionHandler){
-    /* jshint ignore:start */
-    return (
-      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler} />
-    );
-    /* jshint ignore:end */
-  },
-
-  renderNavBarWithTeamPicker:function(title, icon, actionHandler){
-    return (
-      /* jshint ignore:start */
-      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler}>
-        <TeamPicker loggedInUser={this.state.loggedInUser} onUserPicked={this.handleUserChanged} />
-      </ListNavBar>
-      /* jshint ignore:end */
-    );
-  },
-
   renderMessagesForSelectedTeam:function(){
-
     var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+    var header;
 
-    var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
-
-    if(this.userHasTeams()){
-      navBar = this.renderNavBarWithTeamPicker(careTeamName,'back-icon',this.handleBack);
+    if (this.userHasTeams()) {
+      header = this.renderHeader({
+        title: careTeamName,
+        leftIcon: 'back',
+        onLeftAction: this.handleBack
+      });
+    }
+    else {
+      header = this.renderHeader({
+        title: careTeamName,
+        leftIcon: 'logo'
+      });
     }
 
     var content = (
@@ -275,11 +265,14 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
     );
 
-    return this.renderLayout(content, {header: navBar});
+    return this.renderLayout(content, {header: header});
   },
 
   renderMessagesForAllTeams:function(){
-    var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
+    var header = this.renderHeader({
+      title: 'All Notes',
+      leftIcon: 'logo'
+    });
 
     var content = (
       /* jshint ignore:start */
@@ -296,8 +289,12 @@ var ClamShellApp = React.createClass({
 
   renderMessageThread:function(){
     var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+    var header = this.renderHeader({
+      title: careTeamName,
+      leftIcon: 'back',
+      onLeftAction: this.handleBack
+    });
 
-    var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
 
     var content = (
       /* jshint ignore:start */
@@ -311,7 +308,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
       );
 
-    return this.renderLayout(content, {header: navBar});
+    return this.renderLayout(content, {header: header});
   },
 
   renderLogin:function(){
@@ -329,8 +326,6 @@ var ClamShellApp = React.createClass({
   },
 
   renderStartup:function(){
-    var navBar = this.renderNavBar('','logout-icon',this.handleLogout);
-
     var content;
     /* jshint ignore:start */
     content = (
@@ -340,7 +335,7 @@ var ClamShellApp = React.createClass({
       );
     /* jshint ignore:end */
 
-    return this.renderLayout(content, {header: navBar});
+    return this.renderLayout(content);
   },
 
   renderLayout:function(content, options){
@@ -366,9 +361,48 @@ var ClamShellApp = React.createClass({
     return null;
   },
 
+  renderHeader: function(props) {
+    props = props || {};
+
+    if (this.state.showingMenu) {
+      _.assign(props, {
+        // Since menu takes up whole screen currently,
+        // change title to not confuse user
+        title: 'Menu',
+        // Hide left action when menu is open
+        leftIcon: null,
+        onLeftAction: null,
+        rightIcon: 'close-menu',
+        onRightAction: this.handleCloseMenu
+      });
+    }
+    else {
+      _.assign(props, {
+        rightIcon: 'open-menu',
+        onRightAction: this.handleOpenMenu
+      });
+    }
+
+    return Header(props);
+  },
+
   renderMenu: function() {
-    // TODO
-    return null;
+    if (!this.state.showingMenu) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='menu'>
+        <div className='menu-teampicker-instructions'>
+          {'Select a person to view notes:'}
+        </div>
+        <TeamPicker
+          loggedInUser={this.state.loggedInUser}
+          onUserPicked={this.handleUserChanged} />
+      </div>
+      /* jshint ignore:end */
+    );
   }
 });
 

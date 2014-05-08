@@ -13,6 +13,8 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
+@import (reference) "./core/core.less";
+
 .login-screen {
   max-width: 220px;
   margin: auto;
@@ -21,10 +23,24 @@
 }
 
 .startup {
+  position: absolute;
+  top: 50%;
+  margin-top: -@line-height-base/2;
+  width: 100%;
   text-align: center;
-  padding: 100px 10px;
 }
 
-.messages-all {}
-.messages-team {}
-.messages-thread {}
+.menu {
+  padding: 10px 20px;
+  background: @gray-bg-light;
+}
+
+.menu-teampicker-instructions {
+  margin-bottom: 10px;
+}
+
+.messages-all,
+.messages-team,
+.messages-thread {
+  padding: 10px;
+}

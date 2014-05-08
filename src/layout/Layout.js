@@ -98,10 +98,19 @@ var Layout = React.createClass({
       return null;
     }
 
+    var className = [
+      'layout-menu',
+      'layout-content',
+      'layout-content-overflow-scroll',
+      'layout-content-has-header'
+    ].join(' ');
+
     return (
       /* jshint ignore:start */
-      <div className='layout-menu'>
-        {menu}
+      <div className={className}>
+        <div className='layout-content-scroll'>
+          {menu}
+        </div>
       </div>
       /* jshint ignore:end */
     );

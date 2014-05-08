@@ -45,12 +45,24 @@ module.exports = function(component,app) {
   component.handleBack =function(){
     var previousRoute = component.state.previousRoute;
     var currentRoute = component.state.routeName;
-    
+
     if(!previousRoute || previousRoute === currentRoute){
-      
+
       previousRoute = app.routes.messagesForAllTeams;
     }
     component.setState({routeName:previousRoute});
+  };
+
+  component.handleOpenMenu = function() {
+    // Don't try to render if nothing to show
+    if (!component.state.loggedInUser) {
+      return;
+    }
+    component.setState({showingMenu:true});
+  };
+
+  component.handleCloseMenu = function() {
+    component.setState({showingMenu:false});
   };
 
   /**
@@ -194,7 +206,8 @@ module.exports = function(component,app) {
     component.setState({
       routeName : app.routes.messagesForSelectedTeam,
       selectedUser : userToDisplay,
-      previousRoute : component.state.routeName
+      previousRoute : component.state.routeName,
+      showingMenu : false
     });
   };
 };

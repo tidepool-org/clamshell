@@ -50,6 +50,7 @@ var TeamPicker = React.createClass({
   },
 
   renderSelectableUsers: function() {
+    var self = this;
     var selectableUsers = this.getSelectableUsers();
 
     var users = _.map(selectableUsers, function(selectableUser) {
