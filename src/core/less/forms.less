@@ -1,0 +1,98 @@
+/**
+ * Copyright (c) 2014, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ */
+
+// Non-controls
+// ====================================
+
+label,
+.form-label {
+  display: block;
+}
+
+// Help text under form controls
+.form-help-block {
+  margin-top: 5px;
+}
+
+// Form controls
+// ====================================
+
+@form-control-border-size:         1px;
+@form-control-border-color:        @gray-border-light;
+@form-control-border-color-focus:  @blue-light;
+@form-control-height:              (2*@line-height-base);
+
+.form-control {
+  display: block;
+  width: 100%;
+
+  font-size: @font-size-base;
+  height: @form-control-height;
+  line-height: @line-height-base;
+  vertical-align: middle;
+
+  padding: ((@form-control-height - @line-height-base)/2 - @form-control-border-size) 5px;
+
+  border: @form-control-border-size solid @form-control-border-color;
+  border-radius: 0px;
+
+  color: #000;
+
+  // Remove inset shadow in iOS
+  -webkit-appearance: none;
+
+  &:focus {
+    // Disable default WebKit focus style
+    outline: 0;
+
+    border-color: @form-control-border-color-focus;
+  }
+
+  // Reset height for `textarea`s
+  textarea& {
+    height: auto;
+  }
+}
+
+// Special styles for iOS date input
+//
+// In Mobile Safari, date inputs require a pixel line-height that matches the
+// given height of the input.
+input[type="date"] {
+  line-height: @form-control-height;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+// Form groups
+// ====================================
+// Designed to help with the organization and spacing of vertical forms.
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.form-group-checkbox {
+  label {
+    padding-left: 20px;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    float: left;
+    margin-left: -20px;
+    margin-top: 3px;
+  }
+}
