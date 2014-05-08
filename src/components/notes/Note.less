@@ -1,0 +1,110 @@
+/**
+ * Copyright (c) 2014, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ */
+
+@import (reference) "../../core/core.less";
+
+// For padding, margins, inside the user "box"
+@note-spacing-unit: 8px;
+
+.note {
+  // For select icon absolute positioning
+  position: relative;
+  padding: @note-spacing-unit;
+
+  border: 1px solid @gray-border-light;
+  border-radius: 2px;
+  background: #fff;
+}
+
+a.note {
+  display: block;
+  color: @gray-text-dark;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: @gray-text-dark;
+    text-decoration: none;
+  }
+}
+
+.note-content {
+  &:extend(.clearfix all);
+}
+
+@note-picture-large-size: 50px;
+.note-picture-large {
+  float: left;
+  margin-right: @note-spacing-unit;
+
+  background-image: url('images/profile50x50.png');
+  background-repeat: no-repeat;
+  background-size: @note-picture-large-size;
+  width: @note-picture-large-size;
+  height: @note-picture-large-size;
+}
+
+@note-picture-small-size: 32px;
+.note-picture-small {
+  float: left;
+  margin-right: @note-spacing-unit;
+
+  background-image: url('images/profile32x32.png');
+  background-repeat: no-repeat;
+  background-size: @note-picture-small-size;
+  width: @note-picture-small-size;
+  height: @note-picture-small-size;
+}
+
+.note-details {
+  // Makes text stay aligned on the right
+  // and doesn't wrap under floating picture
+  display: table-cell;
+}
+
+.note-title {
+  font-size: @font-size-medium;
+}
+
+.note-title-author {
+  font-weight: bold;
+}
+
+.note-title-team {
+  color: @gray-text-light;
+}
+
+.note-timestamp,
+.note-comments {
+  font-size: @font-size-small;
+  color: @gray-text-light;
+}
+
+.note-header,
+.note-text {
+  margin-bottom: 5px;
+}
+
+.note-comments {
+  text-align: right;
+}
+
+.note-comments-text {
+  display: inline-block;
+
+  background-image: url('images/comment16x16.png');
+  background-repeat: no-repeat;
+  padding-left: 20px;
+}

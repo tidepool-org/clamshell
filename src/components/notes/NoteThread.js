@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./NoteThread.less');
+
 var Note = require('./Note');
 
 var dataHelper = require('../../core/userDataHelper');
@@ -38,7 +40,7 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='rootNote'
-      image='note-image-large'
+      image='large'
       key={message.id}
       author={dataHelper.formatFullName(message.user)}
       note={message.messagetext}
@@ -52,7 +54,7 @@ var NoteThread = React.createClass({
       /* jshint ignore:start */
       <Note
       ref='commentNote'
-      image='note-image'
+      image='small'
       key={message.id}
       author={dataHelper.formatFullName(message.user)}
       note={message.messagetext}
