@@ -26,6 +26,9 @@ var React = require('react');
 window.React = React;
 var bows = require('bows');
 
+require('./core/core.less');
+require('./app.less');
+
 var config = window.appConfig;
 
 var router = require('./appRouter')();
@@ -33,14 +36,13 @@ var router = require('./appRouter')();
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
 var ListNavBar = require('./components/header/ListNavBar');
+var Header = require('./components/header/Header');
 var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
 var TeamPicker = require('./components/header/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
 /*jshint unused:false */
-
-require('./app.css');
 
 var app = {
   log : bows('App'),
@@ -71,6 +73,7 @@ var ClamShellApp = React.createClass({
       notification : null
     };
   },
+
   /**
    * Data integration for the app
    */
@@ -110,6 +113,7 @@ var ClamShellApp = React.createClass({
       });
     }
   },
+
   /**
    * Handlers for the app
    */
@@ -117,6 +121,7 @@ var ClamShellApp = React.createClass({
     app.log('attaching handlers ...');
     require('./appHandlers')(this,app);
   },
+
   /**
    * Router for the app
    */
@@ -124,8 +129,8 @@ var ClamShellApp = React.createClass({
     app.log('attaching router ...');
     router.init(this);
   },
-  componentDidMount: function () {
 
+  componentDidMount: function () {
     app.log('setup ...');
 
     this.attachPlatform(function(){
@@ -149,11 +154,11 @@ var ClamShellApp = React.createClass({
       }.bind(this));
     }.bind(this));
   },
+
   /**
    * Load the logged in users data for all the teams that are a part of
    */
   loadUserData: function(){
-
     this.setState({ loadingData : true });
 
     app.api.user.teams.get(function(error){
@@ -170,6 +175,7 @@ var ClamShellApp = React.createClass({
     }.bind(this));
 
   },
+
   /**
    * Do we have other teams the logged in user is part of?
    */
@@ -177,12 +183,14 @@ var ClamShellApp = React.createClass({
     var teams = this.state.loggedInUser && this.state.loggedInUser.teams;
     return (teams && teams.length > 0);
   },
+
   /**
    * Have we finished loading data?
    */
   hasCompletedLoadingData:function(){
     return !this.state.loadingData;
   },
+
   /**
    * Show the logged in users data for all the teams that are a part of
    */
@@ -202,128 +210,9 @@ var ClamShellApp = React.createClass({
       return;
     }
   },
+
   //---------- Rendering Layouts ----------
   render: function () {
-    var content = this.renderContent();
-
-    return (
-      /* jshint ignore:start */
-      <div className='app'>
-      {content}
-      </div>
-      /* jshint ignore:end */
-      );
-  },
-  renderNavBar:function(title, icon, actionHandler){
-    return (
-      /* jshint ignore:start */
-      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler} />
-      /* jshint ignore:end */
-    );
-  },
-  renderNavBarWithTeamPicker:function(title, icon, actionHandler){
-    return (
-      /* jshint ignore:start */
-      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler}>
-        <TeamPicker loggedInUser={this.state.loggedInUser} onUserPicked={this.handleUserChanged} />
-      </ListNavBar>
-      /* jshint ignore:end */
-    );
-  },
-  renderMessagesForSelectedTeam:function(){
-
-    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
-
-    var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
-
-    if(this.userHasTeams()){
-      navBar = this.renderNavBarWithTeamPicker(careTeamName,'back-icon',this.handleBack);
-    }
-
-    /* jshint ignore:start */
-    return (
-      <Layout
-        notification={this.state.notification}
-        onDismissNotification={this.handleNotificationDismissed}>
-        {navBar}
-        <MessageForm
-          messagePrompt='Type a new note here ...'
-          btnMessage='Post'
-          onFooterAction={this.handleStartConversation} />
-        <TeamNotes
-          notes={this.state.selectedUser.notes}
-          onThreadSelected={this.handleShowConversationThread} />
-      </Layout>
-    );
-    /* jshint ignore:end */
-  },
-  renderMessagesForAllTeams:function(){
-
-    var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
-
-    /* jshint ignore:start */
-    return (
-      <Layout
-        notification={this.state.notification}
-        onDismissNotification={this.handleNotificationDismissed}>
-        {navBar}
-        <TeamNotes
-          notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
-          onThreadSelected={this.handleShowConversationThread} />
-      </Layout>
-      );
-    /* jshint ignore:end */
-  },
-  renderMessageThread:function(){
-    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
-
-    var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
-
-    return (
-      /* jshint ignore:start */
-      <Layout
-        notification={this.state.notification}
-        onDismissNotification={this.handleNotificationDismissed}>
-      {navBar}
-      <NoteThread messages={this.state.selectedThread} />
-      <MessageForm
-        messagePrompt='Type a comment here ...'
-        btnMessage='Post'
-        onFooterAction={this.handleAddingToConversation} />
-      </Layout>
-      /* jshint ignore:end */
-      );
-  },
-
-  renderLoginLayout:function(){
-    return (
-      /* jshint ignore:start */
-      <Layout
-        notification={this.state.notification}
-        onDismissNotification={this.handleNotificationDismissed}>
-        <Login
-          onLoginSuccess={this.handleLoginSuccess}
-          login={app.api.user.login.bind()} />
-      </Layout>
-      /* jshint ignore:end */
-      );
-  },
-
-  renderStartupLayout:function(){
-
-    var navBar = this.renderNavBar('','logout-icon',this.handleLogout);
-
-    return (
-      /* jshint ignore:start */
-      <Layout
-        notification={{message : 'Loading ...', type : 'alert'}} >
-        {navBar}
-      </Layout>
-      /* jshint ignore:end */
-      );
-  },
-
-  renderContent:function(){
     var routeName = this.state.routeName;
 
     if(this.state.authenticated){
@@ -339,9 +228,147 @@ var ClamShellApp = React.createClass({
       }
     }
     if(app.routes.login === routeName && this.state.setupComplete){
-      return this.renderLoginLayout();
+      return this.renderLogin();
     }
-    return this.renderStartupLayout();
+    return this.renderStartup();
+  },
+
+  renderNavBar:function(title, icon, actionHandler){
+    /* jshint ignore:start */
+    return (
+      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler} />
+    );
+    /* jshint ignore:end */
+  },
+
+  renderNavBarWithTeamPicker:function(title, icon, actionHandler){
+    return (
+      /* jshint ignore:start */
+      <ListNavBar title={title} actionIcon={icon} onNavBarAction={actionHandler}>
+        <TeamPicker loggedInUser={this.state.loggedInUser} onUserPicked={this.handleUserChanged} />
+      </ListNavBar>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderMessagesForSelectedTeam:function(){
+
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+
+    var navBar = this.renderNavBar(careTeamName,'logout-icon',this.handleLogout);
+
+    if(this.userHasTeams()){
+      navBar = this.renderNavBarWithTeamPicker(careTeamName,'back-icon',this.handleBack);
+    }
+
+    var content = (
+      /* jshint ignore:start */
+      <div className='messages-team'>
+        <MessageForm
+          messagePrompt='Type a new note here ...'
+          btnMessage='Post'
+          onFooterAction={this.handleStartConversation} />
+        <TeamNotes
+          notes={this.state.selectedUser.notes}
+          onThreadSelected={this.handleShowConversationThread} />
+      </div>
+      /* jshint ignore:end */
+    );
+
+    return this.renderLayout(content, {header: navBar});
+  },
+
+  renderMessagesForAllTeams:function(){
+    var navBar = this.renderNavBarWithTeamPicker('All Notes','logout-icon',this.handleLogout);
+
+    var content = (
+      /* jshint ignore:start */
+      <div className='messages-all'>
+        <TeamNotes
+          notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
+          onThreadSelected={this.handleShowConversationThread} />
+      </div>
+      /* jshint ignore:end */
+    );
+
+    return this.renderLayout(content, {header: header});
+  },
+
+  renderMessageThread:function(){
+    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+
+    var navBar = this.renderNavBar(careTeamName,'back-icon',this.handleBack);
+
+    var content = (
+      /* jshint ignore:start */
+      <div className='messages-thread'>
+        <NoteThread messages={this.state.selectedThread} />
+        <MessageForm
+          messagePrompt='Type a comment here ...'
+          btnMessage='Post'
+          onFooterAction={this.handleAddingToConversation} />
+      </div>
+      /* jshint ignore:end */
+      );
+
+    return this.renderLayout(content, {header: navBar});
+  },
+
+  renderLogin:function(){
+    var content = (
+      /* jshint ignore:start */
+      <div className='login-screen'>
+        <Login
+            onLoginSuccess={this.handleLoginSuccess}
+            login={app.api.user.login.bind()} />
+      </div>
+      /* jshint ignore:end */
+      );
+
+    return this.renderLayout(content);
+  },
+
+  renderStartup:function(){
+    var navBar = this.renderNavBar('','logout-icon',this.handleLogout);
+
+    var content;
+    /* jshint ignore:start */
+    content = (
+      <div className='startup'>
+        Loading...
+      </div>
+      );
+    /* jshint ignore:end */
+
+    return this.renderLayout(content, {header: navBar});
+  },
+
+  renderLayout:function(content, options){
+    options = options || {};
+    var header = options.header;
+    var notification = this.renderNotification();
+    var menu = this.renderMenu();
+
+    return (
+      /* jshint ignore:start */
+      <Layout
+        notification={notification}
+        header={header}
+        menu={menu}>
+        {content}
+      </Layout>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderNotification: function() {
+    // TODO
+    return null;
+  },
+
+  renderMenu: function() {
+    // TODO
+    return null;
   }
 });
 
