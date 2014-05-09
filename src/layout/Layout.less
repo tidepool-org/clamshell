@@ -51,6 +51,20 @@
   background: @gray-bg-light;
 }
 
+// Footer
+// ====================================
+
+.layout-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: @zindex-footer;
+
+  height: @footer-height;
+  line-height: @footer-height;
+}
+
 // Content
 // ====================================
 
@@ -86,4 +100,8 @@
 
 .layout-content-has-header {
   top: @header-height;
+}
+
+.layout-content-has-footer {
+  bottom: @footer-height;
 }

@@ -39,13 +39,10 @@ var Login = React.createClass({
       message: ''
     };
   },
-  renderLogos: function(){
+  renderLogo: function(){
     /* jshint ignore:start */
     return (
-      <div className='login-logos'>
-        <div className='login-tidepool-logo'></div>
-        <div className='login-blip-logo'></div>
-      </div>
+      <div className='login-blip-logo'></div>
     );
     /* jshint ignore:end */
   },
@@ -92,13 +89,13 @@ var Login = React.createClass({
   render: function() {
 
     var login = this.renderSignInForm();
-    var logos = this.renderLogos();
+    var logo = this.renderLogo();
     var message = this.renderMessage();
 
     return (
        /* jshint ignore:start */
       <div className='login'>
-        {logos}
+        {logo}
         {login}
         {message}
       </div>

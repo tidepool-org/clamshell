@@ -30,17 +30,22 @@ var Layout = React.createClass({
   propTypes: {
     notification: React.PropTypes.renderable,
     header: React.PropTypes.renderable,
-    menu: React.PropTypes.renderable
+    menu: React.PropTypes.renderable,
+    footer: React.PropTypes.renderable
   },
 
   render: function() {
     var notification = this.renderNotification();
     var header = this.renderHeader();
     var menu = this.renderMenu();
+    var footer = this.renderFooter();
 
     var contentClassName = 'layout-content layout-content-overflow-scroll';
     if (this.props.header) {
       contentClassName = contentClassName + ' layout-content-has-header';
+    }
+    if (this.props.footer) {
+      contentClassName = contentClassName + ' layout-content-has-footer';
     }
 
     return (
@@ -54,6 +59,7 @@ var Layout = React.createClass({
             {this.props.children}
           </div>
         </div>
+        {footer}
       </div>
       /* jshint ignore:end */
     );
@@ -101,9 +107,15 @@ var Layout = React.createClass({
     var className = [
       'layout-menu',
       'layout-content',
-      'layout-content-overflow-scroll',
-      'layout-content-has-header'
-    ].join(' ');
+      'layout-content-overflow-scroll'
+    ];
+    if (this.props.header) {
+      className.push('layout-content-has-header');
+    }
+    if (this.props.footer) {
+      className.push('layout-content-has-footer');
+    }
+    className.join(' ');
 
     return (
       /* jshint ignore:start */
@@ -111,6 +123,22 @@ var Layout = React.createClass({
         <div className='layout-content-scroll'>
           {menu}
         </div>
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderFooter: function() {
+    var footer = this.props.footer;
+
+    if (!footer) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='layout-footer'>
+        {footer}
       </div>
       /* jshint ignore:end */
     );

@@ -1,4 +1,8 @@
 /**
+ * @jsx React.DOM
+ */
+
+/**
  * Copyright (c) 2014, Tidepool Project
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -13,33 +17,24 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-@import (reference) "./core/core.less";
+'use strict';
+/* jshint unused: false */
 
-.login-screen {
-  max-width: 220px;
-  margin: auto;
-  padding-top: 40px;
-}
+var React = require('react');
 
-.startup {
-  position: absolute;
-  top: 50%;
-  margin-top: -@line-height-base/2;
-  width: 100%;
-  text-align: center;
-}
+require('./LoginFooter.less');
 
-.menu {
-  padding: 10px 20px;
-  background: @gray-bg-light;
-}
+var LoginFooter = React.createClass({
+  
+  render: function() {
+    return (
+      /* jshint ignore:start */
+      <div className='loginfooter'>
+        <div className='loginfooter-tidepool-logo'></div>
+      </div>
+      /* jshint ignore:end */
+    );
+  }
+});
 
-.menu-teampicker-instructions {
-  margin-bottom: 10px;
-}
-
-.messages-all,
-.messages-team .teamnotes,
-.messages-thread .notethread {
-  padding: 10px;
-}
+module.exports = LoginFooter;

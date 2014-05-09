@@ -45,7 +45,7 @@ var Note = React.createClass({
       /* jshint ignore:start */
       noteTeam = (
         <span className='note-title-team'>
-          <span> > {this.props.team}</span>
+          <span>{' to ' + this.props.team}</span>
         </span>
       );
       /* jshint ignore:end */

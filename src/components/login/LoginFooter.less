@@ -15,43 +15,15 @@
 
 @import (reference) "../../core/core.less";
 
-.login-blip-logo {
-  background-image: url('images/blip_logo128x128.png');
+.loginfooter {
+  text-align: center;
+}
+
+.loginfooter-tidepool-logo {
+  display: inline-block;
+
+  background-image: url('images/tidepool_logo.png');
   background-repeat: no-repeat;
-  background-position: center;
-  min-height: 128px;
-  min-width: 128px;
-
-  margin-bottom: 20px;
-}
-
-.login-form-group {
-  &:extend(.form-group all);
-}
-
-.login-form-control {
-  &:extend(.form-control all);
-}
-
-.login-form-group-checkbox {
-  &:extend(.form-group-checkbox all);
-}
-
-.login-form-action-group {
-  text-align: right;
-}
-
-.login-form-button {
-  &:extend(.btn all);
-  &:extend(.btn-primary all);
-}
-
-.login-message {
-  text-align: right;
-
-  margin-top: 10px;
-}
-
-.login-message-error {
-  color: @state-error-text;
+  min-height: 16px;
+  min-width: 145px;
 }

@@ -38,6 +38,7 @@ var Layout = require('./layout/Layout');
 var Header = require('./components/header/Header');
 var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
+var LoginFooter = require('./components/login/LoginFooter');
 var TeamPicker = require('./components/teampicker/TeamPicker');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
@@ -310,6 +311,8 @@ var ClamShellApp = React.createClass({
   },
 
   renderLogin:function(){
+    var footer = LoginFooter();
+
     var content = (
       /* jshint ignore:start */
       <div className='login-screen'>
@@ -320,7 +323,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
       );
 
-    return this.renderLayout(content);
+    return this.renderLayout(content, {footer: footer});
   },
 
   renderStartup:function(){
@@ -339,6 +342,7 @@ var ClamShellApp = React.createClass({
   renderLayout:function(content, options){
     options = options || {};
     var header = options.header;
+    var footer = options.footer;
     var notification = this.renderNotification();
     var menu = this.renderMenu();
 
@@ -347,7 +351,8 @@ var ClamShellApp = React.createClass({
       <Layout
         notification={notification}
         header={header}
-        menu={menu}>
+        menu={menu}
+        footer={footer}>
         {content}
       </Layout>
       /* jshint ignore:end */
