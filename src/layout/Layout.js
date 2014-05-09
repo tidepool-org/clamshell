@@ -115,7 +115,7 @@ var Layout = React.createClass({
     if (this.props.footer) {
       className.push('layout-content-has-footer');
     }
-    className.join(' ');
+    className = className.join(' ');
 
     return (
       /* jshint ignore:start */

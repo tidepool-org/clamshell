@@ -33,7 +33,8 @@ module.exports = function(component,app) {
       }
       component.setState({
         routeName: app.routes.login,
-        authenticated: false
+        authenticated: false,
+        showingMenu: false
       });
       return;
     }.bind(this));

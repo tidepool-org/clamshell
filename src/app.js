@@ -39,7 +39,8 @@ var Header = require('./components/header/Header');
 var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
 var LoginFooter = require('./components/login/LoginFooter');
-var TeamPicker = require('./components/teampicker/TeamPicker');
+var TeamPicker = require('./components/menu/TeamPicker');
+var LoggedInAs = require('./components/menu/LoggedInAs');
 var TeamNotes = require('./components/notes/TeamNotes');
 var NoteThread = require('./components/notes/NoteThread');
 /*jshint unused:false */
@@ -342,7 +343,7 @@ var ClamShellApp = React.createClass({
   renderLayout:function(content, options){
     options = options || {};
     var header = options.header;
-    var footer = options.footer;
+    var footer = this.renderMenuFooter() || options.footer;
     var notification = this.renderNotification();
     var menu = this.renderMenu();
 
@@ -406,6 +407,17 @@ var ClamShellApp = React.createClass({
       </div>
       /* jshint ignore:end */
     );
+  },
+
+  renderMenuFooter: function() {
+    if (!this.state.showingMenu) {
+      return null;
+    }
+
+    return LoggedInAs({
+      user: this.state.loggedInUser,
+      onLogout: this.handleLogout
+    });
   }
 });
 
