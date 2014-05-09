@@ -255,9 +255,8 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <div className='messages-team'>
         <MessageForm
-          messagePrompt='Type a new note here ...'
-          btnMessage='Post'
-          onFooterAction={this.handleStartConversation} />
+          messagePrompt='Type a new note here...'
+          onSubmit={this.handleStartConversation} />
         <TeamNotes
           notes={this.state.selectedUser.notes}
           onThreadSelected={this.handleShowConversationThread} />
@@ -301,9 +300,8 @@ var ClamShellApp = React.createClass({
       <div className='messages-thread'>
         <NoteThread messages={this.state.selectedThread} />
         <MessageForm
-          messagePrompt='Type a comment here ...'
-          btnMessage='Post'
-          onFooterAction={this.handleAddingToConversation} />
+          messagePrompt='Type a comment here...'
+          onSubmit={this.handleAddingToConversation} />
       </div>
       /* jshint ignore:end */
       );

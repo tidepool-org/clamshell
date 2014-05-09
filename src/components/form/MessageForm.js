@@ -24,61 +24,66 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-var btnDisabled = 'btn btn-default disabled';
-var btnEnabled = 'btn btn-default';
+require('./MessageForm.less');
 
-//Form for adding Comments
+// Form for creating new Notes or adding Comments
 var MessageForm = React.createClass({
+  propTypes: {
+    messagePrompt: React.PropTypes.string,
+    onSubmit: React.PropTypes.func
+  },
 
   getInitialState: function() {
-    return {btnState: btnDisabled};
+    return {
+      value: ''
+    };
   },
 
-  handleMessage: function() {
-    var messageText = this.refs.messageText.getDOMNode().value.trim();
-    this.props.onFooterAction({text: messageText});
-    this.refs.messageText.getDOMNode().value = '';
-    this.setState({btnState: btnDisabled});
-    return false;
+  handleChange: function(e) {
+    this.setState({value: e.target.value});
   },
 
-  handleChange: function() {
-    var messageText = this.refs.messageText.getDOMNode().value.trim();
-
-    if(messageText.length > 0){
-      this.setState({btnState: btnEnabled});
-      return false;
+  handleSubmit: function(e) {
+    if (e) {
+      e.preventDefault();
     }
-    this.setState({btnState: btnDisabled});
-    return false;
+
+    var submit = this.props.onSubmit;
+    if (submit) {
+      submit({text: this.state.value});
+    }
+
+    this.setState({value: ''});
   },
 
-  renderMessageForm : function(){
-    return (
-      /* jshint ignore:start */
-      <form className='navbar-form'>
-        <div className='input-group'>
-          <textarea type='textarea' rows='1' className='form-control' ref='messageText' onChange={this.handleChange} placeholder={this.props.messagePrompt}/>
-          <span className='input-group-btn'>
-            <button type='submit' ref='sendBtn' className={this.state.btnState} onClick={this.handleMessage}>{this.props.btnMessage}</button>
-          </span>
-        </div>
-      </form>
-      /* jshint ignore:end */
-    );
+  isButtonDisabled: function() {
+    var value = this.state.value;
+    return !(value && value.length);
   },
 
   render: function() {
-
-    var messageForm  = this.renderMessageForm();
-
-    return this.transferPropsTo(
+    return (
       /* jshint ignore:start */
-      <nav className='messageform navbar navbar-inverse'>
-        {messageForm}
-      </nav>
+      <form className='messageform'>
+        <div className='messageform-textarea-wrapper'>
+          <textarea
+            type='textarea'
+            rows='1'
+            className='messageform-textarea'
+            ref='messageText'
+            placeholder={this.props.messagePrompt}
+            value={this.state.value}
+            onChange={this.handleChange}/>
+        </div>
+        <button
+          type='submit'
+          ref='sendBtn'
+          className='messageform-button'
+          disabled={this.isButtonDisabled()}
+          onClick={this.handleSubmit}>Post</button>
+      </form>
       /* jshint ignore:end */
-      );
+    );
   }
 });
 
