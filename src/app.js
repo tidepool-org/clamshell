@@ -35,6 +35,7 @@ var router = require('./appRouter')();
 
 /*jshint unused:true */
 var Layout = require('./layout/Layout');
+var Notification = require('./components/notification/Notification');
 var Header = require('./components/header/Header');
 var MessageForm = require('./components/form/MessageForm');
 var Login = require('./components/login/Login');
@@ -361,8 +362,14 @@ var ClamShellApp = React.createClass({
   },
 
   renderNotification: function() {
-    // TODO
-    return null;
+    if (!this.state.notification) {
+      return null;
+    }
+
+    return Notification({
+      notification: this.state.notification,
+      onClose: this.handleNotificationDismissed
+    });
   },
 
   renderHeader: function(props) {

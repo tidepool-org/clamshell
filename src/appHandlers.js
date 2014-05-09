@@ -72,7 +72,7 @@ module.exports = function(component,app) {
    * @param {Error} error - The error that has occured to be shown.
    */
   component.handleError =function(error){
-    return component.handleNotification(error,'danger');
+    return component.handleNotification(error,'error');
   };
 
   /**
