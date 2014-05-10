@@ -33,7 +33,8 @@ module.exports = function(grunt) {
         },
         my_target: {
           files: {
-            'app_build/clamshell.min.js': ['app_build/clamshell.js']
+            'app_build/clamshell.min.js': 'app_build/clamshell.js',
+            'app_build/superagent.min.js': 'app_build/superagent.js'
           }
         }
       },
@@ -106,6 +107,14 @@ module.exports = function(grunt) {
             'app_build/index.html': ['index.html']
           }
         }
+      },
+      copy: {
+        vendor: {
+          files: {
+            'app_build/superagent.js': 'node_modules/superagent/superagent.js',
+            'app_build/fastclick.min.js': 'node_modules/fastclick/build/fastclick.min.js',
+          }
+        }
       }
     });
 
@@ -113,6 +122,7 @@ module.exports = function(grunt) {
 
   // Load the plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-shell-spawn');
   grunt.loadNpmTasks('grunt-mocha-test');
@@ -121,11 +131,11 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('default', ['test']);
   // Standard tasks
-  grunt.registerTask('build-dev', ['shell:buildApp','template:parseDev']);
-  grunt.registerTask('build-prod', ['shell:buildApp','uglify','template:parseProd']);
+  grunt.registerTask('build-dev', ['shell:buildApp','template:parseDev','copy']);
+  grunt.registerTask('build-prod', ['shell:buildApp','template:parseProd','copy','uglify']);
   grunt.registerTask('parse-config', ['template:parseConfig']);
   grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
-  grunt.registerTask('develop', ['template:parseDev', 'template:parseConfig', 'shell:watchApp']);
+  grunt.registerTask('develop', ['template:parseDev','template:parseConfig','copy','shell:watchApp']);
   grunt.registerTask('server', ['shell:runApp']);
   grunt.registerTask('test', ['jshint','shell:testBuild','shell:testRun']);
 };

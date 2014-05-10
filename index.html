@@ -23,14 +23,15 @@
   <body>
     <div id="app">Loading app...</div>
 
-    <script type="text/javascript" src="app_build/appConfig.js"></script>
-    <script type="text/javascript" src="../thirdparty/superagent/superagent.js"></script>
-    <script type="text/javascript" src="../thirdparty/fastclick/fastclick.min.js"></script>
+    <script type="text/javascript" src="appConfig.js"></script>
+    <script type="text/javascript" src="fastclick.min.js"></script>
 
     <% if (production) { %>
-    <script type="text/javascript" src="app_build/clamshell.min.js"></script>
+    <script type="text/javascript" src="superagent.min.js"></script>
+    <script type="text/javascript" src="clamshell.min.js"></script>
     <% } else { %>
-    <script type="text/javascript" src="app_build/clamshell.js"></script>
+    <script type="text/javascript" src="superagent.js"></script>
+    <script type="text/javascript" src="clamshell.js"></script>
     <% }  %>
   </body>
 </html>

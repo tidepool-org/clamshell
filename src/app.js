@@ -24,6 +24,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 // Attach React to window to activate "React DevTools" Chrome extension
 window.React = React;
+var _ = require('lodash');
 var bows = require('bows');
 
 require('./core/core.less');

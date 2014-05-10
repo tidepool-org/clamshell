@@ -68,12 +68,7 @@ if(envConfig.discovery){
   setupLocal();
 }
 
-app.use('/app_build', express.static('app_build'));
-app.use('/thirdparty', express.static('thirdparty'));
-
-app.get('/', function(req,res) {
-  res.sendfile('app_build/index.html');
-});
+app.use(express.static('app_build'));
 
 app.listen(servicePort, function() {
   log.info('clamshell server started on port', servicePort);
