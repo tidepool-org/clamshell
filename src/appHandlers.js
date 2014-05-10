@@ -159,7 +159,10 @@ module.exports = function(component,app) {
       }
       var userToUpdate = component.state.selectedUser;
       userToUpdate.notes.unshift(addedNote);
-      component.setState({ selectedUser : userToUpdate });
+      component.setState({
+        selectedUser: userToUpdate,
+        lastNoteAdded: addedNote
+      });
     }.bind(this));
   };
 
@@ -187,7 +190,10 @@ module.exports = function(component,app) {
         return component.handleError(error);
       }
       thread.push(addedComment);
-      component.setState({selectedThread: thread});
+      component.setState({
+        selectedThread: thread,
+        lastCommentAdded: addedComment
+      });
     }.bind(this));
 
   };

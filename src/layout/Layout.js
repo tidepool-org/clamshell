@@ -54,7 +54,7 @@ var Layout = React.createClass({
         {notification}
         {header}
         {menu}
-        <div className={contentClassName}>
+        <div className={contentClassName} ref='content'>
           <div className='layout-content-scroll'>
             {this.props.children}
           </div>
@@ -119,7 +119,7 @@ var Layout = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className={className}>
+      <div className={className} ref='menu'>
         <div className='layout-content-scroll'>
           {menu}
         </div>
@@ -142,6 +142,16 @@ var Layout = React.createClass({
       </div>
       /* jshint ignore:end */
     );
+  },
+
+  scrollToContentTop: function() {
+    var node = this.refs.content.getDOMNode();
+    node.scrollTop = 0;
+  },
+
+  scrollToContentBottom: function() {
+    var node = this.refs.content.getDOMNode();
+    node.scrollTop = node.scrollHeight;
   }
 });
 

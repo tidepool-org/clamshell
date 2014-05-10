@@ -73,7 +73,9 @@ var ClamShellApp = React.createClass({
       selectedUser : null,
       selectedThread : null,
       notification : null,
-      showingMenu : false
+      showingMenu : false,
+      lastNoteAdded: null,
+      lastCommentAdded: null
     };
   },
 
@@ -177,6 +179,62 @@ var ClamShellApp = React.createClass({
       }, this.showUserData);
     }.bind(this));
 
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    var state = this.state;
+
+    if (this.changedRoute(prevState, state)) {
+      app.log('changed route, scroll to top');
+      this.scrollToContentTop();
+    }
+
+    if (this.newNoteAdded(prevState, state)) {
+      app.log('new note added, scroll to top');
+      this.scrollToContentTop();
+    }
+
+    if (this.newCommentAdded(prevState, state)) {
+      app.log('new comment added, scroll to bottom');
+      this.scrollToContentBottom();
+    }
+  },
+
+  scrollToContentTop: function() {
+    // HACK: on iOS Safari, keyboard needs to disappear for scroll positioning
+    // to work as expected, so use `setTimeout` to not call this immediately
+    // (timeout value can be very small, just need to postpone in JS event loop)
+    setTimeout(this.refs.layout.scrollToContentTop, 10);
+  },
+
+  scrollToContentBottom: function() {
+    setTimeout(this.refs.layout.scrollToContentBottom, 10);
+  },
+
+  changedRoute: function(prevState, state) {
+    return (state.routeName !== prevState.routeName);
+  },
+
+  newNoteAdded: function(prevState, state) {
+    var prevAddedNote = prevState.lastNoteAdded  || {};
+    var addedNote = state.lastNoteAdded  || {};
+
+    if (addedNote.id !== prevAddedNote.id) {
+      return true;
+    }
+
+    return false;
+  },
+
+  newCommentAdded: function(prevState, state) {
+    var prevAddedComment = prevState.lastCommentAdded || {};
+    var addedComment = state.lastCommentAdded  || {};
+
+    if (addedComment.id !== prevAddedComment.id) {
+      return true;
+    }
+
+    return false;
   },
 
   /**
@@ -354,7 +412,8 @@ var ClamShellApp = React.createClass({
         notification={notification}
         header={header}
         menu={menu}
-        footer={footer}>
+        footer={footer}
+        ref='layout'>
         {content}
       </Layout>
       /* jshint ignore:end */
