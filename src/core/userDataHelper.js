@@ -21,7 +21,9 @@ var moment = require('moment');
 
 var userDataHelper = {
   getParentMessageId: function(thread) {
-    var parentNote = _.findWhere(thread, { parentmessage : null });
+    var parentNote = _.findWhere(thread, function(message) {
+      return message.parentmessage == null;
+    });
     return parentNote.id;
   },
   getThread: function(team, parentmessageId) {
