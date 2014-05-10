@@ -109,11 +109,12 @@ module.exports = function(grunt) {
         }
       },
       copy: {
-        vendor: {
-          files: {
-            'app_build/superagent.js': 'node_modules/superagent/superagent.js',
-            'app_build/fastclick.min.js': 'node_modules/fastclick/build/fastclick.min.js',
-          }
+        all: {
+          files: [
+            {dest: 'app_build/superagent.js', src: 'node_modules/superagent/superagent.js'},
+            {dest: 'app_build/fastclick.min.js', src: 'node_modules/fastclick/build/fastclick.min.js'},
+            {expand: true, cwd: 'images/', src: ['**'], dest: 'app_build/'}
+          ]
         }
       }
     });
