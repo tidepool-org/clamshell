@@ -66,8 +66,8 @@
 
 @header-icon-size: 32px;
 @header-icon-back-size: 20px;
-@header-icon-open-menu-size: 12px;
-@header-icon-close-menu-size: 12px;
+@header-icon-down-size: 12px;
+@header-icon-up-size: 12px;
 
 .header-item-with-icon {
   // Height spills over for some reason with icons
@@ -95,7 +95,7 @@
 }
 
 .header-icon-back {
-  background: url('images/back32x32.png');
+  background-image: url('images/back-40x40.png');
   background-size: @header-icon-back-size;
   width: @header-icon-back-size;
   height: @header-icon-back-size;
@@ -103,21 +103,21 @@
 }
 
 .header-icon-logo {
-  background: url('images/blip_logo32x32.png');
+  background-image: url('images/blip-logo-64x64.png');
 }
 
-.header-icon-open-menu {
-  background: url('images/dropdown32x32.png');
-  background-size: @header-icon-open-menu-size;
-  width: @header-icon-open-menu-size;
-  height: @header-icon-open-menu-size;
-  margin: (@header-action-size - @header-icon-open-menu-size)/2;
+.header-icon-down {
+  background-image: url('images/down-24x24.png');
+  background-size: @header-icon-down-size;
+  width: @header-icon-down-size;
+  height: @header-icon-down-size;
+  margin: (@header-action-size - @header-icon-down-size)/2;
 }
 
-.header-icon-close-menu {
-  background: url('images/dropdown32x32.png');
-  background-size: @header-icon-close-menu-size;
-  width: @header-icon-close-menu-size;
-  height: @header-icon-close-menu-size;
-  margin: (@header-action-size - @header-icon-close-menu-size)/2;
+.header-icon-up {
+  background-image: url('images/up-24x24.png');
+  background-size: @header-icon-up-size;
+  width: @header-icon-up-size;
+  height: @header-icon-up-size;
+  margin: (@header-action-size - @header-icon-up-size)/2;
 }

@@ -49,11 +49,12 @@ a.note {
   float: left;
   margin-right: @note-spacing-unit;
 
-  background-image: url('images/profile50x50.png');
+  background-image: url('images/profile-100x100.png');
   background-repeat: no-repeat;
   background-size: @note-picture-large-size;
   width: @note-picture-large-size;
   height: @note-picture-large-size;
+  border-radius: @note-picture-large-size;
 }
 
 @note-picture-small-size: 32px;
@@ -61,11 +62,12 @@ a.note {
   float: left;
   margin-right: @note-spacing-unit;
 
-  background-image: url('images/profile32x32.png');
+  background-image: url('images/profile-64x64.png');
   background-repeat: no-repeat;
   background-size: @note-picture-small-size;
   width: @note-picture-small-size;
   height: @note-picture-small-size;
+  border-radius: @note-picture-small-size;
 }
 
 .note-details {
@@ -103,10 +105,16 @@ a.note {
   text-align: right;
 }
 
+@note-comments-icon-size: 12px;
 .note-comments-text {
   display: inline-block;
 
-  background-image: url('images/comment16x16.png');
+  background-image: url('images/comment-24x24.png');
   background-repeat: no-repeat;
-  padding-left: 20px;
+  background-size: @note-comments-icon-size;
+  // Center icon vertically
+  background-position: 0px (@line-height-base - @note-comments-icon-size)/2;
+
+  // Leave room for icon
+  padding-left: @note-comments-icon-size + 4px;
 }

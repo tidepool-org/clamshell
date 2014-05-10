@@ -443,13 +443,13 @@ var ClamShellApp = React.createClass({
         // Hide left action when menu is open
         leftIcon: null,
         onLeftAction: null,
-        rightIcon: 'close-menu',
+        rightIcon: 'up',
         onRightAction: this.handleCloseMenu
       });
     }
     else {
       _.assign(props, {
-        rightIcon: 'open-menu',
+        rightIcon: 'down',
         onRightAction: this.handleOpenMenu
       });
     }

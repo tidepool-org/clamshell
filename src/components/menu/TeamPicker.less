@@ -50,14 +50,15 @@ a.teampicker-user {
   float: left;
   margin-right: @teampicker-user-spacing-unit;
 
-  background-image: url('images/profile32x32.png');
+  background-image: url('images/profile-64x64.png');
   background-repeat: no-repeat;
   background-size: @teampicker-user-picture-size;
   width: @teampicker-user-picture-size;
   height: @teampicker-user-picture-size;
+  border-radius: @teampicker-user-picture-size;
 }
 
-@teampicker-user-select-icon-size: 12px;
+@teampicker-user-select-icon-size: 20px;
 @teampicker-user-select-icon-horizontal-spacing: @teampicker-user-spacing-unit;
 
 .teampicker-user-details {
@@ -87,8 +88,8 @@ a.teampicker-user {
   right: @teampicker-user-select-icon-horizontal-spacing;
   margin-top: -(@teampicker-user-select-icon-size/2);
 
-  // TODO: replace with right arrow
-  background: @gray-bg-dark;
+  background-image: url('images/right-40x40.png');
+  background-repeat: no-repeat;
   background-size: @teampicker-user-select-icon-size;
   width: @teampicker-user-select-icon-size;
   height: @teampicker-user-select-icon-size;
