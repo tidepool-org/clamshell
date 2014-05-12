@@ -16,22 +16,38 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
-var NoteThread = require('../../build/components/notes/NoteThread');
-
 var helpers = require('../lib/helpers');
+var NoteThread = require('../../src/components/notes/NoteThread');
 
-var loggedInUserData = require('../../demo/data').loggedInUser;
-var notes = loggedInUserData.teams[0].notes;
+var messages = [
+  {
+    id: '1',
+    parentmessage: null,
+    userid: '1',
+    groupid: '2',
+    user: {fullName: 'Paul Senter'},
+    team: {fullName: 'Anne Senter'},
+    timestamp: '2014-03-24T16:00:00+00:00',
+    messagetext: 'Hello'
+  },
+  {
+    id: '2',
+    parentmessage: '1',
+    userid: '3',
+    groupid: '2',
+    user: {fullName: 'Melissa Senter'},
+    team: {fullName: 'Anne Senter'},
+    timestamp: '2014-03-24T17:00:00+00:00',
+    messagetext: 'Foo'
+  }
+];
 
-describe('NoteThread component', function() {
+describe('NoteThread', function() {
   var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(
-     NoteThread({messages:notes})
+     NoteThread({messages: messages})
     );
   });
 
@@ -47,20 +63,18 @@ describe('NoteThread component', function() {
     expect(component.refs.messageThread).to.exist;
   });
 
-  it('the messageThread will have has many items as there are messages', function() {
-
+  it('should have as many items as there are messages', function() {
     var numMessageThreadItems = component.refs.messageThread.props.children.length;
-    var numOfMessages = component.props.messages.length;
+    var numOfMessages = messages.length;
 
     expect(numMessageThreadItems).to.equal(numOfMessages);
   });
 
-  it('message will have a rootNote', function() {
+  it('should have a root note', function() {
     expect(component.refs.rootNote).to.exist;
   });
 
-  it('message will have a commentNote', function() {
+  it('should have a comment note', function() {
     expect(component.refs.commentNote).to.exist;
   });
-
 });

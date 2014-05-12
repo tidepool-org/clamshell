@@ -1,0 +1,107 @@
+/**
+ * Copyright (c) 2014, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ */
+
+@import (reference) "../core/core.less";
+
+// Notification
+// ====================================
+
+.layout-notification {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: @zindex-notification;
+
+  padding: 10px;
+}
+
+// Header
+// ====================================
+
+.layout-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: @zindex-header;
+
+  height: @header-height;
+  line-height: @header-height;
+}
+
+// Menu
+// ====================================
+
+.layout-menu {
+  z-index: @zindex-menu;
+
+  background: @gray-bg-light;
+}
+
+// Footer
+// ====================================
+
+.layout-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: @zindex-footer;
+
+  height: @footer-height;
+  line-height: @footer-height;
+}
+
+// Content
+// ====================================
+
+.layout-content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  overflow: hidden;
+
+  width: auto;
+  height: auto;
+}
+
+// Inner element that scrolls
+.layout-content-scroll {}
+
+.layout-content-overflow-scroll {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+
+  .layout-content-scroll {
+    position: static;
+    height: 100%;
+    // fix iOS bug where relative children of scroller disapear while scrolling
+    // see: http://stackoverflow.com/questions/9807620/ipad-safari-scrolling-causes-html-elements-to-disappear-and-reappear-with-a-dela
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+}
+
+.layout-content-has-header {
+  top: @header-height;
+}
+
+.layout-content-has-footer {
+  bottom: @footer-height;
+}

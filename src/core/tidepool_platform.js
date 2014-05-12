@@ -18,7 +18,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var migrations = require('./apimigrations');
-var _ = require('lodash');
 
 module.exports = function(api, userSchema, platform, config) {
   var async = require('async');

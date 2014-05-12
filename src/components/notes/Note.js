@@ -23,6 +23,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./Note.less');
+
 var Note = React.createClass({
 
   propTypes: {
@@ -32,26 +34,25 @@ var Note = React.createClass({
     note : React.PropTypes.string,
     team : React.PropTypes.string,
     showCommentLink : React.PropTypes.bool,
-    onGroupSelected : React.PropTypes.func,
     onNoteSelected : React.PropTypes.func
   },
 
-  renderHeading : function(){
+  renderTitle : function(){
     var noteTeam;
     //show if they differ - there is no point in showing My Group > MyGroup
     if(this.props.team && this.props.team !== this.props.author){
       /* jshint ignore:start */
       noteTeam = (
-        <span className='note-for-team'>
-          <span> > {this.props.team}</span>
+        <span className='note-title-team'>
+          <span>{' to ' + this.props.team}</span>
         </span>
       );
       /* jshint ignore:end */
     }
     /* jshint ignore:start */
     return (
-      <div>
-        <strong ref='messageAuthorAndGroup' className='note-header media-heading'> {this.props.author}</strong>
+      <div ref='messageAuthorAndGroup' className='note-title'>
+        <span className='note-title-author'>{this.props.author}</span>
         {noteTeam}
       </div>
     );
@@ -62,38 +63,70 @@ var Note = React.createClass({
     if(this.props.showCommentLink){
       return (
         /* jshint ignore:start */
-        <div>
-          <span ref='showMessageThread' className='small pull-right note-comment'>Comment</span>
+        <div ref='showMessageThread' className='note-comments'>
+          <div className='note-comments-text'>Comment</div>
         </div>
         /* jshint ignore:end */
       );
     }
   },
 
-  render: function() {
-
+  renderNoteContent: function() {
+    var noteTitle = this.renderTitle();
     var commentLink = this.renderCommentLink();
-    var noteHeading = this.renderHeading();
-    var className = 'note media';
-    if (this.props.onNoteSelected) {
-      className = className + ' note-clickable';
-    }
 
     return this.transferPropsTo(
       /* jshint ignore:start */
-      <div className={className} onClick={this.props.onNoteSelected}>
-        <div ref='imgColumn' className='media-object pull-left'>
-          <div ref='authorImage' className={this.props.image}/>
-        </div>
-        <div ref='detailColumn' className='media-body'>
-          {noteHeading}
-          <span ref='messageWhen' className='small note-when'>{this.props.when}</span>
-          <p ref='messageText' className='note-message'>{this.props.note}</p>
+      <div className='note-content'>
+        <div ref='imgColumn' className={'note-picture note-picture-' + this.props.image}></div>
+        <div ref='detailColumn' className='note-details'>
+          <div className='note-header'>
+            {noteTitle}
+            <div ref='messageWhen' className='note-timestamp'>{this.props.when}</div>
+          </div>
+          <div ref='messageText' className='note-text'>{this.props.note}</div>
           {commentLink}
         </div>
       </div>
       /* jshint ignore:end */
     );
+  },
+
+  render: function() {
+    var className = 'note';
+
+    var note = this.renderNoteContent();
+
+    var onNoteSelected = this.props.onNoteSelected;
+    if (onNoteSelected) {
+      var handleClick = function(e) {
+        if (e) {
+          e.preventDefault();
+        }
+        onNoteSelected();
+      };
+
+      className = className + ' note-link';
+
+      /* jshint ignore:start */
+      note = (
+        <a href='' className={className} onClick={handleClick}>
+          {note}
+        </a>
+      );
+      /* jshint ignore:end */
+    }
+    else {
+      /* jshint ignore:start */
+      note = (
+        <div className={className}>
+          {note}
+        </div>
+      );
+      /* jshint ignore:end */
+    }
+
+    return note;
   }
 });
 

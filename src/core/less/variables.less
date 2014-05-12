@@ -1,0 +1,84 @@
+/**
+ * Copyright (c) 2014, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ */
+
+// Colors
+// ====================================
+
+@gray-text-dark:         #777;
+@gray-text-light:        #aaa;
+// The original text grays are a little light for font-weight 300
+// @gray-text-dark:         #989897;
+// @gray-text-light:        #c6c6c5;
+
+@gray-bg-dark:           #e6e6e5;
+@gray-bg-light:          #f7f7f8;
+@gray-border-light:      #eee;
+@gray-border-dark:       #b2b2b2;
+
+@blue-green-dark:        #155e63;
+@blue-green:             #6ac1d2;
+@blue-green-light:       #b4e0e8;
+
+@blue-light:             #79d0f2;
+
+// Scaffolding
+// ====================================
+
+@body-bg:                @gray-bg-light;
+@text-color:             @gray-text-dark;
+
+@link-color:             @blue-green;
+@link-hover-color:       darken(@link-color, 15%);
+
+// Typography
+// ====================================
+
+@font-family-base:       "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-weight-base:       300;
+@font-size-base:         13px;
+@line-height-base:       18px;
+
+@font-size-small:        11px;
+@font-size-medium:       15px;
+@font-size-large:        17px;
+
+// Header & Footer
+// ====================================
+
+@header-height:          44px;
+@footer-height:          @header-height;
+
+// Notification states
+// ====================================
+
+@state-success-text:             #3c763d;
+@state-success-bg:               #dff0d8;
+@state-success-border:           darken(spin(@state-success-bg, -10), 5%);
+
+@state-alert-text:               #8a6d3b;
+@state-alert-bg:                 #fcf8e3;
+@state-alert-border:             darken(spin(@state-alert-bg, -10), 5%);
+
+@state-error-text:               #a94442;
+@state-error-bg:                 #f2dede;
+@state-error-border:             darken(spin(@state-error-bg, -10), 5%);
+
+// Z-index master list
+// ====================================
+
+@zindex-menu:                1010;
+@zindex-header:              1020;
+@zindex-footer:              1020;
+@zindex-notification:        1030;

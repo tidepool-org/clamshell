@@ -16,13 +16,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-var React = require('react');
-
-var Note = require('../../build/components/notes/Note');
-
 var helpers = require('../lib/helpers');
+var Note = require('../../src/components/notes/Note');
 
 var testGroupName = 'My Test Group';
 var testAuthor = 'Jamie';
@@ -88,19 +83,11 @@ describe('Note', function() {
   });
 
   it('should show link section when it is set',function(){
-    var note = new Note({
-      name : testGroupName,
-      author : testAuthor,
-      note : testNote,
-      when : testWhenTheLatestNoteOccured,
+    component.setProps({
       showCommentLink : true
     });
 
-    var testContainer = document.createElement('div');
-    document.documentElement.appendChild(testContainer);
-    React.renderComponent(note, testContainer);
-
-    expect(note.refs.showMessageThread).to.exist;
+    expect(component.refs.showMessageThread).to.exist;
   });
 
 });

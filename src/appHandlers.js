@@ -33,7 +33,8 @@ module.exports = function(component,app) {
       }
       component.setState({
         routeName: app.routes.login,
-        authenticated: false
+        authenticated: false,
+        showingMenu: false
       });
       return;
     }.bind(this));
@@ -45,12 +46,24 @@ module.exports = function(component,app) {
   component.handleBack =function(){
     var previousRoute = component.state.previousRoute;
     var currentRoute = component.state.routeName;
-    
+
     if(!previousRoute || previousRoute === currentRoute){
-      
+
       previousRoute = app.routes.messagesForAllTeams;
     }
     component.setState({routeName:previousRoute});
+  };
+
+  component.handleOpenMenu = function() {
+    // Don't try to render if nothing to show
+    if (!component.state.loggedInUser) {
+      return;
+    }
+    component.setState({showingMenu:true});
+  };
+
+  component.handleCloseMenu = function() {
+    component.setState({showingMenu:false});
   };
 
   /**
@@ -59,7 +72,7 @@ module.exports = function(component,app) {
    * @param {Error} error - The error that has occured to be shown.
    */
   component.handleError =function(error){
-    return component.handleNotification(error,'danger');
+    return component.handleNotification(error,'error');
   };
 
   /**
@@ -146,7 +159,10 @@ module.exports = function(component,app) {
       }
       var userToUpdate = component.state.selectedUser;
       userToUpdate.notes.unshift(addedNote);
-      component.setState({ selectedUser : userToUpdate });
+      component.setState({
+        selectedUser: userToUpdate,
+        lastNoteAdded: addedNote
+      });
     }.bind(this));
   };
 
@@ -174,7 +190,10 @@ module.exports = function(component,app) {
         return component.handleError(error);
       }
       thread.push(addedComment);
-      component.setState({selectedThread: thread});
+      component.setState({
+        selectedThread: thread,
+        lastCommentAdded: addedComment
+      });
     }.bind(this));
 
   };
@@ -194,7 +213,8 @@ module.exports = function(component,app) {
     component.setState({
       routeName : app.routes.messagesForSelectedTeam,
       selectedUser : userToDisplay,
-      previousRoute : component.state.routeName
+      previousRoute : component.state.routeName,
+      showingMenu : false
     });
   };
 };

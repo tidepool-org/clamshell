@@ -15,82 +15,209 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
 */
 
-var data = {
-	loggedInUser : {
-		userid : 'user-id-123',
-		profile : { fullName: 'Foo A really long long long last name',shortName:'Foo'},
-		notes : [],//has none
-		teams : []
+var _ = require('lodash');
+
+// Users
+// ====================================
+
+var userCount = 0;
+
+function nextUserId() {
+	userCount = userCount + 1;
+	return userCount.toString();
+}
+
+var users = {
+	'Paul': {
+		userid: nextUserId(),
+		profile: {fullName: 'Paul Senter', shortName: 'Paul'}
+	},
+	'Melissa': {
+		userid: nextUserId(),
+		profile: {fullName: 'Melissa Senter', shortName: 'Melissa'}
+	},
+	'Anne': {
+		userid: nextUserId(),
+		profile: {fullName: 'Anne Senter', shortName: 'Anne'}
+	},
+	'Dr. Jona': {
+		userid: nextUserId(),
+		profile: {fullName: 'Dr. Jona', shortName: 'Dr. Jona'}
+	},
+	'Charles': {
+		userid: nextUserId(),
+		profile: {fullName: 'Charles West', shortName: 'Charles'}
 	}
 };
 
-/* Just the one team*/
-data.loggedInUser.teams =
-	[{
-		userid : 'user-id-456',
-		profile : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-		notes : [
-			{
-				id : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				parentmessage : null,
-				userid : 'user-id-456',
-				groupid : 'user-id-456',
-				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				timestamp : '2013-12-22T23:07:40+00:00',
-				messagetext : 'There is a bit of pressure on in the lead up to the holidays, I am finding even a bit of excerise each morning helps with the stress '
-			},
-			{
-				id : '72428a86-b1c8-41cd-8d62-31b57128d590',
-				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				userid : 'user-id-456',
-				groupid : 'user-id-456',
-				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				timestamp : '2013-12-24T23:07:40+00:00',
-				messagetext : 'Will try and apply my stress / life balance measures to xmas day tomorrow and see how it goes.'
-			},
-			{
-				id : '1a4a8a93-cc02-43ba-acd6-4edb6c5eadf9',
-				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				userid : 'user-id-456',
-				groupid : 'user-id-456',
-				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				timestamp : '2013-12-25T23:07:40+00:00',
-				messagetext : 'I have struggled to resist the temptations of Christmas but did go for a ride early in the day that help to balance things out.'
-			},
-			{
-				id : 'bd3de6e4-d805-4ca7-a3b9-2e0eb4e221ca',
-				parentmessage : '9233c2ae-7bad-41f5-9295-e73f0437295b',
-				userid : 'user-id-123', //Doc
-				groupid : 'user-id-456',
-				user : {fullName: 'Foo A really long long long last name',shortName:'Foo'},
-				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				timestamp : '2014-01-04T23:07:40+00:00',
-				messagetext : 'It sounds like you coped well over the Christmas / New Years period given the temptations'
-			},
-			{
-				id : '070159bf-bd33-4998-b874-6b9c2bafe7fb',
-				userid : 'user-id-456',
-				parentmessage : null,
-				groupid : 'user-id-456',
-				user : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				timestamp : '2014-01-05T23:07:40+00:00',
-				messagetext : 'Big hypo yesterday. I went for a longer than normal ride. I ate well during but didn\'t have lunch until late after the ride. Maybe a good snack just after???'
-			},
-			{
-				id : 'bd3de6e4-d234-4ca7-a3b9-2e0eb4e999xe',
-				parentmessage : null,
-				userid : 'user-id-123', //Doc
-				groupid : 'user-id-456',
-				user : {fullName: 'Foo A really long long long last name',shortName:'Foo'},
-				team : {fullName:'Funky The Type One Diabetic',shortName:'Funky'},
-				timestamp : '2014-01-08T23:07:40+00:00',
-				messagetext : 'How are things going?'
-			},
-		]
-	}];
+// Messages
+// ====================================
+
+var messageCount = 0;
+
+function nextMessageId() {
+	messageCount = messageCount + 1;
+	return messageCount.toString();
+}
+
+var messages = {};
+var note;
+var comments;
+
+function newMessage(opts) {
+	var from = users[opts.from];
+	var to = users[opts.to];
+	return {
+		id: nextMessageId(),
+		parentmessage: opts.parentmessage || null,
+		userid: from.userid,
+		groupid: to.userid,
+		user: _.clone(from.profile),
+		team: _.clone(to.profile),
+		timestamp: opts.timestamp,
+		messagetext: opts.messagetext
+	};
+}
+
+// Anne
+// ====================================
+
+messages['Anne'] = [];
+
+note = newMessage({
+	from: 'Paul',
+	to: 'Anne',
+	timestamp: '2014-03-24T16:07:00+00:00',
+	messagetext: 'Going to soccer game, 25% temp basal one hour early.'
+});
+
+comments = [
+	newMessage({
+		parentmessage: note.id,
+		from: 'Melissa',
+		to: 'Anne',
+		timestamp: '2014-03-24T16:15:00+00:00',
+		messagetext: 'We tried that last week and she still went hight. Let\'s try 40%?'
+	}),
+	newMessage({
+		parentmessage: note.id,
+		from: 'Paul',
+		to: 'Anne',
+		timestamp: '2014-03-24T16:22:00+00:00',
+		messagetext: 'Okay, good idea. -40% set, 45 minutes till game time.'
+	}),
+	newMessage({
+		parentmessage: note.id,
+		from: 'Paul',
+		to: 'Anne',
+		timestamp: '2014-03-24T18:45:00+00:00',
+		messagetext: 'She peaked at 190 on CGM but was down to 112 at end of game. Won the game too!'
+	})
+];
+
+messages['Anne'] = messages['Anne'].concat([note]).concat(comments);
+
+note = newMessage({
+	from: 'Melissa',
+	to: 'Anne',
+	timestamp: '2014-02-15T10:12:00+00:00',
+	messagetext: 'Soy flour, almond meal, eggs, sour cream and Splenda. 14g protein and 6g carbs.'
+});
+
+comments = [
+	newMessage({
+		parentmessage: note.id,
+		from: 'Dr. Jona',
+		to: 'Anne',
+		timestamp: '2014-02-16T15:20:00+00:00',
+		messagetext: 'That\'s an amazing muffin for diabetes and GF. Great food choice for all your kids :)'
+	}),
+	newMessage({
+		parentmessage: note.id,
+		from: 'Melissa',
+		to: 'Anne',
+		timestamp: '2014-02-16T15:22:00+00:00',
+		messagetext: 'It also tastes really good. Glycemic index is high but it doesn\'t make a big diff with only 6g carbs!'
+	})
+];
+
+messages['Anne'] = messages['Anne'].concat([note]).concat(comments);
+
+// Charles
+// ====================================
+
+messages['Charles'] = [
+	newMessage({
+		from: 'Charles',
+		to: 'Charles',
+		timestamp: '2014-03-09T15:31:00+00:00',
+		messagetext: 'Ripped off insertion set. #ouch Pump off 9am-2:30p. Very long walk 9:40-1pm. #bgnow 74'
+	}),
+	newMessage({
+		from: 'Charles',
+		to: 'Charles',
+		timestamp: '2014-02-05T09:27:00+00:00',
+		messagetext: '#sitechange'
+	}),
+	newMessage({
+		from: 'Charles',
+		to: 'Charles',
+		timestamp: '2014-02-05T23:16:00+00:00',
+		messagetext: 'Dinner at Fred\'s. Veggie burger.'
+	})
+];
+
+note = newMessage({
+	from: 'Charles',
+	to: 'Charles',
+	timestamp: '2013-12-22T23:07:40+00:00',
+	messagetext: 'There is a bit of pressure leading up to the holidays, I find that even a small amount of exercise each morning helps with the stress.'
+});
+
+comments = [
+	newMessage({
+		parentmessage: note.id,
+		from: 'Charles',
+		to: 'Charles',
+		timestamp: '2013-12-24T23:07:40+00:00',
+		messagetext: 'Will try and apply my stress & life balance measures to xmas day tomorrow and see how it goes.'
+	}),
+	newMessage({
+		parentmessage: note.id,
+		from: 'Charles',
+		to: 'Charles',
+		timestamp: '2013-12-25T23:07:40+00:00',
+		messagetext: 'I have struggled to resist the temptations of Christmas but did go for a ride early in the day that helped to balance things out.'
+	}),
+	newMessage({
+		parentmessage: note.id,
+		from: 'Dr. Jona',
+		to: 'Charles',
+		timestamp: '2014-01-04T23:07:40+00:00',
+		messagetext: 'It sounds like you coped well over the Christmas & New Years period given the temptations'
+	})
+];
+
+messages['Charles'] = messages['Charles'].concat([note]).concat(comments);
+
+// All data
+// ====================================
+
+var data = {};
+
+data.loggedInUser = _.cloneDeep(users['Paul']);
+data.loggedInUser.notes = [];
+data.loggedInUser.teams = [
+	{
+		userid: users['Anne'].userid,
+		profile: _.clone(users['Anne'].profile),
+		notes: messages['Anne']
+	},
+	{
+		userid: users['Charles'].userid,
+		profile: _.clone(users['Charles'].profile),
+		notes: messages['Charles']
+	}
+];
 
 module.exports = data;

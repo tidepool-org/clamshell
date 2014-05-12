@@ -24,6 +24,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var _ = require('lodash');
 
+require('./TeamNotes.less');
+
 var Note = require('./Note');
 
 var dataHelper = require('../../core/userDataHelper');
@@ -42,7 +44,7 @@ var TeamNotes = React.createClass({
         /* jshint ignore:start */
         <Note
           ref='teamNote'
-          image='note-image-large'
+          image='large'
           key={note.id}
           author={dataHelper.formatFullName(note.user)}
           team={dataHelper.formatFullName(note.team)}

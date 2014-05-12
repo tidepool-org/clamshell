@@ -16,6 +16,11 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var clamshellApp = require('./app');
+// Eliminate 300ms delay for click events on touch screens
+var FastClick = window.FastClick;
+window.addEventListener('load', function() {
+  FastClick.attach(document.body);
+}, false);
 
+var clamshellApp = require('./app');
 clamshellApp.start();

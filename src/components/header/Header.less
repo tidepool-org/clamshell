@@ -1,0 +1,123 @@
+/**
+ * Copyright (c) 2014, Tidepool Project
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the associated License, which is identical to the BSD 2-Clause
+ * License as published by the Open Source Initiative at opensource.org.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the License for more details.
+ *
+ * You should have received a copy of the License along with this program; if
+ * not, you can obtain one from Tidepool Project at tidepool.org.
+ */
+
+@import (reference) "../../core/core.less";
+
+@header-action-size:           @header-height;
+@header-optimal-screen-size:   320px;
+
+.header {
+  height: @header-height;
+
+  font-size: @font-size-large;
+  color: #fff;
+  background: @blue-green;
+}
+
+.header-item {
+  display: inline-block;
+  width: 100%;
+
+  // Important:; by default goes on the bottom and will make grid items
+  // not align properly
+  vertical-align: top;
+}
+
+.header-left,
+.header-right {
+  width: percentage(@header-action-size/@header-optimal-screen-size);
+}
+
+.header-left {
+  text-align: left;
+}
+
+.header-right {
+  text-align: right;
+}
+
+.header-center {
+  width: percentage((@header-optimal-screen-size - 2*@header-action-size)/@header-optimal-screen-size);
+  text-align: center;
+
+  padding: 0 10px;
+}
+
+.header-overflow-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Icons
+// ====================================
+
+@header-icon-size: 32px;
+@header-icon-back-size: 20px;
+@header-icon-down-size: 12px;
+@header-icon-up-size: 12px;
+
+.header-item-with-icon {
+  // Height spills over for some reason with icons
+  // adjust line-height to correct
+  line-height: 10px;
+}
+
+.header-icon-link {
+  display: inline-block;
+
+  .no-touch &:hover,
+  &:focus,
+  &:active {
+    background-color: @blue-green-dark;
+  }
+}
+
+.header-icon {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: @header-icon-size;
+  width: @header-icon-size;
+  height: @header-icon-size;
+  margin: (@header-action-size - @header-icon-size)/2;
+}
+
+.header-icon-back {
+  background-image: url('images/back-40x40.png');
+  background-size: @header-icon-back-size;
+  width: @header-icon-back-size;
+  height: @header-icon-back-size;
+  margin: (@header-action-size - @header-icon-back-size)/2;
+}
+
+.header-icon-logo {
+  background-image: url('images/blip-logo-64x64.png');
+}
+
+.header-icon-down {
+  background-image: url('images/down-24x24.png');
+  background-size: @header-icon-down-size;
+  width: @header-icon-down-size;
+  height: @header-icon-down-size;
+  margin: (@header-action-size - @header-icon-down-size)/2;
+}
+
+.header-icon-up {
+  background-image: url('images/up-24x24.png');
+  background-size: @header-icon-up-size;
+  width: @header-icon-up-size;
+  height: @header-icon-up-size;
+  margin: (@header-action-size - @header-icon-up-size)/2;
+}

@@ -17,30 +17,51 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
-var TeamNotes = require('../../build/components/notes/TeamNotes');
-
 var helpers = require('../lib/helpers');
+var TeamNotes = require('../../src/components/notes/TeamNotes');
 
-var loggedInUserData = require('../../demo/data').loggedInUser;
-var teamNotes = loggedInUserData.teams[0].notes;
+var teamNotes = [
+  {
+    id: '1',
+    parentmessage: null,
+    userid: '1',
+    groupid: '2',
+    user: {fullName: 'Paul Senter'},
+    team: {fullName: 'Anne Senter'},
+    timestamp: '2014-03-24T16:00:00+00:00',
+    messagetext: 'Hello'
+  },
+  {
+    id: '1',
+    parentmessage: '1',
+    userid: '1',
+    groupid: '2',
+    user: {fullName: 'Melissa Senter'},
+    team: {fullName: 'Anne Senter'},
+    timestamp: '2014-03-24T16:00:00+00:00',
+    messagetext: 'Foo'
+  },
+  {
+    id: '2',
+    parentmessage: null,
+    userid: '3',
+    groupid: '2',
+    user: {fullName: 'Paul Senter'},
+    team: {fullName: 'Anne Senter'},
+    timestamp: '2014-03-24T18:00:00+00:00',
+    messagetext: 'Hi'
+  }
+];
 
-var handlerCalled = false;
-var propsGiven;
-
-var handleThreadSelected = function(props, key){
-  propsGiven = props;
-  handlerCalled = true;
-};
-
-describe('TeamNotes component', function() {
+describe('TeamNotes', function() {
   var component;
 
   beforeEach(function() {
     component = helpers.mountComponent(
-     TeamNotes({notes:teamNotes,onThreadSelected:handleThreadSelected})
+      TeamNotes({
+        notes: teamNotes,
+        onThreadSelected: function() {}
+      })
     );
   });
 
@@ -48,21 +69,14 @@ describe('TeamNotes component', function() {
     helpers.unmountComponent();
   });
 
-  it.skip('should call handler for group selection when a note is clicked', function() {
-    //call the onClick of first groupitem that is a child of our component
-    console.log('failing test');
-    component.refs.teamNote.props.onClick();
-    expect(handlerCalled).to.be.true;
-  });
+  it('should call handler with message when an item is clicked', function() {
+    var handleThreadSelected = sinon.spy();
+    component.setProps({onThreadSelected: handleThreadSelected});
 
-  it.skip('should return the note when it is clicked', function() {
-    //call the onClick of first groupitem that is a child of our component
-    component.refs.teamNote.props.onClick();
-    expect(propsGiven).to.have.id;
-    expect(propsGiven).to.have.messagetext;
-    expect(propsGiven).to.have.groupid;
-    expect(propsGiven).to.have.userid;
-    expect(propsGiven).to.have.timestamp;
+    // select the first item that is a child of our component
+    component.refs.teamNote.props.onNoteSelected();
+
+    expect(handleThreadSelected).to.have.been.calledWith(teamNotes[0]);
   });
 
   it('has method to buildViewableNotes', function() {
@@ -76,7 +90,7 @@ describe('TeamNotes component', function() {
   it('prepareNotes will return all the notes, but not the comments, to be displayed', function() {
     var notes = component.prepareNotes();
     expect(notes).to.exist;
-    expect(notes.length).to.equal(3);
+    expect(notes.length).to.equal(2);
   });
 
 });

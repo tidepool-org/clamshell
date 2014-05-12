@@ -126,6 +126,7 @@ module.exports = function(api, userSchema) {
     api.log('[mock] adding new message thread ... ');
     var id = 'mock_note_'+Math.floor((Math.random()*1000)+1);
     api.log('[mock] added message thread ... ');
+    message.parentmessage = null;
     message.id = id;
     allMessages.push(message);
     return callback(null,message);

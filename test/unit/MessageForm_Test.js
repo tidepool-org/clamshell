@@ -16,53 +16,43 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
-var MessageForm = require('../../build/components/form/MessageForm');
 var helpers = require('../lib/helpers');
-
-var submittedMessage;
-
-var getSubmittedMessage = function(content){
-  submittedMessage = content.text;
-};
+var MessageForm = require('../../src/components/form/MessageForm');
 
 describe('MessageForm', function() {
   var component;
 
   beforeEach(function() {
-    component = helpers.mountComponent(
-      MessageForm({onFooterAction:getSubmittedMessage})
-    );
+    component = helpers.mountComponent(MessageForm());
   });
 
   afterEach(function() {
     helpers.unmountComponent();
   });
 
-  it('should exist', function() {
-    expect(component).to.exist;
-    expect(component.refs).to.exist;
-  });
-
-  it('should have a send button reference', function() {
+  it('should have a send button', function() {
     var sendBtn = component.refs.sendBtn;
     expect(sendBtn).to.exist;
   });
 
-  it('should have a message text reference', function() {
+  it('should have a message text input', function() {
     var messageText = component.refs.messageText;
     expect(messageText).to.exist;
   });
 
-  it('should give the submitted message text via the handler', function() {
+  it('should pass the submitted message text to the given handler', function() {
+    var myTestMessage = 'should get this message text';
 
-    var myTestMessage = 'should be this message text I see';
-    component.refs.messageText.getDOMNode().value = myTestMessage;
-    component.handleMessage();
+    var handleMessage = sinon.spy();
+    component.setProps({
+      onSubmit: handleMessage
+    });
+    component.setState({
+      value: myTestMessage
+    });
+    var clickPost = component.refs.sendBtn.props.onClick;
+    clickPost();
 
-    expect(submittedMessage).to.equal(myTestMessage);
+    expect(handleMessage).to.have.been.calledWith({text: myTestMessage});
   });
-
 });

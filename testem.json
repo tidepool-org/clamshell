@@ -1,22 +1,12 @@
 {
     "framework": "mocha",
-    "serve_files": [
-      "thirdparty/jquery/jquery.min.js",
-      "thirdparty/superagent/superagent.js",
-      "thirdparty/bootstrap/js/bootstrap.min.js",
-      "build/browserified.js"
-    ],
     "src_files": [
-      "build/**/*.js",
-      "build/**/*.css",
-      "test/**/*.js"
+      "test_build/**/*.js"
     ],
-    "launchers": {
-        "Node": {
-            "command": "mocha test/**/*.js -R tap",
-            "protocol": "tap"
-        }
-    },
-    "launch_in_dev": [ "chrome" ],
-    "launch_in_ci": [ "chrome" ]
+    "serve_files": [
+      "test_build/vendor/*.js",
+      "test_build/unit/*.js"
+    ],
+    "launch_in_dev": ["chrome"],
+    "launch_in_ci": ["chrome"]
   }

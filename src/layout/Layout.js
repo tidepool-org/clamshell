@@ -24,70 +24,134 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+require('./Layout.less');
+
 var Layout = React.createClass({
-
   propTypes: {
-    notification: React.PropTypes.object,
-    onDismissNotification: React.PropTypes.func
+    notification: React.PropTypes.renderable,
+    header: React.PropTypes.renderable,
+    menu: React.PropTypes.renderable,
+    footer: React.PropTypes.renderable
   },
-  getDismissButton:function(){
-    var dismiss;
 
-    if(this.props.onDismissNotification){
+  render: function() {
+    var notification = this.renderNotification();
+    var header = this.renderHeader();
+    var menu = this.renderMenu();
+    var footer = this.renderFooter();
+
+    var contentClassName = 'layout-content layout-content-overflow-scroll';
+    if (this.props.header) {
+      contentClassName = contentClassName + ' layout-content-has-header';
+    }
+    if (this.props.footer) {
+      contentClassName = contentClassName + ' layout-content-has-footer';
+    }
+
+    return (
       /* jshint ignore:start */
-      dismiss = (<button type='button' refs='dismissBtn' className='close' onClick={this.handleDismiss}>&times;</button>);
-      /* jshint ignore:end */
-    }
-    return dismiss;
-  },
-  getNotificationClasses:function(){
-    var classes;
-    if(this.props.notification){
-      var theType = this.props.notification.type ? this.props.notification.type : 'alert';
-      classes = 'layout-notification-inner layout-notification-' + theType;
-    }
-    return classes;
-  },
-  renderNotification: function() {
-
-    if(this.props.notification){
-
-      var message = this.props.notification.message;
-      var notificationClasses = this.getNotificationClasses();
-      var dismiss = this.getDismissButton();
-
-      return (
-        /* jshint ignore:start */
-        <div className='layout-notification col-xs-offset-2 col-xs-8 col-sm-offset-4 col-sm-4'>
-          <div className={notificationClasses}>
-            {dismiss}
-            {message}
+      <div className='layout'>
+        {notification}
+        {header}
+        {menu}
+        <div className={contentClassName} ref='contentContainer'>
+          <div className='layout-content-scroll' ref='content'>
+            {this.props.children}
           </div>
         </div>
-        /* jshint ignore:end */
-      );
-    }
-    return null;
-  },
-  handleDismiss: function(e) {
-    e.preventDefault();
-    var dismiss = this.props.onDismissNotification;
-    if (dismiss) {
-      dismiss();
-    }
-  },
-  render: function() {
-
-    var notification = this.renderNotification();
-
-    return this.transferPropsTo(
-      /* jshint ignore:start */
-      <div className='content'>
-        {notification}
-        {this.props.children}
+        {footer}
       </div>
       /* jshint ignore:end */
     );
+  },
+
+  renderNotification: function() {
+    var notification = this.props.notification;
+
+    if (!notification) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='layout-notification' ref='notification'>
+        {notification}
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderHeader: function() {
+    var header = this.props.header;
+
+    if (!header) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='layout-header' ref='header'>
+        {header}
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderMenu: function() {
+    var menu = this.props.menu;
+
+    if (!menu) {
+      return null;
+    }
+
+    var className = [
+      'layout-menu',
+      'layout-content',
+      'layout-content-overflow-scroll'
+    ];
+    if (this.props.header) {
+      className.push('layout-content-has-header');
+    }
+    if (this.props.footer) {
+      className.push('layout-content-has-footer');
+    }
+    className = className.join(' ');
+
+    return (
+      /* jshint ignore:start */
+      <div className={className} ref='menuContainer'>
+        <div className='layout-content-scroll' ref='menu'>
+          {menu}
+        </div>
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderFooter: function() {
+    var footer = this.props.footer;
+
+    if (!footer) {
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <div className='layout-footer' ref='footer'>
+        {footer}
+      </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  scrollToContentTop: function() {
+    var node = this.refs.content.getDOMNode();
+    node.scrollTop = 0;
+  },
+
+  scrollToContentBottom: function() {
+    var node = this.refs.content.getDOMNode();
+    node.scrollTop = node.scrollHeight;
   }
 });
 

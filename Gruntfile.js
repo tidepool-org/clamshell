@@ -27,13 +27,20 @@ module.exports = function(grunt) {
         },
         all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js']
       },
+      watch: {
+        jshint: {
+          files: '<%= jshint.all %>',
+          tasks: ['jshint']
+        },
+      },
       uglify: {
         options: {
           mangle: false
         },
-        my_target: {
+        app: {
           files: {
-            'app_build/clamshell.min.js': ['app_build/clamshell.js']
+            'app_build/clamshell.min.js': 'app_build/clamshell.js',
+            'app_build/superagent.min.js': 'app_build/superagent.js'
           }
         }
       },
@@ -53,18 +60,17 @@ module.exports = function(grunt) {
             'exec node clamshellServer'
           ]
         },
-        testBuild: {
+        buildTest: {
           command: [
-            'rm -r build',
-            './node_modules/.bin/jsx src/ build/',
-            './node_modules/.bin/browserify test/**/*.js -o build/browserified.js'
-          ].join('&&'),
-          options: {
-            async: false,
-            expand: true
-          }
+            './node_modules/.bin/webpack --debug test/unitAll.js test_build/unit/bundle.js'
+          ]
         },
-        testRun: {
+        watchTest: {
+          command: [
+            './node_modules/.bin/webpack --watch --debug test/unitAll.js test_build/unit/bundle.js'
+          ]
+        },
+        runTest: {
           command: [
             './node_modules/.bin/testem ci'
           ]
@@ -106,6 +112,30 @@ module.exports = function(grunt) {
             'app_build/index.html': ['index.html']
           }
         }
+      },
+      copy: {
+        app: {
+          files: [
+            {dest: 'app_build/superagent.js', src: 'node_modules/superagent/superagent.js'},
+            {dest: 'app_build/fastclick.min.js', src: 'node_modules/fastclick/build/fastclick.min.js'},
+            {expand: true, cwd: 'images/', src: ['**'], dest: 'app_build/'}
+          ]
+        },
+        test: {
+          files: [
+            {dest: 'test_build/vendor/superagent.js', src: 'node_modules/superagent/superagent.js'},
+            {dest: 'test_build/vendor/fastclick.min.js', src: 'node_modules/fastclick/build/fastclick.min.js'},
+            {dest: 'test_build/vendor/sinon.js', src: 'node_modules/sinon/pkg/sinon.js'}
+          ]
+        }
+      },
+      clean: {
+        appBuild: ['app_build'],
+        testBuild: ['test_build'],
+        tmpProdBuild: [
+          'app_build/clamshell.js',
+          'app_build/superagent.js'
+        ]
       }
     });
 
@@ -113,19 +143,23 @@ module.exports = function(grunt) {
 
   // Load the plugins
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-shell-spawn');
-  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-template');
 
   // Default task(s).
   grunt.registerTask('default', ['test']);
   // Standard tasks
-  grunt.registerTask('build-dev', ['shell:buildApp','template:parseDev']);
-  grunt.registerTask('build-prod', ['shell:buildApp','uglify','template:parseProd']);
+  grunt.registerTask('jshint-watch', ['jshint','watch:jshint']);
+  grunt.registerTask('build-dev', ['clean:appBuild','shell:buildApp','template:parseDev','copy:app']);
+  grunt.registerTask('build-prod', ['clean:appBuild','shell:buildApp','template:parseProd','copy:app','uglify','clean:tmpProdBuild']);
   grunt.registerTask('parse-config', ['template:parseConfig']);
   grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
-  grunt.registerTask('develop', ['template:parseDev', 'template:parseConfig', 'shell:watchApp']);
+  grunt.registerTask('develop', ['template:parseDev','template:parseConfig','copy:app','shell:watchApp']);
   grunt.registerTask('server', ['shell:runApp']);
-  grunt.registerTask('test', ['jshint','shell:testBuild','shell:testRun']);
+  grunt.registerTask('test', ['jshint','clean:testBuild','copy:test','shell:buildTest','shell:runTest']);
+  grunt.registerTask('test-watch', ['jshint','clean:testBuild','copy:test','shell:watchTest']);
 };

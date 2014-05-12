@@ -4,30 +4,50 @@
     <meta charset="utf-8" />
 
     <title>Blip Notes</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="initial-scale=1">
 
-    <!-- We include jQuery only for the Parse SDK and Bootstrap; it's not needed for React. -->
-    <script type="text/javascript" src="app_build/appConfig.js"></script>
-    <script type="text/javascript" src="../thirdparty/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="../thirdparty/superagent/superagent.js"></script>
-    <link rel="stylesheet" href="../thirdparty/bootstrap/css/bootstrap-theme.min.css" />
-    <link rel="stylesheet" href="../thirdparty/bootstrap/css/bootstrap.min.css" />
-    <script type="text/javascript" src="../thirdparty/bootstrap/js/bootstrap.min.js"></script>
-    <!-- We include jQuery only for the Parse SDK and Bootstrap; it's not needed for React. -->
+    <!-- Begin iOS settings -->
+
+    <!-- Run in full-screen mode -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Make the status bar black with white text -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- Disable phone number detection -->
+    <meta name="format-detection" content="telephone=no">
+    <!-- Icons -->
+    <!-- iOS 7 iPhone (retina) -->
+    <link href="apple-touch-icon-120x120.png"
+          sizes="120x120"
+          rel="apple-touch-icon">
+    <!-- Startup images -->
+    <!-- iOS 6 & 7 iPhone 5 -->
+    <link href="apple-touch-startup-image-640x1096.png"
+          media="(device-width: 320px) and (device-height: 568px)
+             and (-webkit-device-pixel-ratio: 2)"
+          rel="apple-touch-startup-image">
+    <!-- iOS 6 & 7 iPhone (retina) -->
+    <link href="apple-touch-startup-image-640x920.png"
+          media="(device-width: 320px) and (device-height: 480px)
+             and (-webkit-device-pixel-ratio: 2)"
+          rel="apple-touch-startup-image">
+
+    <!-- End iOS settings -->
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,700italic,300,700' rel='stylesheet' type='text/css'>
   </head>
-  <style media="screen" type="text/css">
-    body {
-      background-color: #F7F7F8;
-    }
-  </style>
+
   <body>
-    <div id="app">
-    </div>
-     <% if (production) { %>
-    <script type="text/javascript" src="app_build/clamshell.min.js"></script>
+    <div id="app">Loading app...</div>
+
+    <script type="text/javascript" src="appConfig.js"></script>
+    <script type="text/javascript" src="fastclick.min.js"></script>
+
+    <% if (production) { %>
+    <script type="text/javascript" src="superagent.min.js"></script>
+    <script type="text/javascript" src="clamshell.min.js"></script>
     <% } else { %>
-    <script type="text/javascript" src="app_build/clamshell.js"></script>
+    <script type="text/javascript" src="superagent.js"></script>
+    <script type="text/javascript" src="clamshell.js"></script>
     <% }  %>
   </body>
 </html>
