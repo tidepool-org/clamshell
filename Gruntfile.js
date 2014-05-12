@@ -131,7 +131,11 @@ module.exports = function(grunt) {
       },
       clean: {
         appBuild: ['app_build'],
-        testBuild: ['test_build']
+        testBuild: ['test_build'],
+        tmpProdBuild: [
+          'app_build/clamshell.js',
+          'app_build/superagent.js'
+        ]
       }
     });
 
@@ -151,7 +155,7 @@ module.exports = function(grunt) {
   // Standard tasks
   grunt.registerTask('jshint-watch', ['jshint','watch:jshint']);
   grunt.registerTask('build-dev', ['clean:appBuild','shell:buildApp','template:parseDev','copy:app']);
-  grunt.registerTask('build-prod', ['clean:appBuild','shell:buildApp','template:parseProd','copy:app','uglify']);
+  grunt.registerTask('build-prod', ['clean:appBuild','shell:buildApp','template:parseProd','copy:app','uglify','clean:tmpProdBuild']);
   grunt.registerTask('parse-config', ['template:parseConfig']);
   grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
   grunt.registerTask('develop', ['template:parseDev','template:parseConfig','copy:app','shell:watchApp']);
