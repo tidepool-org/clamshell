@@ -40,8 +40,8 @@ var Notification = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className={className}>
-        <span className="notification-message">{message}</span>
+      <div className={className} ref='notification'>
+        <span className="notification-message" ref='message'>{message}</span>
         {closeLink}
       </div>
       /* jshint ignore:end */
@@ -58,7 +58,8 @@ var Notification = React.createClass({
       <a
         className="notification-close"
         href=""
-        onClick={this.handleClose}>Close</a>
+        onClick={this.handleClose}
+        ref='close'>Close</a>
       /* jshint ignore:end */
     );
   },

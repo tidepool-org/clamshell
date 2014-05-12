@@ -17,33 +17,14 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
-var Login = require('../../src/components/login/Login');
-
 var helpers = require('../lib/helpers');
-
-var loggedIn = false;
-
-var handleLoginSuccess  = function(){
-  loggedIn = true;
-};
-
-var loginFake  = function(user,cb){
-  cb(user.username,user.password);
-};
+var Login = require('../../src/components/login/Login');
 
 describe('Login', function() {
   var component;
 
   beforeEach(function() {
-    component = helpers.mountComponent(
-      Login({
-        login : loginFake,
-        onLoginSuccess : handleLoginSuccess
-      })
-    );
+    component = helpers.mountComponent(Login());
   });
 
   afterEach(function() {
@@ -53,42 +34,33 @@ describe('Login', function() {
   it('should have a login button of type submit', function() {
     var loginBtn = component.refs.loginBtn;
     expect(loginBtn).to.exist;
-    console.log(loginBtn);
     expect(loginBtn.props.type).to.equal('submit');
   });
 
-  it('takes a users email and is of type email', function() {
+  it('should have an input of type email', function() {
     var email = component.refs.emailField;
     expect(email).to.exist;
     expect(email.props.type).to.equal('email');
   });
 
-  it('takes a users password and is of type password', function() {
+  it('should have an input of type password', function() {
     var pw = component.refs.pwField;
     expect(pw).to.exist;
     expect(pw.props.type).to.equal('password');
   });
 
-  it('allows to select a remember me which is a checkbox', function() {
+  it('should have a remember-me input of type checkbox', function() {
     var rememberMe = component.refs.rememberMe;
     expect(rememberMe).to.exist;
     expect(rememberMe.props.type).to.equal('checkbox');
   });
 
-  it('remember me is false by default', function() {
+  it('should have remember-me set as false by default', function() {
     var rememberMe = component.refs.rememberMe;
     expect(rememberMe.state.checked).to.be.false;
   });
 
-  it('should fire onLoginSuccess handler when called', function() {
-    expect(loggedIn).to.be.false;
-    component.props.onLoginSuccess();
-    expect(loggedIn).to.be.true;
-  });
-
-  it('should use login handler when submit clicked', function() {
-
-
+  it('should call login handler with field values when submit clicked', function() {
     var fakeUn = 'fake.user@go.org';
     var fakePw = 'f@k31t';
 
@@ -97,14 +69,39 @@ describe('Login', function() {
       password : fakePw
     };
 
-    component.props.login(user,function(givenUser,givenPw){
-      expect(givenPw).to.equal(fakePw);
-      expect(givenUser).to.equal(fakeUn);
+    var handleLogin = sinon.spy();
+    component.setProps({
+      login: handleLogin,
+      onLoginSuccess: function() {}
     });
+
+    component.refs.emailField.getDOMNode().value = fakeUn;
+    component.refs.pwField.getDOMNode().value = fakePw;
+    var clickLogin = component.refs.loginBtn.props.onClick;
+    clickLogin();
+
+    expect(handleLogin).to.have.been.calledWith(user);
+  });
+
+  it('should fire login success handler when login complete', function(done) {
+    var handleLoginSuccess = sinon.spy();
+    var handleLogin = function(user, options, cb) {
+      cb();
+      expect(handleLoginSuccess).to.have.been.called;
+      done();
+    };
+
+    component.setProps({
+      login: handleLogin,
+      onLoginSuccess: handleLoginSuccess
+    });
+    component.refs.emailField.getDOMNode().value = 'foo';
+    component.refs.pwField.getDOMNode().value = 'bar';
+    var clickLogin = component.refs.loginBtn.props.onClick;
+    clickLogin();
   });
 
   it('should fail validation and return a message with no email', function() {
-
     var user = {
       username : '',
       password : 'pa55w0rd'
@@ -135,7 +132,7 @@ describe('Login', function() {
     expect(err).to.equal('Missing email and password.');
   });
 
-  it('should pass validation when given details', function() {
+  it('should pass validation when given required inputs', function() {
     var user = {
       username : 'test.user@test.com',
       password : 'pa55w0rd'
@@ -144,15 +141,4 @@ describe('Login', function() {
     var err = component.validate(user);
     expect(err).to.be.empty;
   });
-
-  it('should have a loggingIn state', function() {
-    var loggingInState = component.state.loggingIn;
-    expect(loggingInState).to.exist;
-  });
-
-  it('should have a message in state', function() {
-    var messageState = component.state.message;
-    expect(messageState).to.exist;
-  });
-
 });

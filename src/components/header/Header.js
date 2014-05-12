@@ -41,7 +41,7 @@ var Header = React.createClass({
     });
 
     var right = this.renderAction({
-      side: 'left',
+      side: 'right',
       icon: this.props.rightIcon,
       action: this.props.onRightAction
     });
@@ -50,7 +50,7 @@ var Header = React.createClass({
       /* jshint ignore:start */
       <div className='header'>
         {left}
-        <div className='header-item header-center header-overflow-ellipsis'>
+        <div className='header-item header-center header-overflow-ellipsis' ref='title'>
           {this.props.title}
         </div>
         {right}
@@ -68,7 +68,9 @@ var Header = React.createClass({
     if (icon) {
       /* jshint ignore:start */
       content = (
-        <span className={'header-icon header-icon-' + icon}></span>
+        <span
+          className={'header-icon header-icon-' + icon}
+          ref={side + 'Icon'}></span>
       );
       /* jshint ignore:end */
     }
@@ -83,7 +85,11 @@ var Header = React.createClass({
 
       /* jshint ignore:start */
       content = (
-        <a href='' className='header-icon-link' onClick={handleClick}>
+        <a
+          href=''
+          className='header-icon-link'
+          onClick={handleClick}
+          ref={side + 'Link'}>
           {content}
         </a>
       );

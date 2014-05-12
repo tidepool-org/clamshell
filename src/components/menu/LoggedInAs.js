@@ -39,7 +39,7 @@ var LoggedInAs = React.createClass({
         <span className='loggedinas-inline loggedinas-copy'>
           {'Logged in as'}
         </span>
-        <span className='loggedinas-inline loggedinas-name'>
+        <span className='loggedinas-inline loggedinas-name' ref='name'>
           {this.getUserDisplayName(this.props.user)}
         </span>
         <span className='loggedinas-inline loggedinas-separator'>
@@ -48,7 +48,8 @@ var LoggedInAs = React.createClass({
         <a
           href=''
           className='loggedinas-inline loggedinas-logout'
-          onClick={this.handleLogout}>Logout</a>
+          onClick={this.handleLogout}
+          ref='logout'>Logout</a>
       </div>
       /* jshint ignore:end */
     );

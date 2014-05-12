@@ -129,10 +129,16 @@ To run the tests only once, use:
 $ npm test
 ```
 
-To run the tests in "watch mode" (re-run on every file change) use:
+To run the tests in "watch mode" (re-run on every file change), in a first terminal run:
 
 ```bash
 $ npm run test-watch
+```
+
+And in a second terminal launch:
+
+```bash
+$ npm run test-server
 # Or if you have testem installed globally you can simply use:
 $ testem
 ```

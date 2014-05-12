@@ -16,96 +16,95 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
+var helpers = require('../lib/helpers');
 var Layout = require('../../src/layout/Layout');
 
-var helpers = require('../lib/helpers');
-
-var dismissed = false;
-
-var handleDismiss  = function(){
-  dismissed = true;
-};
-
 describe('Layout', function() {
+  var component;
+
+  beforeEach(function() {
+    component = helpers.mountComponent(Layout({}, 'my content'));
+  });
 
   afterEach(function() {
     helpers.unmountComponent();
   });
 
-  it('can be empty', function() {
-    var emptyLayout = helpers.mountComponent(Layout());
-    expect(emptyLayout).to.exist;
+  it('should render content given as children', function() {
+    var content = component.refs.content.props.children;
+
+    expect(content).to.equal('my content');
   });
 
-  it('can be empty create with a notification', function() {
-    var notificationLayout = helpers.mountComponent(Layout({notification:{message:'testing 123',type:'info'}}));
-    expect(notificationLayout).to.exist;
+  it('should not render other regions if only given content', function() {
+    var notification = component.refs.notification;
+    var header = component.refs.header;
+    var menu = component.refs.menu;
+    var footer = component.refs.footer;
+
+    expect(notification).to.not.exist;
+    expect(header).to.not.exist;
+    expect(menu).to.not.exist;
+    expect(footer).to.not.exist;
   });
 
-  it('can be empty create with a notification and onDismissNotification', function() {
-    var notificationLayoutWithDismiss = helpers.mountComponent(
-      Layout({
-        notification : {message:'testing 123',type:'info'},
-        onDismissNotification : handleDismiss
-      }));
-    expect(notificationLayoutWithDismiss).to.exist;
+  it('should render notification', function() {
+    var expectedNotification = 'my notification';
+
+    component.setProps({notification: expectedNotification});
+    var actualNotification = component.refs.notification.props.children;
+
+    expect(actualNotification).to.equal(expectedNotification);
   });
 
-  it('will have a dismiss button if the handler is set', function() {
-    var notificationLayoutWithDismiss = helpers.mountComponent(
-      Layout({
-        notification : {message:'testing 123',type:'info'},
-        onDismissNotification : handleDismiss
-      }));
+  it('should render header', function() {
+    var expectedHeader = 'my header';
 
-    var dismissBtn = notificationLayoutWithDismiss.getDismissButton();
+    component.setProps({header: expectedHeader});
+    var actualHeader = component.refs.header.props.children;
 
-    expect(dismissBtn).to.exist;
-    expect(dismissBtn.props.type).to.equal('button');
+    expect(actualHeader).to.equal(expectedHeader);
   });
 
-  it('will NOT have a dismiss button if the handler is NOT set', function() {
-    var notificationLayoutNoDismiss = helpers.mountComponent(
-      Layout({
-        notification : {message:'testing 123',type:'info'}
-      }));
+  it('should render menu', function() {
+    var expectedMenu = 'my menu';
 
-    var dismissBtn = notificationLayoutNoDismiss.getDismissButton();
+    component.setProps({menu: expectedMenu});
+    var actualMenu = component.refs.menu.props.children;
 
-    expect(dismissBtn).to.not.exist;
+    expect(actualMenu).to.equal(expectedMenu);
   });
 
-  it('will set the notification classes to be of the notification type given', function() {
-    var notificationLayoutNoDismiss = helpers.mountComponent(
-      Layout({
-        notification : {message:'testing 123',type:'info'}
-      }));
+  it('should render footer', function() {
+    var expectedFooter = 'my footer';
 
-    var classes = notificationLayoutNoDismiss.getNotificationClasses();
+    component.setProps({footer: expectedFooter});
+    var actualFooter = component.refs.footer.props.children;
 
-    expect(classes).to.contain('layout-notification-info');
+    expect(actualFooter).to.equal(expectedFooter);
   });
 
-  it('will defauilt the notification classes to alert if none is set', function() {
-    var notificationLayoutNoDismiss = helpers.mountComponent(
-      Layout({
-        notification : {message:'testing 123',type:''}
-      }));
+  it('should add has-header class to elements when given a header', function() {
+    component.setProps({
+      header: 'my header',
+      menu: 'my menu'
+    });
+    var contentClasses = component.refs.contentContainer.props.className;
+    var menuClasses = component.refs.menuContainer.props.className;
 
-    var classes = notificationLayoutNoDismiss.getNotificationClasses();
-
-    expect(classes).to.contain('layout-notification-alert');
+    expect(contentClasses).to.contain('has-header');
+    expect(menuClasses).to.contain('has-header');
   });
 
-  it('has no notification classes if a notification is not set', function() {
-    var emptyLayout = helpers.mountComponent(Layout());
+  it('should add has-footer class to elements when given a footer', function() {
+    component.setProps({
+      footer: 'my footer',
+      menu: 'my menu'
+    });
+    var contentClasses = component.refs.contentContainer.props.className;
+    var menuClasses = component.refs.menuContainer.props.className;
 
-    var classes = emptyLayout.getNotificationClasses();
-
-    expect(classes).to.not.exist;
+    expect(contentClasses).to.contain('has-footer');
+    expect(menuClasses).to.contain('has-footer');
   });
-
 });

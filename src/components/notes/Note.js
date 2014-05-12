@@ -34,7 +34,6 @@ var Note = React.createClass({
     note : React.PropTypes.string,
     team : React.PropTypes.string,
     showCommentLink : React.PropTypes.bool,
-    onGroupSelected : React.PropTypes.func,
     onNoteSelected : React.PropTypes.func
   },
 

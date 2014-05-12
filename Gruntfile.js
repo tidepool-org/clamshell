@@ -52,7 +52,7 @@ module.exports = function(grunt) {
         },
         watchApp: {
           command: [
-            './node_modules/.bin/webpack --watch --debug --devtool=source-map src/main.js app_build/clamshell.js'
+            './node_modules/.bin/webpack --watch --debug src/main.js app_build/clamshell.js'
           ]
         },
         runApp: {
@@ -62,7 +62,12 @@ module.exports = function(grunt) {
         },
         buildTest: {
           command: [
-            './node_modules/.bin/webpack test/unit/Note_Test.js test_build/unit/bundle.js'
+            './node_modules/.bin/webpack --debug test/unitAll.js test_build/unit/bundle.js'
+          ]
+        },
+        watchTest: {
+          command: [
+            './node_modules/.bin/webpack --watch --debug test/unitAll.js test_build/unit/bundle.js'
           ]
         },
         runTest: {
@@ -118,8 +123,9 @@ module.exports = function(grunt) {
         },
         test: {
           files: [
-            {dest: 'test_build/superagent.js', src: 'node_modules/superagent/superagent.js'},
-            {dest: 'test_build/fastclick.min.js', src: 'node_modules/fastclick/build/fastclick.min.js'}
+            {dest: 'test_build/vendor/superagent.js', src: 'node_modules/superagent/superagent.js'},
+            {dest: 'test_build/vendor/fastclick.min.js', src: 'node_modules/fastclick/build/fastclick.min.js'},
+            {dest: 'test_build/vendor/sinon.js', src: 'node_modules/sinon/pkg/sinon.js'}
           ]
         }
       },
@@ -150,6 +156,6 @@ module.exports = function(grunt) {
   grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
   grunt.registerTask('develop', ['template:parseDev','template:parseConfig','copy:app','shell:watchApp']);
   grunt.registerTask('server', ['shell:runApp']);
-  grunt.registerTask('testem-before-tests', ['shell:buildTest','copy:test']);
-  grunt.registerTask('test', ['jshint','clean:testBuild','shell:runTest']);
+  grunt.registerTask('test', ['jshint','clean:testBuild','copy:test','shell:buildTest','shell:runTest']);
+  grunt.registerTask('test-watch', ['jshint','clean:testBuild','copy:test','shell:watchTest']);
 };

@@ -1,8 +1,4 @@
 /**
- * @jsx React.DOM
- */
-
-/**
  * Copyright (c) 2014, Tidepool Project
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -17,24 +13,19 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-'use strict';
-/* jshint unused: false */
+'use scrict';
 
-var React = require('react');
+var globals = {
+  chai: require('chai'),
+  // Can't use `require('sinon')` when not in Node because won't load plugins
+  // http://stackoverflow.com/questions/20570301/typeerror-undefined-is-not-a-function-evaluating-sinon-spy
+  sinon: window.sinon
+};
+globals.expect = globals.chai.expect;
+var sinonChai = require('sinon-chai');
+globals.chai.use(sinonChai);
 
-require('./LoginFooter.less');
-
-var LoginFooter = React.createClass({
-
-  render: function() {
-    return (
-      /* jshint ignore:start */
-      <div className='loginfooter'>
-        <div className='loginfooter-tidepool-logo' ref='logo'></div>
-      </div>
-      /* jshint ignore:end */
-    );
-  }
-});
-
-module.exports = LoginFooter;
+// Add to global object for all tests to use
+window.chai = globals.chai;
+window.expect = globals.expect;
+window.sinon = globals.sinon;

@@ -1,8 +1,4 @@
 /**
- * @jsx React.DOM
- */
-
-/**
  * Copyright (c) 2014, Tidepool Project
  *
  * This program is free software; you can redistribute it and/or modify it under
@@ -18,23 +14,26 @@
  */
 
 'use strict';
-/* jshint unused: false */
 
-var React = require('react');
+var helpers = require('../lib/helpers');
+var LoginFooter = require('../../src/components/login/LoginFooter');
 
-require('./LoginFooter.less');
+describe('LoginFooter', function() {
+  var component;
 
-var LoginFooter = React.createClass({
-
-  render: function() {
-    return (
-      /* jshint ignore:start */
-      <div className='loginfooter'>
-        <div className='loginfooter-tidepool-logo' ref='logo'></div>
-      </div>
-      /* jshint ignore:end */
+  beforeEach(function() {
+    component = helpers.mountComponent(
+      LoginFooter({})
     );
-  }
-});
+  });
 
-module.exports = LoginFooter;
+  afterEach(function() {
+    helpers.unmountComponent();
+  });
+
+  it('should show Tidepool logo', function() {
+    var logoClasses = component.refs.logo.props.className;
+
+    expect(logoClasses).to.contain('tidepool-logo');
+  });
+});

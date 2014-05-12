@@ -39,6 +39,8 @@
     "less-loader": "0.7.2",
     "mocha": "1.16.2",
     "react-tools": "0.10.0",
+    "sinon": "1.9.1",
+    "sinon-chai": "2.5.0",
     "style-loader": "0.6.0",
     "testem": "0.6.8",
     "url-loader": "0.5.1",
@@ -49,6 +51,7 @@
     "test": "grunt test",
     "server": "grunt server",
     "jshint-watch": "grunt jshint-watch",
-    "test-watch": "testem"
+    "test-watch": "grunt test-watch",
+    "test-server": "testem"
   }
 }

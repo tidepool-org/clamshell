@@ -16,27 +16,30 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 */
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
-var TeamPicker = require('../../src/components/header/TeamPicker');
-
 var helpers = require('../lib/helpers');
-
-var loggedInUserData = require('../../demo/data').loggedInUser;
-
-var selectedUsersId;
-
-var handleUserPicked = function(selectedId){
-  selectedUsersId = selectedId;
-};
+var TeamPicker = require('../../src/components/menu/TeamPicker');
 
 describe('TeamPicker', function() {
   var component;
 
   beforeEach(function() {
+    var loggedInUser = {
+      userid: '1',
+      profile: {fullName: 'User1'},
+      notes: [],
+      teams: [
+        {
+          userid: '2',
+          profile: {fullName: 'User2'},
+          notes: []
+        }
+      ]
+    };
     component = helpers.mountComponent(
-     TeamPicker({loggedInUser:loggedInUserData, onUserPicked:handleUserPicked})
+      TeamPicker({
+        loggedInUser: loggedInUser,
+        onUserPicked: function() {}
+      })
     );
   });
 
@@ -44,29 +47,25 @@ describe('TeamPicker', function() {
     helpers.unmountComponent();
   });
 
-  it('should have a group drop down', function() {
-    var groupDropdown = component.refs.selectGroup;
-    expect(groupDropdown).to.exist;
+  it('should have a user list', function() {
+    var userList = component.refs.users;
+    expect(userList).to.exist;
   });
 
-  it('should have a groups list', function() {
-    var groupsList = component.refs.groups;
-    expect(groupsList).to.exist;
+  it('should show logged in user and teams in user list', function() {
+    var userNodes = component.refs.users.props.children;
+    expect(userNodes.length).to.equal(2);
   });
 
-  it('should have a group to select', function() {
-    var groupToSelect = component.refs.group;
-    expect(groupToSelect).to.exist;
-  });
+  it('should call handler with the id of the choosen user', function() {
+    var handleUserPicked = sinon.spy();
+    component.setProps({
+      onUserPicked: handleUserPicked
+    });
 
-  it('should have a teamColumn', function() {
-    var teamColumn = component.refs.teamColumn;
-    expect(teamColumn).to.exist;
-  });
+    component.refs.users.props.children[0].props.onClick();
 
-  it.skip('should fire the handler with the id of the choosen group', function() {
-    component.refs.teamColumn.props.onClick();
-    expect(selectedUsersId).to.exist;
+    expect(handleUserPicked).to.have.been.calledWith('1');
   });
 
 });

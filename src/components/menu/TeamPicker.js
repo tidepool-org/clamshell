@@ -40,8 +40,8 @@ var TeamPicker = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div ref='selectGroup' className='teampicker'>
-        <div ref='groups' className='teampicker-users'>
+      <div className='teampicker'>
+        <div ref='users' className='teampicker-users'>
           {users}
         </div>
       </div>
@@ -66,17 +66,16 @@ var TeamPicker = React.createClass({
         <a
           href=""
           key={selectableUser.userid}
-          ref='group'
           className='teampicker-user'
           onClick={handleClick}>
 
           <div className='teampicker-user-info'>
-            <div ref='imgColumn' className='teampicker-user-picture'></div>
-            <div ref='teamColumn' className='teampicker-user-details'>
-              <div ref='groupName' className='teampicker-user-name'>
+            <div className='teampicker-user-picture'></div>
+            <div className='teampicker-user-details'>
+              <div className='teampicker-user-name'>
                 {selectableUser.name}
               </div>
-              <div ref='lastGroupNote' className='teampicker-user-last-note'>
+              <div className='teampicker-user-last-note'>
                 {selectableUser.latestNote}
               </div>
             </div>

@@ -17,108 +17,131 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
-
 var userDataHelper = require('../../src/core/userDataHelper');
-
-var loggedInUserData = require('../../demo/data').loggedInUser;
-var team = loggedInUserData.teams[0];
 
 describe('userDataHelper', function() {
 
-  it('getParentMessageId returns id of the parent message', function() {
-    var parentId = '9233c2ae-7bad-41f5-9295-e73f0437295b';
-    var thread = userDataHelper.getThread(team, parentId);
+  it('getParentMessageId returns parent message id of a thread', function() {
+    var thread = [
+      {id: '1', parentmessage: null},
+      {id: '2', parentmessage: '1'},
+      {id: '3', parentmessage: '1'}
+    ];
     var foundParentId = userDataHelper.getParentMessageId(thread);
-    expect(foundParentId).to.equal(parentId);
+    expect(foundParentId).to.equal('1');
   });
 
-  it('getThread returns notes in a thread', function() {
-    var thread = userDataHelper.getThread(team,'9233c2ae-7bad-41f5-9295-e73f0437295b');
+  it('getThread returns messages belonging to a thread', function() {
+    var team = {
+      notes: [
+        {id: '1', parentmessage: null},
+        {id: '2', parentmessage: '1'},
+        {id: '3', parentmessage: null}
+      ]
+    };
+    var thread = userDataHelper.getThread(team,'1');
     expect(thread).to.exist;
     expect(thread).to.be.a('array');
-    expect(thread.length).to.equal(4);
+    expect(thread.length).to.equal(2);
   });
 
-  it('filterNotes returns only notes from thread', function() {
-    var notes = userDataHelper.filterNotes(team.notes);
-    expect(notes.length).to.equal(3);
-
-    notes.forEach(function(note) {
-      expect(note.parentmessage).to.not.exist;
-    });
-
+  it('filterNotes returns only notes from a list of messages', function() {
+    var messages = [
+      {id: '1', parentmessage: null},
+      {id: '2', parentmessage: '1'}
+    ];
+    var notes = userDataHelper.filterNotes(messages);
+    expect(notes.length).to.equal(1);
   });
 
   it('sortNotesDescending returns newest note first', function() {
-    var notes = userDataHelper.sortNotesDescending(team.notes);
+    var messages = [
+      {timestamp: '2013-01-01T00:00:00+00:00'},
+      {timestamp: '2014-01-01T00:00:00+00:00'}
+    ];
+    var notes = userDataHelper.sortNotesDescending(messages);
     var firstNote = notes[0];
-    expect(firstNote.timestamp).to.equal('2014-01-08T23:07:40+00:00');
+    expect(firstNote.timestamp).to.equal('2014-01-01T00:00:00+00:00');
   });
 
   it('sortNotesAscending returns oldest note first', function() {
-    var notes = userDataHelper.sortNotesAscending(team.notes);
+    var messages = [
+      {timestamp: '2014-01-01T00:00:00+00:00'},
+      {timestamp: '2013-01-01T00:00:00+00:00'}
+    ];
+    var notes = userDataHelper.sortNotesAscending(messages);
     var firstNote = notes[0];
-    expect(firstNote.timestamp).to.equal('2013-12-22T23:07:40+00:00');
+    expect(firstNote.timestamp).to.equal('2013-01-01T00:00:00+00:00');
   });
 
   it('getNotesForTeams returns all notes for all teams', function() {
+    var teams = [
+      {notes: [{id: '1'}, {id: '2'}]},
+      {notes: [{id: '3'}]}
+    ];
 
-    var expectedNotesCount = team.notes.length;
-
-    var allNotes = userDataHelper.getNotesForTeams(loggedInUserData.teams);
-    expect(allNotes.length).to.equal(expectedNotesCount);
-
+    var allNotes = userDataHelper.getNotesForTeams(teams);
+    expect(allNotes.length).to.equal(3);
   });
 
   it('formatFullName returns the fullName as a string from the profile', function() {
-
     var profile = {fullName:'Foo Bar'};
     expect(userDataHelper.formatFullName(profile)).to.equal('Foo Bar');
-
   });
 
   it('formatFullName returns nothing when profile not set', function() {
-
     var profile = {};
     expect(userDataHelper.formatFullName(profile)).to.not.exist;
-
   });
 
   it('formatShortName returns the shortName as a string from the profile', function() {
-
     var profile = {shortName:'Foo'};
     expect(userDataHelper.formatShortName(profile)).to.equal('Foo');
-
   });
 
   it('formatShortName returns nothing when shortName is not set', function() {
-
     var profile = {};
     expect(userDataHelper.formatShortName(profile)).to.not.exist;
-
-  });
-  //getSelectedUser
-  it('getSelectedUser returns the logged in user when given that userid', function() {
-    expect(userDataHelper.getSelectedUser(loggedInUserData.userid,loggedInUserData)).to.deep.equal(loggedInUserData);
   });
 
-  it('getSelectedUser returns the team user when given that userid', function() {
-    expect(userDataHelper.getSelectedUser(team.userid,loggedInUserData)).to.deep.equal(team);
+  it('getSelectedUser returns the logged in user when given proper userid', function() {
+    var loggedInUser = {userid: '1'};
+    expect(userDataHelper.getSelectedUser('1', loggedInUser)).to.deep.equal(loggedInUser);
   });
 
-  it('getAllNotesForLoggedInUser returns 6 notes', function() {
-    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(6);
+  it('getSelectedUser returns the team user when given proper userid', function() {
+    var loggedInUser = {
+      userid: '1',
+      teams: [
+        {userid: '2'}
+      ]
+    };
+    expect(userDataHelper.getSelectedUser('2',loggedInUser)).to.deep.equal(loggedInUser.teams[0]);
   });
 
-  it('getAllNotesForLoggedInUser returns 7 notes when we add one for the user', function() {
-    loggedInUserData.notes.push(team.notes[3]);
-    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUserData).length).to.equal(7);
+  it('getAllNotesForLoggedInUser returns team notes when user has no notes', function() {
+    var loggedInUser = {
+      notes: [],
+      teams: [
+        {notes: [{id: '1'}]},
+        {notes: [{id: '2'}]}
+      ]
+    };
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUser).length).to.equal(2);
+  });
+
+  it('getAllNotesForLoggedInUser returns user and team notes when both exist', function() {
+    var loggedInUser = {
+      notes: [{id: '1'}],
+      teams: [
+        {notes: [{id: '2'}]},
+        {notes: [{id: '3'}]}
+      ]
+    };
+    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUser).length).to.equal(3);
   });
 
   it('createMessage returns message that is for a specified group', function() {
-
     var userDetails = {
       userid : '12345678',
       profile : { fullName : 'Sponge Bob' }
@@ -138,7 +161,6 @@ describe('userDataHelper', function() {
   });
 
   it('createReply returns message that is for a specified group and parent message', function() {
-
     var userDetails = {
       userid : '12345678',
       profile : { fullName : 'Sponge Bob' }

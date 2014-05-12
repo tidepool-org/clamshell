@@ -54,8 +54,8 @@ var Layout = React.createClass({
         {notification}
         {header}
         {menu}
-        <div className={contentClassName} ref='content'>
-          <div className='layout-content-scroll'>
+        <div className={contentClassName} ref='contentContainer'>
+          <div className='layout-content-scroll' ref='content'>
             {this.props.children}
           </div>
         </div>
@@ -74,7 +74,7 @@ var Layout = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className='layout-notification'>
+      <div className='layout-notification' ref='notification'>
         {notification}
       </div>
       /* jshint ignore:end */
@@ -90,7 +90,7 @@ var Layout = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className='layout-header'>
+      <div className='layout-header' ref='header'>
         {header}
       </div>
       /* jshint ignore:end */
@@ -119,8 +119,8 @@ var Layout = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className={className} ref='menu'>
-        <div className='layout-content-scroll'>
+      <div className={className} ref='menuContainer'>
+        <div className='layout-content-scroll' ref='menu'>
           {menu}
         </div>
       </div>
@@ -137,7 +137,7 @@ var Layout = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className='layout-footer'>
+      <div className='layout-footer' ref='footer'>
         {footer}
       </div>
       /* jshint ignore:end */
