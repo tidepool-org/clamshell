@@ -19,7 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var MessageForm = require('../../build/components/form/MessageForm');
+var MessageForm = require('../../src/components/form/MessageForm');
 var helpers = require('../lib/helpers');
 
 var submittedMessage;

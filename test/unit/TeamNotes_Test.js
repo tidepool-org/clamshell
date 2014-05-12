@@ -20,7 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var TeamNotes = require('../../build/components/notes/TeamNotes');
+var TeamNotes = require('../../src/components/notes/TeamNotes');
 
 var helpers = require('../lib/helpers');
 

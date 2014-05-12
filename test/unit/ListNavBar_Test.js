@@ -20,7 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var ListNavBar = require('../../build/components/header/ListNavBar');
+var ListNavBar = require('../../src/components/header/ListNavBar');
 var helpers = require('../lib/helpers');
 
 

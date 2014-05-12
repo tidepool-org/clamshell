@@ -20,7 +20,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var React = require('react');
 
-var Note = require('../../build/components/notes/Note');
+var Note = require('../../src/components/notes/Note');
 
 var helpers = require('../lib/helpers');
 

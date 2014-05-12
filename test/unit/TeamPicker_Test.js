@@ -19,7 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var TeamPicker = require('../../build/components/header/TeamPicker');
+var TeamPicker = require('../../src/components/header/TeamPicker');
 
 var helpers = require('../lib/helpers');
 

@@ -20,7 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var Login = require('../../build/components/login/Login');
+var Login = require('../../src/components/login/Login');
 
 var helpers = require('../lib/helpers');
 

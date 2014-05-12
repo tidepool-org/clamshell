@@ -19,7 +19,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var chai = require('chai');
 var expect = chai.expect;
 
-var Layout = require('../../build/layout/Layout');
+var Layout = require('../../src/layout/Layout');
 
 var helpers = require('../lib/helpers');
 
