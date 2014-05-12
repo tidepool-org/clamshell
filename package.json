@@ -1,6 +1,6 @@
 {
   "name": "clamshell",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "",
   "private": true,
   "repository": "https://github.com/tidepool-org/clamshell.git",
@@ -19,7 +19,7 @@
     "moment": "2.5.1",
     "react": "0.10.0",
     "superagent": "0.18.0",
-    "tidepool-platform-client": "0.4.1"
+    "tidepool-platform-client": "0.5.0"
   },
   "devDependencies": {
     "browserify": "3.30.1",
