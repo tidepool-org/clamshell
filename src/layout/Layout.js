@@ -145,12 +145,12 @@ var Layout = React.createClass({
   },
 
   scrollToContentTop: function() {
-    var node = this.refs.content.getDOMNode();
+    var node = this.refs.contentContainer.getDOMNode();
     node.scrollTop = 0;
   },
 
   scrollToContentBottom: function() {
-    var node = this.refs.content.getDOMNode();
+    var node = this.refs.contentContainer.getDOMNode();
     node.scrollTop = node.scrollHeight;
   }
 });
