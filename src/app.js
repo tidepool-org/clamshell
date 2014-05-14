@@ -49,7 +49,7 @@ var NoteThread = require('./components/notes/NoteThread');
 
 var app = {
   log : bows('App'),
-  api : require('./core/api')(bows),
+  api : require('./core/apiSchema')(bows),
   dataHelper : require('./core/userDataHelper'),
   routes : router.routes
 };
@@ -86,7 +86,7 @@ var ClamShellApp = React.createClass({
   attachPlatform : function(cb){
     app.log('attaching to platform ...');
 
-    var userSchema = require('./core/loggedInUser');
+    var userSchema = require('./core/userSchema');
 
     if(config.demo){
 
