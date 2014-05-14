@@ -72,6 +72,24 @@ module.exports = function(component,app) {
    * @param {Error} error - The error that has occured to be shown.
    */
   component.handleError =function(error){
+
+    if(error.status){
+      if(error.status === 401){
+        //go to login
+        app.log('redirect to login');
+        component.setState({
+          routeName: app.routes.login,
+          authenticated: false,
+          showingMenu: false
+        });
+        return;
+      } else if (error.status === 500){
+        app.log('500 from server');
+        //show what went wrong
+        return component.handleNotification(error.body,'error');
+      }
+    }
+
     return component.handleNotification(error,'error');
   };
 
