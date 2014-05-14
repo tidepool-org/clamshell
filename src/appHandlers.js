@@ -26,6 +26,7 @@ module.exports = function(component,app) {
    * Delete the users session and set app state to be logged out
    */
   component.handleLogout =function(){
+    app.trackMetric('Logged Out');
     app.log('logging out');
     app.api.user.logout(function(error,success){
       if(error){
@@ -44,6 +45,7 @@ module.exports = function(component,app) {
    * Set app state to handle the back command
    */
   component.handleBack =function(){
+    app.trackMetric('Go Back');
     var previousRoute = component.state.previousRoute;
     var currentRoute = component.state.routeName;
 
@@ -55,6 +57,7 @@ module.exports = function(component,app) {
   };
 
   component.handleOpenMenu = function() {
+    app.trackMetric('Open Menu');
     // Don't try to render if nothing to show
     if (!component.state.loggedInUser) {
       return;
@@ -63,6 +66,7 @@ module.exports = function(component,app) {
   };
 
   component.handleCloseMenu = function() {
+    app.trackMetric('Close Menu');
     component.setState({showingMenu:false});
   };
 
@@ -101,6 +105,7 @@ module.exports = function(component,app) {
    * Trigger load of user data on successful login
    */
   component.handleLoginSuccess = function(){
+    app.trackMetric('Logged In');
     component.setState({ authenticated : true });
     component.loadUserData();
   };
@@ -111,7 +116,7 @@ module.exports = function(component,app) {
    * @param {Message} mostRecentMessageInThread - The most recent message in a thread
    */
   component.handleShowConversationThread = function(mostRecentMessageInThread){
-
+    app.trackMetric('Show Note Thread');
     var messagesId = mostRecentMessageInThread.id;
 
     if(mostRecentMessageInThread.parentmessage){
@@ -145,7 +150,7 @@ module.exports = function(component,app) {
    * @param {Object} note - The root message text of this thread
    */
   component.handleStartConversation = function(note){
-
+    app.trackMetric('Add Note');
     var message = app.dataHelper.createMessage(
       note.text,
       component.state.loggedInUser,
@@ -172,7 +177,7 @@ module.exports = function(component,app) {
    * @param {Object} note - A comment on the thread
    */
   component.handleAddingToConversation = function(note){
-
+    app.trackMetric('Add Comment');
     var thread = component.state.selectedThread;
     var parentId = app.dataHelper.getParentMessageId(thread);
 
@@ -204,7 +209,7 @@ module.exports = function(component,app) {
    * @param {Object} selectedUser - the user that has been selected
    */
   component.handleUserChanged = function(selectedUserId){
-
+    app.trackMetric('Changed Selected User');
     var userToDisplay = app.dataHelper.getSelectedUser(
       selectedUserId,
       component.state.loggedInUser

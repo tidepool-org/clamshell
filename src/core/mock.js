@@ -131,6 +131,17 @@ module.exports = function(api, userSchema) {
     allMessages.push(message);
     return callback(null,message);
   };
+
+  // ----- Metrics -----
+
+  api.metrics.track = function(eventName, properties, cb) {
+    api.log('[mock] track metric ' + eventName);
+
+    if (typeof cb === 'function') {
+      cb();
+    }
+  };
+
   return{
     initialize : function(cb){
       loadSession();
