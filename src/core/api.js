@@ -17,11 +17,12 @@
 
 module.exports = function(bows) {
   var api = {
-    log: bows('Api'),
-    user: {
-      teams:{}
+    log : bows('Api'),
+    user : {
+      teams : {}
     },
-    notes:{}
+    notes : {},
+    metrics : {}
   };
   return api;
 };

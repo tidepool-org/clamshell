@@ -95,6 +95,8 @@ module.exports = function(api, userSchema, platform, config) {
     return callback(platform.isLoggedIn());
   };
 
+  // ----- User -----
+
   /*
    * Return the logged in user
    */
@@ -207,6 +209,8 @@ module.exports = function(api, userSchema, platform, config) {
     });
   };
 
+  // ----- Notes -----
+
   /*
    * Find a specific message thread
    */
@@ -241,4 +245,21 @@ module.exports = function(api, userSchema, platform, config) {
       return callback(error, message);
     });
   };
+
+  // ----- Metrics -----
+
+  /*
+   * Track a given event
+   */
+  api.metrics.track = function(eventName, properties, cb) {
+    api.log('track metric ' + eventName);
+
+    properties = _.assign({
+      source: 'clamshell',
+      version: config.VERSION
+    }, properties);
+
+    return platform.trackMetric(eventName, properties, cb);
+  };
+
 };

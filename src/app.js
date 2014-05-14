@@ -96,6 +96,7 @@ var ClamShellApp = React.createClass({
 
       mockApi.initialize(function(){
         app.log('Initialized Mock API');
+        app.trackMetric = app.api.metrics.track.bind(app.api.metrics);
         return cb();
       });
 
@@ -117,6 +118,7 @@ var ClamShellApp = React.createClass({
           tidepoolApi,
           config
         );
+        app.trackMetric = app.api.metrics.track.bind(app.api.metrics);
         return cb();
       });
     }
