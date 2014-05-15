@@ -262,4 +262,18 @@ module.exports = function(api, userSchema, platform, config) {
     return platform.trackMetric(eventName, properties, cb);
   };
 
+  /*
+   * Log this error to the platform
+   */
+  api.errors.log = function(error, message) {
+    api.log('log app error ');
+
+    properties = {
+      source: 'clamshell',
+      version: config.VERSION
+    };
+
+    return platform.logAppError(error, message, properties);
+  };
+
 };
