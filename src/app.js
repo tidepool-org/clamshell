@@ -383,7 +383,8 @@ var ClamShellApp = React.createClass({
       <div className='login-screen'>
         <Login
             onLoginSuccess={this.handleLoginSuccess}
-            login={app.api.user.login.bind()} />
+            login={app.api.user.login.bind()}
+            errorLogging={app.api.errors.log.bind()} />
       </div>
       /* jshint ignore:end */
       );

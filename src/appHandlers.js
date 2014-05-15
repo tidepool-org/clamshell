@@ -77,27 +77,29 @@ module.exports = function(component,app) {
    */
   component.handleError =function(error){
 
-    if(error.status){
-      if(error.status === 401){
-        //go to login
-        var message = '401 so redirect to login';
-        app.api.logAppError(error,message);
-        app.log(message);
-        component.setState({
-          routeName: app.routes.login,
-          authenticated: false,
-          showingMenu: false
-        });
-        return;
-      } else if (error.status === 500){
+    var status = error.status ||  'unknown';
 
-        var message = '500 from server';
-        app.api.logAppError(error,message);
-        app.log('500 from server');
-        //show what went wrong
-        return component.handleNotification(error.body,'error');
-      }
+    if (status === 401) {
+      //go to login
+      var message = '401 so redirect to login';
+      app.api.errors.logAppError(error,message);
+      app.log(message);
+      component.setState({
+        routeName: app.routes.login,
+        authenticated: false,
+        showingMenu: false
+      });
+      return;
     }
+
+    if (status === 500) {
+      var message = '500 from server';
+      app.api.errors.logAppError(error,message);
+      app.log('500 from server');
+      //show what went wrong
+      return component.handleNotification(error.body,'error');
+    }
+
     app.api.logAppError(error,'error was captured');
     return component.handleNotification(error,'error');
   };

@@ -30,7 +30,8 @@ var Login = React.createClass({
 
   propTypes: {
     login: React.PropTypes.func,
-    onLoginSuccess: React.PropTypes.func
+    onLoginSuccess: React.PropTypes.func,
+    errorLogging: React.PropTypes.func
   },
 
   getInitialState: function() {
@@ -141,6 +142,8 @@ var Login = React.createClass({
         if (err.status === 401) {
           errorMessage = 'Wrong username or password.';
         }
+
+        this.props.errorLogging(err,errorMessage);
 
         this.setState({
           loggingIn: false,
