@@ -322,7 +322,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <div className='messages-team'>
         <MessageForm
-          messagePrompt='Type a new note here...'
+          messagePrompt={app.userMessages.NOTE_PROMPT}
           onSubmit={this.handleStartConversation} />
         <TeamNotes
           notes={this.state.selectedUser.notes}
@@ -336,7 +336,7 @@ var ClamShellApp = React.createClass({
 
   renderMessagesForAllTeams:function(){
     var header = this.renderHeader({
-      title: 'All Notes',
+      title: app.userMessages.ALL_NOTES,
       leftIcon: 'logo'
     });
 
@@ -367,7 +367,7 @@ var ClamShellApp = React.createClass({
       <div className='messages-thread'>
         <NoteThread messages={this.state.selectedThread} />
         <MessageForm
-          messagePrompt='Type a comment here...'
+          messagePrompt={app.userMessages.COMMENT_PROMPT}
           onSubmit={this.handleAddingToConversation} />
       </div>
       /* jshint ignore:end */
@@ -445,7 +445,7 @@ var ClamShellApp = React.createClass({
       _.assign(props, {
         // Since menu takes up whole screen currently,
         // change title to not confuse user
-        title: 'Menu',
+        title: app.userMessages.MENU,
         // Hide left action when menu is open
         leftIcon: null,
         onLeftAction: null,
@@ -472,7 +472,7 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:start */
       <div className='menu'>
         <div className='menu-teampicker-instructions'>
-          {'Select a person to view notes:'}
+          {app.userMessages.SELECT_TO_VIEW}
         </div>
         <TeamPicker
           loggedInUser={this.state.loggedInUser}

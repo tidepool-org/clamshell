@@ -19,5 +19,10 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 module.exports = {
   AUTH_ERROR: 'Looks like you have been logged out!',
-  PLATFORM_ERROR : "Sorry! Something wrong happened. It's our fault, not yours. We'll be looking into it."
+  PLATFORM_ERROR : "Sorry! Something wrong happened. It's our fault, not yours. We'll be looking into it.",
+  NOTE_PROMPT : 'Type a new note here...',
+  COMMENT_PROMPT : 'Type a comment here...',
+  MENU : 'Menu',
+  SELECT_TO_VIEW : 'Select a person to view notes:',
+  ALL_NOTES : 'All Notes'
 };
