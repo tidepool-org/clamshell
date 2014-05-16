@@ -21,6 +21,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
+var _ = require('lodash');
+
 module.exports = function(component,app) {
   /**
    * Delete the users session and set app state to be logged out
@@ -70,6 +72,18 @@ module.exports = function(component,app) {
     component.setState({showingMenu:false});
   };
 
+  function stringifyError(errorObject){
+
+    var details;
+
+    if(_.isPlainObject(errorObject)){
+      details = JSON.stringify(errorObject);
+    } else {
+      details = errorObject.toString();
+    }
+    return details;
+  }
+
   /**
    * Basic handler when an error has occured, we just show the message
    *
@@ -78,6 +92,8 @@ module.exports = function(component,app) {
   component.handleError =function(error){
 
     var status = error.status ||  'unknown';
+
+    error = stringifyError(error);
 
     var info = {
       message : app.userMessages.PLATFORM_ERROR,
