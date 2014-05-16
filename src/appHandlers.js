@@ -21,6 +21,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
+var _ = require('lodash');
+
 module.exports = function(component,app) {
   /**
    * Delete the users session and set app state to be logged out
@@ -70,35 +72,104 @@ module.exports = function(component,app) {
     component.setState({showingMenu:false});
   };
 
+  function stringifyError(errorObject){
+
+    var details;
+
+    if(_.isPlainObject(errorObject)){
+      details = JSON.stringify(errorObject);
+    } else {
+      details = errorObject.toString();
+    }
+    return details;
+  }
+
   /**
    * Basic handler when an error has occured, we just show the message
    *
    * @param {Error} error - The error that has occured to be shown.
    */
   component.handleError =function(error){
-    return component.handleNotification(error,'error');
+
+    var status = error.status ||  'unknown';
+
+    error = stringifyError(error);
+
+    var info = {
+      message : app.userMessages.PLATFORM_ERROR,
+      details : error,
+      type : 'error'
+    };
+
+    //default will refresh
+    var stateOnClosing = {
+      loggedInUser : app.api.user.get()
+    };
+
+    if (status === 401) {
+      //go to login
+      info.message = app.userMessages.AUTH_ERROR;
+      info.type = 'alert';
+
+      app.log(info.message);
+      app.api.errors.log(error,info.message);
+
+      //set  what we want the state to be on close
+      stateOnClosing = { routeName: app.routes.login, authenticated: false, showingMenu: false };
+
+      component.setState({
+        notification : { info: info, stateOnClosing : stateOnClosing }
+      });
+      return;
+    }
+
+    if (status === 500) {
+      app.api.errors.log(error,info.message);
+      app.log(info.message);
+
+      component.setState({
+        notification : { info: info, stateOnClosing : stateOnClosing }
+      });
+
+      return;
+    }
+
+    app.api.log(error,info.message);
+
+    component.setState({
+      notification : { info: info, stateOnClosing : stateOnClosing }
+    });
+
+    return;
   };
 
   /**
    * Basic handler when a message needs to be shown to the user
    *
-   * @param message - The notification message to show
-   * @param type - The type of notification show, defaults to `info`
+   * @param {Object} info
+   * @param {String} info.message the user friendly message
+   * @param {String} info.type the type of notification
+   * @param {String} info.details optionals error details used in screen shots
+   * @param {Object} stateOnClosing contains state settings that will be applied when notification is closed
    */
-  component.handleNotification =function(message,type){
-
-    type = type ? type : 'success';
+  component.handleNotification =function(info, stateOnClosing){
 
     component.setState({
-      notification : { message: message, type: type}
+      notification : { info: info, stateOnClosing : stateOnClosing }
     });
   };
 
   /**
-   * Clears the notification
+   * Clears the notification and sets any state that is given
+   *
+   * @param {Object} stateOnClosing
    */
-  component.handleNotificationDismissed = function(){
-    component.setState({ notification : null });
+  component.handleNotificationDismissed = function(stateOnClosing){
+
+    stateOnClosing = stateOnClosing || {};
+    stateOnClosing.notification = null;
+
+    component.setState(stateOnClosing);
   };
 
   /**

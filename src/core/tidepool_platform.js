@@ -251,15 +251,23 @@ module.exports = function(api, userSchema, platform, config) {
   /*
    * Track a given event
    */
-  api.metrics.track = function(eventName, properties, cb) {
+  api.metrics.track = function(eventName) {
     api.log('track metric ' + eventName);
 
-    properties = _.assign({
-      source: 'clamshell',
-      version: config.VERSION
-    }, properties);
+    var properties = { source: 'clamshell' };
 
-    return platform.trackMetric(eventName, properties, cb);
+    return platform.trackMetric(eventName, properties);
+  };
+
+  /*
+   * Log this error to the platform
+   */
+  api.errors.log = function(error, message) {
+    api.log('log app error');
+
+    var properties = { source: 'clamshell' };
+
+    return platform.logAppError(error, message, properties);
   };
 
 };

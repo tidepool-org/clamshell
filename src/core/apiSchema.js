@@ -22,7 +22,8 @@ module.exports = function(bows) {
       teams : {}
     },
     notes : {},
-    metrics : {}
+    metrics : {},
+    errors : {}
   };
   return api;
 };

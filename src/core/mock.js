@@ -142,6 +142,13 @@ module.exports = function(api, userSchema) {
     }
   };
 
+  /*
+   * Log this error to the platform
+   */
+  api.errors.log = function(error, message) {
+    api.log('log app error ',error);
+  };
+
   return{
     initialize : function(cb){
       loadSession();

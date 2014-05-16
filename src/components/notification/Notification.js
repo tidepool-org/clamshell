@@ -32,18 +32,37 @@ var Notification = React.createClass({
 
   render: function() {
     var notification = this.props.notification;
-    var type = notification.type || 'alert';
+    var type = notification.info.type || 'alert';
     var className = 'notification notification-' + type;
-    var message = notification.message;
+    var message = notification.info.message;
+    var errorDetail = this.renderErrorDetails(notification.info.details);
 
     var closeLink = this.renderCloseLink();
 
     return (
       /* jshint ignore:start */
       <div className={className} ref='notification'>
-        <span className="notification-message" ref='message'>{message}</span>
-        {closeLink}
+        <p className='notification-body'>
+          <span className='notification-message' ref='message'>{message}</span>
+          {closeLink}
+        </p>
+        {errorDetail}
       </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderErrorDetails:function(details){
+
+    if(!details){
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <p className='notification-details' ref='details'>
+        {details}
+      </p>
       /* jshint ignore:end */
     );
   },
@@ -68,7 +87,8 @@ var Notification = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    this.props.onClose();
+    var stateOnClosing = this.props.notification.stateOnClosing || {};
+    this.props.onClose(stateOnClosing);
   }
 });
 
