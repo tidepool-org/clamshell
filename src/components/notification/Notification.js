@@ -35,7 +35,7 @@ var Notification = React.createClass({
     var type = notification.type || 'alert';
     var className = 'notification notification-' + type;
     var message = notification.info.message;
-    var details = notification.info.details;
+    var errorDetail = this.renderErrorDetails(notification.info.details);
 
     var closeLink = this.renderCloseLink();
 
@@ -43,11 +43,24 @@ var Notification = React.createClass({
       /* jshint ignore:start */
       <div className={className} ref='notification'>
         <span className="notification-message" ref='message'>{message}</span>
-        <div className='notification-details' ref='details'>
-          {details}
-        </div>
+        {errorDetail}
         {closeLink}
       </div>
+      /* jshint ignore:end */
+    );
+  },
+
+  renderErrorDetails:function(details){
+
+    if(!details){
+      return null;
+    }
+
+    return (
+      /* jshint ignore:start */
+      <p className='notification-details' ref='details'>
+        {JSON.stringify(details)}
+      </p>
       /* jshint ignore:end */
     );
   },

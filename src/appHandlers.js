@@ -81,7 +81,7 @@ module.exports = function(component,app) {
 
     var info = {
       message : app.userMessages.PLATFORM_ERROR,
-      details : null,
+      details : error,
       type : 'error'
     };
 
@@ -93,7 +93,6 @@ module.exports = function(component,app) {
     if (status === 401) {
       //go to login
       info.message = app.userMessages.AUTH_ERROR;
-      info.details = error.body;
 
       app.log(info.message);
       app.api.errors.log(error,info.message);
@@ -108,7 +107,6 @@ module.exports = function(component,app) {
     }
 
     if (status === 500) {
-      info.details = error.body;
       app.api.errors.log(error,info.message);
       app.log(info.message);
 
@@ -118,8 +116,6 @@ module.exports = function(component,app) {
 
       return;
     }
-
-    info.details = error.message;
 
     app.api.log(error,info.message);
 
