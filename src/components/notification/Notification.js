@@ -34,7 +34,8 @@ var Notification = React.createClass({
     var notification = this.props.notification;
     var type = notification.type || 'alert';
     var className = 'notification notification-' + type;
-    var message = notification.message;
+    var message = notification.info.message;
+    var details = notification.info.details;
 
     var closeLink = this.renderCloseLink();
 
@@ -42,6 +43,9 @@ var Notification = React.createClass({
       /* jshint ignore:start */
       <div className={className} ref='notification'>
         <span className="notification-message" ref='message'>{message}</span>
+        <div className='notification-details' ref='details'>
+          {details}
+        </div>
         {closeLink}
       </div>
       /* jshint ignore:end */
@@ -68,7 +72,8 @@ var Notification = React.createClass({
     if (e) {
       e.preventDefault();
     }
-    this.props.onClose();
+    var stateOnClosing = this.props.notification.stateOnClosing || {};
+    this.props.onClose(stateOnClosing);
   }
 });
 

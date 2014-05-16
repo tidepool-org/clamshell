@@ -51,7 +51,8 @@ var app = {
   log : bows('App'),
   api : require('./core/apiSchema')(bows),
   dataHelper : require('./core/userDataHelper'),
-  routes : router.routes
+  routes : router.routes,
+  userMessages : require('./userMessages')
 };
 
 window.app = app;

@@ -79,51 +79,84 @@ module.exports = function(component,app) {
 
     var status = error.status ||  'unknown';
 
+    var info = {
+      message : app.userMessages.PLATFORM_ERROR,
+      details : null,
+      type : 'error'
+    };
+
+    //default will refresh
+    var stateOnClosing = {
+      loggedInUser : app.api.user.get()
+    };
+
     if (status === 401) {
       //go to login
-      var message = '401 so redirect to login';
-      app.api.errors.logAppError(error,message);
-      app.log(message);
+      info.message = app.userMessages.AUTH_ERROR;
+      info.details = error.body;
+
+      app.log(info.message);
+      app.api.errors.log(error,info.message);
+
+      //set  what we want the state to be on close
+      stateOnClosing = { routeName: app.routes.login, authenticated: false, showingMenu: false };
+
       component.setState({
-        routeName: app.routes.login,
-        authenticated: false,
-        showingMenu: false
+        notification : { info: info, stateOnClosing : stateOnClosing }
       });
       return;
     }
 
     if (status === 500) {
-      var message = '500 from server';
-      app.api.errors.logAppError(error,message);
-      app.log('500 from server');
-      //show what went wrong
-      return component.handleNotification(error.body,'error');
+      info.details = error.body;
+      app.api.errors.log(error,info.message);
+      app.log(info.message);
+
+      component.setState({
+        notification : { info: info, stateOnClosing : stateOnClosing }
+      });
+
+      return;
     }
 
-    app.api.logAppError(error,'error was captured');
-    return component.handleNotification(error,'error');
+    info.details = error.message;
+
+    app.api.log(error,info.message);
+
+    component.setState({
+      notification : { info: info, stateOnClosing : stateOnClosing }
+    });
+
+    return;
   };
 
   /**
    * Basic handler when a message needs to be shown to the user
    *
-   * @param message - The notification message to show
-   * @param type - The type of notification show, defaults to `info`
+   * @param {Object} info
+   * @param {String} info.message the user friendly message
+   * @param {String} info.type the type of notification
+   * @param {String} info.details optionals error details used in screen shots
+   * @param {Object} stateOnClosing contains state settings that will be applied when notification is closed
    */
-  component.handleNotification =function(message,type){
-
-    type = type ? type : 'success';
+  component.handleNotification =function(info, stateOnClosing){
 
     component.setState({
-      notification : { message: message, type: type}
+      notification : { info: info, stateOnClosing : stateOnClosing }
     });
   };
 
   /**
-   * Clears the notification
+   * Clears the notification and sets any state that is given
+   *
+   * @param {Object} stateOnClosing
    */
-  component.handleNotificationDismissed = function(){
-    component.setState({ notification : null });
+  component.handleNotificationDismissed = function(stateOnClosing){
+
+    stateOnClosing = stateOnClosing || {};
+    stateOnClosing.notification = null;
+
+    component.setState(stateOnClosing);
   };
 
   /**
