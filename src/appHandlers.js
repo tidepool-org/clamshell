@@ -110,6 +110,8 @@ module.exports = function(component,app) {
       //go to login
       info.message = app.userMessages.AUTH_ERROR;
       info.type = 'alert';
+      //its a 401 - the error adds no detail in this case
+      info.error = null;
 
       app.log(info.message);
       app.api.errors.log(error,info.message);
