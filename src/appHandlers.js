@@ -110,11 +110,13 @@ module.exports = function(component,app) {
       //go to login
       info.message = app.userMessages.AUTH_ERROR;
       info.type = 'alert';
+      //its a 401 - the error adds no detail in this case
+      info.details = null;
 
       app.log(info.message);
       app.api.errors.log(error,info.message);
 
-      //set  what we want the state to be on close
+      //set what we want the state to be on close
       stateOnClosing = { routeName: app.routes.login, authenticated: false, showingMenu: false };
 
       component.setState({
