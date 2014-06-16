@@ -37,6 +37,15 @@
   &:extend(.form-control all);
 }
 
+.messageform-when-wrapper {
+  // Leave room for absolute positioned button
+  padding-right: (@message-form-button-width + @message-form-spacing-unit);
+}
+
+.messageform-when {
+  &:extend(.form-control all);
+}
+
 .messageform-button {
   &:extend(.btn all);
   &:extend(.btn-primary all);
@@ -44,7 +53,7 @@
   display: block;
   position: absolute;
   // Compensate for button height smaller than form control height
-  top: (@message-form-spacing-unit + (@form-control-height - @btn-height)/2);
+  top: (@message-form-spacing-unit + ((@form-control-height *3) - @btn-height)/2);
   right: @message-form-spacing-unit;
 
   width: @message-form-button-width;

@@ -23,6 +23,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 /* jshint unused: false */
 
 var React = require('react');
+var sundial = require('sundial');
 
 require('./MessageForm.less');
 
@@ -35,12 +36,20 @@ var MessageForm = React.createClass({
 
   getInitialState: function() {
     return {
-      value: ''
+      msg: '',
+      when : sundial.utcDateString()
     };
   },
 
-  handleChange: function(e) {
-    this.setState({value: e.target.value});
+  handleMsgChange: function(e) {
+    //set the date first time the user starts typing the message
+    if(!this.state.msg){
+      this.setState({when: sundial.utcDateString()})
+    }
+    this.setState({ msg: e.target.value});
+  },
+
+  handleWhenChange: function(e) {
   },
 
   handleSubmit: function(e) {
@@ -50,21 +59,33 @@ var MessageForm = React.createClass({
 
     var submit = this.props.onSubmit;
     if (submit) {
-      submit({text: this.state.value});
-    }
 
-    this.setState({value: ''});
+      console.log('set as ',this.state.when);
+      console.log('save as ',sundial.formatForStorage(this.state.when));
+
+      submit({text: this.state.msg, when: sundial.formatForStorage(this.state.when) });
+    }
+    //reset the form
+    this.setState({msg : '',when : ''});
   },
 
   isButtonDisabled: function() {
-    var value = this.state.value;
-    return !(value && value.length);
+    var msg = this.state.msg;
+    return !(msg && msg.length);
   },
 
   render: function() {
     return (
       /* jshint ignore:start */
       <form className='messageform'>
+        <div className='messageform-when-wrapper'>
+          <input
+            type='text'
+            ref='messageWhen'
+            value={sundial.formatForDisplay(this.state.when,'MM-DD h:mm a')}
+            className='messageform-when'
+            onChange={this.handleWhenChange}/>
+        </div>
         <div className='messageform-textarea-wrapper'>
           <textarea
             type='textarea'
@@ -72,8 +93,8 @@ var MessageForm = React.createClass({
             className='messageform-textarea'
             ref='messageText'
             placeholder={this.props.messagePrompt}
-            value={this.state.value}
-            onChange={this.handleChange}/>
+            value={this.state.msg}
+            onChange={this.handleMsgChange}/>
         </div>
         <button
           type='submit'

@@ -17,7 +17,9 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var _ = require('lodash');
-var moment = require('moment');
+
+var sundial = require('sundial');
+var moment = sundial.momentInstance();
 
 var userDataHelper = {
   getParentMessageId: function(thread) {

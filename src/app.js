@@ -355,17 +355,17 @@ var ClamShellApp = React.createClass({
 
   renderMessageThread:function(){
     var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+
     var header = this.renderHeader({
       title: careTeamName,
       leftIcon: 'back',
       onLeftAction: this.handleBack
     });
 
-
     var content = (
       /* jshint ignore:start */
       <div className='messages-thread'>
-        <NoteThread messages={this.state.selectedThread} />
+        <NoteThread messages={this.state.selectedThread} userId={this.state.loggedInUser.userid} />
         <MessageForm
           messagePrompt={app.userMessages.COMMENT_PROMPT}
           onSubmit={this.handleAddingToConversation} />

@@ -32,7 +32,19 @@ var dataHelper = require('../../core/userDataHelper');
 var NoteThread = React.createClass({
 
   propTypes: {
-    messages: React.PropTypes.array
+    messages: React.PropTypes.array,
+    userId: React.PropTypes.string,
+    onEdit: React.PropTypes.func
+  },
+
+  edit : function(message){
+
+    console.log('edit this?');
+
+    if(this.props.userId === message.userid){
+      console.log('Hell YEAH!!');
+    }
+
   },
 
   renderNote: function(message){
@@ -45,7 +57,8 @@ var NoteThread = React.createClass({
       author={dataHelper.formatFullName(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
-      showCommentLink={false}/>
+      showCommentLink={false}
+      onNoteSelected={this.edit.bind(null, message)}/>
       /* jshint ignore:end */
       );
   },
@@ -59,7 +72,8 @@ var NoteThread = React.createClass({
       author={dataHelper.formatFullName(message.user)}
       note={message.messagetext}
       when={dataHelper.formatDisplayDate(message.timestamp)}
-      showCommentLink={false}/>
+      showCommentLink={false}
+      onNoteSelected={this.edit.bind(null, message)}/>
       /* jshint ignore:end */
       );
   },

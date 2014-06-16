@@ -40,6 +40,11 @@ describe('MessageForm', function() {
     expect(messageText).to.exist;
   });
 
+  it('should have a message time input', function() {
+    var messageTime = component.refs.messageTime;
+    expect(messageTime).to.exist;
+  });
+
   it('should pass the submitted message text to the given handler', function() {
     var myTestMessage = 'should get this message text';
 
