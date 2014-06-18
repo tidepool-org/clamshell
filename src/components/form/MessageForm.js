@@ -42,6 +42,15 @@ var MessageForm = React.createClass({
       offset : null
     };
   },
+  getDefaultProps: function () {
+    return {
+      DATE_MASK : 'YYYY-MM-DD',
+      TIME_MASK : 'HH:mm:ss',
+      EDITED_DATE_MASK : 'YYYY-MM-DD HH:mm:ss',
+      cancelBtnText : 'Cancel',
+      saveBtnText : 'Post'
+    }
+  },
   handleMsgChange: function(e) {
     //set the date first time the user starts typing the message
     if(!this.state.msg){

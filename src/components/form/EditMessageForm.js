@@ -34,27 +34,46 @@ var MessageEditForm = React.createClass({
     onCancel : React.PropTypes.func,
     onSave : React.PropTypes.func
   },
+  getDefaultProps: function () {
+    return {
+      DATE_MASK : 'YYYY-MM-DD',
+      TIME_MASK : 'HH:mm:ss',
+      EDITED_DATE_MASK : 'YYYY-MM-DD HH:mm:ss',
+      cancelBtnText : 'Cancel',
+      saveBtnText : 'Save'
+    }
+  },
   getInitialState: function() {
     return {
       msg: this.props.note.messagetext,
-      offset : null
+      date : sundial.formatForDisplay(this.props.note.timestamp,this.props.DATE_MASK),
+      time : sundial.formatForDisplay(this.props.note.timestamp,this.props.TIME_MASK)
     };
+  },
+  getDateToSave:function(date,time){
+    var theMoment = sundial.momentInstance();
+    return theMoment(date+' '+time,this.props.EDITED_DATE_MASK).toISOString();
   },
   handleSave: function(e) {
     if (e) {
       e.preventDefault();
     }
     this.props.note.messagetext = this.state.msg;
-
+    this.props.note.timestamp = this.getDateToSave(this.state.date,this.state.time);
     this.props.onSave(this.props.note);
   },
+  handleMsgChange: function(e) {
+    this.setState({ msg: e.target.value});
+  },
+  handleDateChange: function(e) {
+    console.log(e.target.value);
+    this.setState({ date: e.target.value});
+  },
+  handleTimeChange: function(e) {
+    console.log(e.target.value);
+    this.setState({ time: e.target.value});
+  },
   render: function() {
-
-    var DATE_MASK = 'YYYY-MM-DD';
-    var TIME_MASK = 'HH:mm:ss';
-
-    var displayDate = sundial.formatForDisplay(this.props.note.timestamp,DATE_MASK);
-    var displayTime = sundial.formatForDisplay(this.props.note.timestamp,TIME_MASK);
 
     return (
       /* jshint ignore:start */
@@ -63,34 +82,35 @@ var MessageEditForm = React.createClass({
           <input
             type='date'
             ref='editMessageDate'
-            placeholder={DATE_MASK}
-            value={displayDate}
-            className='editmessageform-date'/>
+            value={this.state.date}
+            className='editmessageform-date'
+            onChange={this.handleDateChange}/>
           <input
             type='time'
             ref='editMessageTime'
-            placeholder={TIME_MASK}
-            value={displayTime}
-            className='editmessageform-time'/>
+            value={this.state.time}
+            className='editmessageform-time'
+            onChange={this.handleTimeChange}/>
         </div>
         <div className='editmessageform-textarea-wrapper'>
           <textarea
             type='textarea'
-            rows='1'
+            rows='2'
             className='editmessageform-textarea'
             ref='messageText'
-            value={this.state.msg}/>
+            value={this.state.msg}
+            onChange={this.handleMsgChange}/>
         </div>
         <button
           type='submit'
           ref='sendBtn'
           className='editmessageform-button'
-          onClick={this.handleSave}>Save</button>
+          onClick={this.handleSave}>{this.props.saveBtnText}</button>
         <button
           type='reset'
           ref='cancelBtn'
           className='editmessageform-button'
-          onClick={this.props.onCancel}>Cancel</button>  
+          onClick={this.props.onCancel}>{this.props.cancelBtnText}</button>
       </form>
       /* jshint ignore:end */
     );
