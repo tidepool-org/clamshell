@@ -214,7 +214,31 @@ module.exports = function(component,app) {
         previousRoute : component.state.routeName
       });
     });
+  };
 
+  /**
+   * Show this message and make editable
+   *
+   * @param {Message} toEdit - the message to edit
+   */
+  component.handleShowForEdit = function(toEdit){
+    app.trackMetric('Selected For Edit');
+    console.log('edit ',toEdit);
+
+    component.setState({
+      selectedForEdit : toEdit,
+      routeName : app.routes.messageThread
+    });
+  };
+
+  /**
+   * Save the edited message
+   *
+   * @param {Message} edited - the edited message
+   */
+  component.handleSaveEdit = function(edited){
+    app.trackMetric('Edit To Save');
+    console.log('save: ',edited);
   };
 
   /**
@@ -260,7 +284,7 @@ module.exports = function(component,app) {
       component.state.loggedInUser,
       component.state.selectedUser.userid,
       parentId
-      );
+    );
 
     app.api.notes.reply(comment,function(error, addedComment){
       app.log('reply added');

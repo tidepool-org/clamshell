@@ -34,6 +34,7 @@ var TeamNotes = React.createClass({
 
   propTypes: {
     notes : React.PropTypes.array,
+    loggedInId : React.PropTypes.string,
     onThreadSelected : React.PropTypes.func
   },
 
@@ -46,13 +47,9 @@ var TeamNotes = React.createClass({
           ref='teamNote'
           image='large'
           key={note.id}
-          author={dataHelper.formatFullName(note.user)}
-          team={dataHelper.formatFullName(note.team)}
-          numberOfComments={dataHelper.getComments(note.id)}
-          note={note.messagetext}
-          when={dataHelper.formatDisplayDate(note.timestamp)}
-          showCommentLink={true}
-          onNoteSelected={this.props.onThreadSelected.bind(null, note)}/>
+          theNote={note}
+          loggedInId={this.props.loggedInId}
+          onSelect={this.props.onThreadSelected.bind(null, note)}/>
         /* jshint ignore:end */
       );
     }.bind(this));

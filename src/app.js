@@ -77,7 +77,8 @@ var ClamShellApp = React.createClass({
       notification : null,
       showingMenu : false,
       lastNoteAdded: null,
-      lastCommentAdded: null
+      lastCommentAdded: null,
+      selectedForEdit: null
     };
   },
 
@@ -323,9 +324,11 @@ var ClamShellApp = React.createClass({
       <div className='messages-team'>
         <MessageForm
           messagePrompt={app.userMessages.NOTE_PROMPT}
+          saveBtnText={app.userMessages.POST}
           onSubmit={this.handleStartConversation} />
         <TeamNotes
           notes={this.state.selectedUser.notes}
+          loggedInId={this.state.loggedInUser.userid}
           onThreadSelected={this.handleShowConversationThread} />
       </div>
       /* jshint ignore:end */
@@ -345,6 +348,7 @@ var ClamShellApp = React.createClass({
       <div className='messages-all'>
         <TeamNotes
           notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
+          loggedInId={this.state.loggedInUser.userid}
           onThreadSelected={this.handleShowConversationThread} />
       </div>
       /* jshint ignore:end */
@@ -365,10 +369,14 @@ var ClamShellApp = React.createClass({
     var content = (
       /* jshint ignore:start */
       <div className='messages-thread'>
-        <NoteThread messages={this.state.selectedThread} userId={this.state.loggedInUser.userid} />
+        <NoteThread
+          messages={this.state.selectedThread}
+          loggedInId={this.state.loggedInUser.userid}
+          onSelectedForEdit={this.handleShowForEdit}/>
         <MessageForm
           messagePrompt={app.userMessages.COMMENT_PROMPT}
-          onSubmit={this.handleAddingToConversation} />
+          saveBtnText={app.userMessages.POST}
+          onSubmit={this.handleAddingToConversation}/>
       </div>
       /* jshint ignore:end */
       );

@@ -24,5 +24,7 @@ module.exports = {
   COMMENT_PROMPT : 'Type a comment here...',
   MENU : 'Menu',
   SELECT_TO_VIEW : 'Select a person to view notes:',
-  ALL_NOTES : 'All Notes'
+  ALL_NOTES : 'All Notes',
+  SAVE : 'Save',
+  POST : 'Post'
 };

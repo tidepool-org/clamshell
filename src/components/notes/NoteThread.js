@@ -33,32 +33,30 @@ var NoteThread = React.createClass({
 
   propTypes: {
     messages: React.PropTypes.array,
-    userId: React.PropTypes.string,
-    onEdit: React.PropTypes.func
+    loggedInId: React.PropTypes.string,
+    onSelectedForEdit: React.PropTypes.func
   },
 
   edit : function(message){
 
-    console.log('edit this?');
+    console.log('lets save',message);
 
-    if(this.props.userId === message.userid){
-      console.log('Hell YEAH!!');
+    var edit = this.props.onSelectedForEdit;
+    if (edit) {
+      edit(message);
     }
-
   },
 
   renderNote: function(message){
     return (
       /* jshint ignore:start */
       <Note
-      ref='rootNote'
-      image='large'
-      key={message.id}
-      author={dataHelper.formatFullName(message.user)}
-      note={message.messagetext}
-      when={dataHelper.formatDisplayDate(message.timestamp)}
-      showCommentLink={false}
-      onNoteSelected={this.edit.bind(null, message)}/>
+        ref='rootNote'
+        image='large'
+        key={message.id}
+        loggedInId={this.props.loggedInId}
+        theNote={message}
+        onSaveEdit={this.edit}/>
       /* jshint ignore:end */
       );
   },
@@ -66,14 +64,12 @@ var NoteThread = React.createClass({
     return (
       /* jshint ignore:start */
       <Note
-      ref='commentNote'
-      image='small'
-      key={message.id}
-      author={dataHelper.formatFullName(message.user)}
-      note={message.messagetext}
-      when={dataHelper.formatDisplayDate(message.timestamp)}
-      showCommentLink={false}
-      onNoteSelected={this.edit.bind(null, message)}/>
+        ref='commentNote'
+        image='small'
+        key={message.id}
+        loggedInId={this.props.loggedInId}
+        theNote={message}
+        onSaveEdit={this.edit}/>
       /* jshint ignore:end */
       );
   },
@@ -92,7 +88,7 @@ var NoteThread = React.createClass({
     return (
      /* jshint ignore:start */
      <div ref='messageThread' className='notethread'>
-     {items}
+      {items}
      </div>
      /* jshint ignore:end */
      );

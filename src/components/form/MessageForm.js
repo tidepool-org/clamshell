@@ -30,51 +30,59 @@ require('./MessageForm.less');
 // Form for creating new Notes or adding Comments
 var MessageForm = React.createClass({
   propTypes: {
-    messagePrompt: React.PropTypes.string,
-    onSubmit: React.PropTypes.func
+    messagePrompt : React.PropTypes.string,
+    saveBtnText : React.PropTypes.string,
+    onSubmit : React.PropTypes.func
   },
-
   getInitialState: function() {
     return {
-      msg: '',
-      when : sundial.utcDateString()
+      msg: null,
+      whenDisplay : null,
+      whenUtc : null,
+      offset : null
     };
   },
-
   handleMsgChange: function(e) {
     //set the date first time the user starts typing the message
     if(!this.state.msg){
-      this.setState({when: sundial.utcDateString()})
+      this.setState({whenUtc: sundial.utcDateString()})
     }
     this.setState({ msg: e.target.value});
   },
-
   handleWhenChange: function(e) {
   },
-
-  handleSubmit: function(e) {
+  resetState: function(){
+    this.setState({
+      msg: null,
+      when : null,
+      offset : null
+    });
+  },
+  handleSave: function(e) {
     if (e) {
       e.preventDefault();
     }
-
     var submit = this.props.onSubmit;
     if (submit) {
-
-      console.log('set as ',this.state.when);
-      console.log('save as ',sundial.formatForStorage(this.state.when));
-
-      submit({text: this.state.msg, when: sundial.formatForStorage(this.state.when) });
+      submit({
+        text: this.state.msg,
+        when: sundial.formatForStorage(this.state.when)
+      });
     }
-    //reset the form
-    this.setState({msg : '',when : ''});
+    this.resetState();
   },
-
   isButtonDisabled: function() {
     var msg = this.state.msg;
     return !(msg && msg.length);
   },
-
   render: function() {
+
+    var displayDate;
+
+    if(this.state.when){
+      displayDate = sundial.formatForDisplay(this.state.whenUtc,'YYYY-MM-DD h:mm a');
+    }
+
     return (
       /* jshint ignore:start */
       <form className='messageform'>
@@ -82,7 +90,8 @@ var MessageForm = React.createClass({
           <input
             type='text'
             ref='messageWhen'
-            value={sundial.formatForDisplay(this.state.when,'MM-DD h:mm a')}
+            placeholder={'YYYY-MM-DD h:mm a'}
+            value={displayDate}
             className='messageform-when'
             onChange={this.handleWhenChange}/>
         </div>
@@ -101,7 +110,7 @@ var MessageForm = React.createClass({
           ref='sendBtn'
           className='messageform-button'
           disabled={this.isButtonDisabled()}
-          onClick={this.handleSubmit}>Post</button>
+          onClick={this.handleSave}>{this.props.saveBtnText}</button>
       </form>
       /* jshint ignore:end */
     );

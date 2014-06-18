@@ -23,28 +23,74 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
+var EditMessageForm = require('../form/EditMessageForm');
+var dataHelper = require('../../core/userDataHelper');
+
 require('./Note.less');
 
 var Note = React.createClass({
 
   propTypes: {
-    when : React.PropTypes.string,
+    theNote : React.PropTypes.object,
     image : React.PropTypes.string,
-    author : React.PropTypes.string,
-    note : React.PropTypes.string,
-    team : React.PropTypes.string,
-    showCommentLink : React.PropTypes.bool,
-    onNoteSelected : React.PropTypes.func
+    loggedInId : React.PropTypes.string,
+    onSelect : React.PropTypes.func,
+    onSaveEdit : React.PropTypes.func
+  },
+
+  getInitialState: function() {
+    return {
+      editing : false
+    };
+  },
+
+  componentDidMount: function () {
+    this.setState({
+      author :  dataHelper.formatFullName(this.props.theNote.user),
+      team : dataHelper.formatFullName(this.props.theNote.team),
+      numberOfComments : dataHelper.getComments(this.props.theNote.id),
+      note : this.props.theNote.messagetext,
+      when : dataHelper.formatDisplayDate(this.props.theNote.timestamp)
+    });
+  },
+
+  getNote : function(){
+    return this.props.theNote;
+  },
+
+  handleSelect : function(e){
+    if (e) {
+      e.preventDefault();
+    }
+    var select = this.props.onSelect;
+
+    if (select) {
+      select();
+    };
+  },
+
+  handleAllowEdit : function(e){
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState({editing:true});
+  },
+
+  handleCancelEdit : function(e){
+    if (e) {
+      e.preventDefault();
+    }
+    this.setState({editing:false});
   },
 
   renderTitle : function(){
     var noteTeam;
     //show if they differ - there is no point in showing My Group > MyGroup
-    if(this.props.team && this.props.team !== this.props.author){
+    if(this.state.team && this.state.team !== this.state.author){
       /* jshint ignore:start */
       noteTeam = (
         <span className='note-title-team'>
-          <span>{' to ' + this.props.team}</span>
+          <span>{' to ' + this.state.team}</span>
         </span>
       );
       /* jshint ignore:end */
@@ -52,40 +98,85 @@ var Note = React.createClass({
     /* jshint ignore:start */
     return (
       <div ref='messageAuthorAndGroup' className='note-title'>
-        <span className='note-title-author'>{this.props.author}</span>
+        <span className='note-title-author'>{this.state.author}</span>
         {noteTeam}
       </div>
     );
     /* jshint ignore:end */
   },
 
-  renderCommentLink : function(){
-    if(this.props.showCommentLink){
+  renderShowThreadLink : function(){
+    if(this.props.onSelect){
       return (
         /* jshint ignore:start */
-        <div ref='showMessageThread' className='note-comments'>
-          <div className='note-comments-text'>Comment</div>
-        </div>
+        <a
+          className='note-comments note-comments-text'
+          href=''
+          onClick={this.handleSelect}
+          ref='showMessageThread'>Comments</a>
         /* jshint ignore:end */
       );
     }
   },
 
+  renderEditLink : function(){
+
+    if(this.props.loggedInId === this.props.theNote.userid){
+      return (
+        /* jshint ignore:start */
+        <a
+          className='note-edit'
+          href=''
+          onClick={this.handleAllowEdit}
+          ref='editNote'>Edit</a>
+        /* jshint ignore:end */
+      );
+    }
+  },
+
+  renderAsEdit:function(){
+    return(
+      <EditMessageForm
+        note={this.props.theNote}
+        onSave={this.props.onSaveEdit}
+        onCancel={this.handleCancelEdit} />
+    );
+  },
+
+  renderAsDetail:function(){
+    return(
+      <div>
+      <div className='note-header'>
+        <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
+      </div>
+      <div ref='messageText' className='note-text'>{this.state.note}</div>
+      </div>
+    );
+  },
+
   renderNoteContent: function() {
-    var noteTitle = this.renderTitle();
-    var commentLink = this.renderCommentLink();
+    var title = this.renderTitle();
+    var form;
+    var details;
+
+    if( this.state.editing ){
+      form = this.renderAsEdit();
+    } else {
+      details = this.renderAsDetail();
+    }
+    var threadLink = this.renderShowThreadLink();
+    var editLink = this.renderEditLink();
 
     return this.transferPropsTo(
       /* jshint ignore:start */
       <div className='note-content'>
         <div ref='imgColumn' className={'note-picture note-picture-' + this.props.image}></div>
         <div ref='detailColumn' className='note-details'>
-          <div className='note-header'>
-            {noteTitle}
-            <div ref='messageWhen' className='note-timestamp'>{this.props.when}</div>
-          </div>
-          <div ref='messageText' className='note-text'>{this.props.note}</div>
-          {commentLink}
+          {editLink}
+          {title}
+          {details}
+          {form}
+          {threadLink}
         </div>
       </div>
       /* jshint ignore:end */
@@ -93,40 +184,16 @@ var Note = React.createClass({
   },
 
   render: function() {
-    var className = 'note';
 
     var note = this.renderNoteContent();
 
-    var onNoteSelected = this.props.onNoteSelected;
-    if (onNoteSelected) {
-      var handleClick = function(e) {
-        if (e) {
-          e.preventDefault();
-        }
-        onNoteSelected();
-      };
-
-      className = className + ' note-link';
-
+    return (
       /* jshint ignore:start */
-      note = (
-        <a href='' className={className} onClick={handleClick}>
-          {note}
-        </a>
-      );
+      <div className='note'>
+        {note}
+      </div>
       /* jshint ignore:end */
-    }
-    else {
-      /* jshint ignore:start */
-      note = (
-        <div className={className}>
-          {note}
-        </div>
-      );
-      /* jshint ignore:end */
-    }
-
-    return note;
+    );
   }
 });
 
