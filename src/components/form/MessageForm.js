@@ -34,16 +34,6 @@ var MessageForm = React.createClass({
     saveBtnText : React.PropTypes.string,
     onSubmit : React.PropTypes.func
   },
-  initialState: function(){
-    return {
-      msg: null,
-      whenUtc : null,
-      date: null,
-      time: null,
-      offset : null,
-      changeDateTime : false
-    };
-  },
   getInitialState: function() {
     return this.initialState();
   },
@@ -56,14 +46,46 @@ var MessageForm = React.createClass({
       saveBtnText : 'Post'
     }
   },
+  /*
+   * Declared so that we can reset them easily
+   */
+  initialState: function(){
+    return {
+      msg: null,
+      whenUtc : null,
+      date: null,
+      time: null,
+      offset : null,
+      editing : false,
+      changeDateTime : false
+    };
+  },
+  /*
+   * If there is now a message show
+   * - make sure the current datetime is set
+   * - go in to `editing` mode
+   *
+   * Always keep the msg state current
+   */
   handleMsgChange: function(e) {
-    //set the date first time the user starts typing the message
     if (e.target.value) {
-      this.setState({ whenUtc: sundial.utcDateString() , editing: true });
-    } else {
-      this.setState({ whenUtc: null , editing: false });
+      this.setState({
+        whenUtc: sundial.utcDateString(),
+        editing: true
+      });
     }
     this.setState({ msg: e.target.value});
+  },
+  /*
+   * Use the given onCancel handler or just
+   * clear the data if there wasn't one given
+   */
+  handleCancel: function(e) {
+    if(this.props.onCancel){
+      this.props.onCancel();
+    } else {
+      this.setState(this.initialState());
+    }
   },
   handleDateChange: function(e) {
     this.setState({ date: e.target.value});
@@ -71,46 +93,71 @@ var MessageForm = React.createClass({
   handleTimeChange: function(e) {
     this.setState({ time: e.target.value});
   },
+  /*
+   * If the date and/or time has been edited format to utc and return that
+   * otherwise return the existing utc formated timestamp
+   */
+  getUtcTimestamp: function() {
+    var utcTimestamp = this.state.whenUtc;
+
+    if(this.state.date && this.state.time){
+      var editedTimestamp = this.state.date+'T'+this.state.time;
+      utcTimestamp =  sundial.momentInstance(editedTimestamp, this.props.EDITED_DATE_MASK).toISOString();
+    }
+
+    return utcTimestamp;
+  },
   handleSave: function(e) {
     if (e) {
       e.preventDefault();
     }
-    var submit = this.props.onSubmit;
-    if (submit) {
-      submit({
+    if (this.props.onSubmit) {
+
+      var utcTimestamp = this.getUtcTimestamp();
+
+      this.props.onSubmit({
         text: this.state.msg,
-        when: this.state.whenUtc
+        when: utcTimestamp
       });
     }
-    this.setState(this.initialState);
+    this.setState(this.initialState());
   },
+  /*
+   * Split the timestamp into the date and time
+   * components to allow for editing
+   */
   showEditDate:function(e){
     if (e) {
       e.preventDefault();
     }
-    this.setState({changeDateTime:true});
-    console.log('now allow edit')
+    this.setState({
+      changeDateTime : true,
+      time : sundial.formatForDisplay(this.state.whenUtc,this.props.TIME_MASK),
+      date : sundial.formatForDisplay(this.state.whenUtc,this.props.DATE_MASK)
+    });
   },
   isButtonDisabled: function() {
     var msg = this.state.msg;
     return !(msg && msg.length);
   },
   /*
-   * Just displays the notes date
+   * Just displays the notes date if it is set
    */
   renderDisplayDate: function(){
     var displayDate;
     if(this.state.whenUtc){
-      displayDate = sundial.formatForDisplay(this.state.whenUtc);
+      displayDate = (
+        <div ref='showDateTime' onClick={this.showEditDate}>
+          <label className='messageform-datetime-label'>
+            {sundial.formatForDisplay(this.state.whenUtc)}
+          </label>
+        </div>
+      );
     }
-    return (
-      <div ref='showDateTime' onClick={this.showEditDate}>
-        <label>{displayDate}</label>
-      </div>
-    );
+    return displayDate;
   },
   /*
-   * Enables the editing of the notes date
+   * Enables the editing of the notes date and time components
    */
   renderEditableDate: function(){
     return (
@@ -130,17 +177,25 @@ var MessageForm = React.createClass({
       </div>
     );
   },
-  /*
-   * The buttons
-   */
   renderButtons: function(){
     return (
-      <button
-        type='submit'
-        ref='sendBtn'
-        className='messageform-button'
-        disabled={this.isButtonDisabled()}
-        onClick={this.handleSave}>{this.props.saveBtnText}</button>
+      <div className='messageform-buttons'>
+        <button
+          type='submit'
+          ref='sendBtn'
+          className='messageform-button'
+          disabled={this.isButtonDisabled()}
+          onClick={this.handleSave}>
+          {this.props.saveBtnText}
+        </button>
+        <button
+          type='reset'
+          ref='cancelBtn'
+          className='messageform-button'
+          onClick={this.handleCancel}>
+          {this.props.cancelBtnText}
+        </button>
+      </div>
     );
   },
   render: function() {
