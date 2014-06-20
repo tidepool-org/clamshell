@@ -329,7 +329,8 @@ var ClamShellApp = React.createClass({
         <TeamNotes
           notes={this.state.selectedUser.notes}
           loggedInId={this.state.loggedInUser.userid}
-          onThreadSelected={this.handleShowConversationThread} />
+          onThreadSelected={this.handleShowConversationThread}
+          onSaveEdited={this.handleSaveEdit} />
       </div>
       /* jshint ignore:end */
     );
@@ -349,7 +350,8 @@ var ClamShellApp = React.createClass({
         <TeamNotes
           notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
           loggedInId={this.state.loggedInUser.userid}
-          onThreadSelected={this.handleShowConversationThread} />
+          onThreadSelected={this.handleShowConversationThread}
+          onSaveEdited={this.handleSaveEdit} />
       </div>
       /* jshint ignore:end */
     );
@@ -372,7 +374,7 @@ var ClamShellApp = React.createClass({
         <NoteThread
           messages={this.state.selectedThread}
           loggedInId={this.state.loggedInUser.userid}
-          onSelectedForEdit={this.handleShowForEdit}/>
+          onSaveEdited={this.handleSaveEdit}/>
         <MessageForm
           messagePrompt={app.userMessages.COMMENT_PROMPT}
           saveBtnText={app.userMessages.POST}

@@ -34,7 +34,7 @@ var NoteThread = React.createClass({
   propTypes: {
     messages: React.PropTypes.array,
     loggedInId: React.PropTypes.string,
-    onSelectedForEdit: React.PropTypes.func
+    onSaveEdited : React.PropTypes.func
   },
 
   edit : function(message){
@@ -56,7 +56,7 @@ var NoteThread = React.createClass({
         key={message.id}
         loggedInId={this.props.loggedInId}
         theNote={message}
-        onSaveEdit={this.edit}/>
+        onSaveEdit={this.props.onSaveEdited}/>
       /* jshint ignore:end */
       );
   },
@@ -69,7 +69,7 @@ var NoteThread = React.createClass({
         key={message.id}
         loggedInId={this.props.loggedInId}
         theNote={message}
-        onSaveEdit={this.edit}/>
+        onSaveEdit={this.props.onSaveEdited}/>
       /* jshint ignore:end */
       );
   },

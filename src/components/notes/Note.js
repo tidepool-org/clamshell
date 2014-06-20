@@ -23,7 +23,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 
-var EditMessageForm = require('../form/EditMessageForm');
+var MessageForm = require('../form/MessageForm');
 var dataHelper = require('../../core/userDataHelper');
 
 require('./Note.less');
@@ -67,6 +67,21 @@ var Note = React.createClass({
     if (select) {
       select();
     };
+  },
+
+  handleEditSave:function(edits){
+
+    var saveEdit = this.props.onSaveEdit;
+
+    if(saveEdit){
+      var noteUpdates = this.props.theNote;
+      noteUpdates.messagetext = edits.text;
+      noteUpdates.timestamp = edits.timestamp;
+
+      console.log('save it ',noteUpdates);
+      saveEdit(noteUpdates);
+    }
+
   },
 
   handleAllowEdit : function(e){
@@ -136,10 +151,11 @@ var Note = React.createClass({
 
   renderAsEdit:function(){
     return(
-      <EditMessageForm
-        note={this.props.theNote}
-        onSave={this.props.onSaveEdit}
-        onCancel={this.handleCancelEdit} />
+      <MessageForm
+        editNote={this.props.theNote}
+        onSubmit={this.props.handleEditSave}
+        onCancel={this.handleCancelEdit}
+        saveBtnText='Save' />
     );
   },
 

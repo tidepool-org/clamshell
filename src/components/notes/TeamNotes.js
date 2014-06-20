@@ -35,7 +35,8 @@ var TeamNotes = React.createClass({
   propTypes: {
     notes : React.PropTypes.array,
     loggedInId : React.PropTypes.string,
-    onThreadSelected : React.PropTypes.func
+    onThreadSelected : React.PropTypes.func,
+    onSaveEdited : React.PropTypes.func
   },
 
   buildViewableNotes:function(rawNotes){
@@ -49,6 +50,7 @@ var TeamNotes = React.createClass({
           key={note.id}
           theNote={note}
           loggedInId={this.props.loggedInId}
+          onSaveEdit={this.props.onSaveEdited.bind(null, note)}
           onSelect={this.props.onThreadSelected.bind(null, note)}/>
         /* jshint ignore:end */
       );

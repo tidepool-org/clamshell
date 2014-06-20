@@ -30,8 +30,10 @@ require('./MessageForm.less');
 // Form for creating new Notes or adding Comments
 var MessageForm = React.createClass({
   propTypes: {
+    editNote : React.PropTypes.object,
     messagePrompt : React.PropTypes.string,
     saveBtnText : React.PropTypes.string,
+    onCancel : React.PropTypes.func,
     onSubmit : React.PropTypes.func
   },
   getInitialState: function() {
@@ -44,6 +46,21 @@ var MessageForm = React.createClass({
       EDITED_DATE_MASK : 'YYYY-MM-DD HH:mm',
       cancelBtnText : 'Cancel',
       saveBtnText : 'Post'
+    }
+  },
+  componentDidMount: function () {
+
+    if(this.props.editNote){
+      //perset all state for an existing not
+      this.setState({
+        msg : this.props.editNote.messagetext,
+        whenUtc : this.props.editNote.timestamp,
+        editing : true,
+        changeDateTime : true,
+        time : sundial.formatForDisplay(this.props.editNote.timestamp,this.props.TIME_MASK),
+        date : sundial.formatForDisplay(this.props.editNote.timestamp,this.props.DATE_MASK)
+      });
+      this.refs.messageText.getDOMNode().rows = 3;
     }
   },
   /*
