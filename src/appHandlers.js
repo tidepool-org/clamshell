@@ -250,9 +250,10 @@ module.exports = function(component,app) {
     app.trackMetric('Added Note');
     var message = app.dataHelper.createMessage(
       note.text,
+      note.timestamp,
       component.state.loggedInUser,
       component.state.selectedUser.userid
-      );
+    );
 
     app.api.notes.add(message,function(error,addedNote){
       app.log('thread started');
@@ -281,6 +282,7 @@ module.exports = function(component,app) {
     //we set the parentId here
     var comment = app.dataHelper.createMessage(
       note.text,
+      note.timestamp,
       component.state.loggedInUser,
       component.state.selectedUser.userid,
       parentId

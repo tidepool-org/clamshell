@@ -40,8 +40,8 @@ var MessageForm = React.createClass({
   getDefaultProps: function () {
     return {
       DATE_MASK : 'YYYY-MM-DD',
-      TIME_MASK : 'HH:mm:ss',
-      EDITED_DATE_MASK : 'YYYY-MM-DD HH:mm:ss',
+      TIME_MASK : 'HH:mm',
+      EDITED_DATE_MASK : 'YYYY-MM-DD HH:mm',
       cancelBtnText : 'Cancel',
       saveBtnText : 'Post'
     }
@@ -51,7 +51,7 @@ var MessageForm = React.createClass({
    */
   initialState: function(){
     return {
-      msg: null,
+      msg: '',
       whenUtc : null,
       date: null,
       time: null,
@@ -68,12 +68,6 @@ var MessageForm = React.createClass({
    * Always keep the msg state current
    */
   handleMsgChange: function(e) {
-    if (e.target.value) {
-      this.setState({
-        whenUtc: sundial.utcDateString(),
-        editing: true
-      });
-    }
     this.setState({ msg: e.target.value});
   },
   /*
@@ -84,6 +78,7 @@ var MessageForm = React.createClass({
     if(this.props.onCancel){
       this.props.onCancel();
     } else {
+      this.refs.messageText.getDOMNode().rows = 1;
       this.setState(this.initialState());
     }
   },
@@ -102,7 +97,8 @@ var MessageForm = React.createClass({
 
     if(this.state.date && this.state.time){
       var editedTimestamp = this.state.date+'T'+this.state.time;
-      utcTimestamp =  sundial.momentInstance(editedTimestamp, this.props.EDITED_DATE_MASK).toISOString();
+      var aMoment = sundial.momentInstance();
+      utcTimestamp =  aMoment(editedTimestamp, this.props.EDITED_DATE_MASK).toISOString();
     }
 
     return utcTimestamp;
@@ -113,14 +109,19 @@ var MessageForm = React.createClass({
     }
     if (this.props.onSubmit) {
 
-      var utcTimestamp = this.getUtcTimestamp();
-
       this.props.onSubmit({
         text: this.state.msg,
-        when: utcTimestamp
+        timestamp: this.getUtcTimestamp()
       });
+      this.setState(this.initialState());
     }
-    this.setState(this.initialState());
+  },
+  handleGrow:function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    this.refs.messageText.getDOMNode().rows = 3;
+    this.setState({ editing: true, whenUtc: sundial.utcDateString()});
   },
   /*
    * Split the timestamp into the date and time
@@ -181,26 +182,42 @@ var MessageForm = React.createClass({
     return (
       <div className='messageform-buttons'>
         <button
+          type='reset'
+          ref='cancelBtn'
+          className='messageform-button messageform-button-cancel'
+          onClick={this.handleCancel}>
+          {this.props.cancelBtnText}
+        </button>
+        <button
           type='submit'
           ref='sendBtn'
-          className='messageform-button'
+          className='messageform-button messageform-button-save'
           disabled={this.isButtonDisabled()}
           onClick={this.handleSave}>
           {this.props.saveBtnText}
         </button>
-        <button
-          type='reset'
-          ref='cancelBtn'
-          className='messageform-button'
-          onClick={this.handleCancel}>
-          {this.props.cancelBtnText}
-        </button>
+      </div>
+    );
+  },
+  renderTextArea: function(){
+    return (
+      <div className='messageform-textarea-wrapper'>
+        <textarea
+          type='textarea'
+          rows='1'
+          className='messageform-textarea'
+          ref='messageText'
+          placeholder={this.props.messagePrompt}
+          value={this.state.msg}
+          onFocus={this.handleGrow}
+          onChange={this.handleMsgChange}/>
       </div>
     );
   },
   render: function() {
 
     var date = this.renderDisplayDate();
+    var textArea = this.renderTextArea();
     var buttons;
 
     if(this.state.editing){
@@ -215,17 +232,7 @@ var MessageForm = React.createClass({
       /* jshint ignore:start */
       <form className='messageform'>
         {date}
-        <div className='messageform-textarea-wrapper'>
-          <textarea
-            type='textarea'
-            rows='1'
-            className='messageform-textarea'
-            ref='messageText'
-            placeholder={this.props.messagePrompt}
-            value={this.state.msg}
-            onFocus={this.grow}
-            onChange={this.handleMsgChange}/>
-        </div>
+        {textArea}
         {buttons}
       </form>
       /* jshint ignore:end */

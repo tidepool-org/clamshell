@@ -52,11 +52,19 @@
 }
 
 .messageform-button {
-   &:extend(.btn all);
+  &:extend(.btn all);
   &:extend(.btn-primary all);
 
-  width: @message-form-button-width;
   margin-top: 5px;
+}
+
+.messageform-button-save {
+  padding-left: 5px;
+  padding-right: 5px;
+  float: right;
+}
+
+.messageform-button-cancel {
   margin-right: 5px;
   padding-left: 5px;
   padding-right: 5px;
