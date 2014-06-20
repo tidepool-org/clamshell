@@ -50,8 +50,8 @@ var TeamNotes = React.createClass({
           key={note.id}
           theNote={note}
           loggedInId={this.props.loggedInId}
-          onSaveEdit={this.props.onSaveEdited.bind(null, note)}
-          onSelect={this.props.onThreadSelected.bind(null, note)}/>
+          onSaveEdit={this.props.onSaveEdited}
+          onShowThread={this.props.onThreadSelected.bind(null, note)}/>
         /* jshint ignore:end */
       );
     }.bind(this));

@@ -37,16 +37,6 @@ var NoteThread = React.createClass({
     onSaveEdited : React.PropTypes.func
   },
 
-  edit : function(message){
-
-    console.log('lets save',message);
-
-    var edit = this.props.onSelectedForEdit;
-    if (edit) {
-      edit(message);
-    }
-  },
-
   renderNote: function(message){
     return (
       /* jshint ignore:start */

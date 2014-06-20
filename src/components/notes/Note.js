@@ -34,7 +34,7 @@ var Note = React.createClass({
     theNote : React.PropTypes.object,
     image : React.PropTypes.string,
     loggedInId : React.PropTypes.string,
-    onSelect : React.PropTypes.func,
+    onShowThread : React.PropTypes.func,
     onSaveEdit : React.PropTypes.func
   },
 
@@ -58,14 +58,14 @@ var Note = React.createClass({
     return this.props.theNote;
   },
 
-  handleSelect : function(e){
+  handleShowThread : function(e){
     if (e) {
       e.preventDefault();
     }
-    var select = this.props.onSelect;
+    var showThread = this.props.onShowThread;
 
-    if (select) {
-      select();
+    if (showThread) {
+      showThread();
     };
   },
 
@@ -77,9 +77,12 @@ var Note = React.createClass({
       var noteUpdates = this.props.theNote;
       noteUpdates.messagetext = edits.text;
       noteUpdates.timestamp = edits.timestamp;
-
-      console.log('save it ',noteUpdates);
       saveEdit(noteUpdates);
+      this.setState({
+        note : edits.text,
+        when : dataHelper.formatDisplayDate(edits.timestamp),
+        editing : false
+      });
     }
 
   },
@@ -121,13 +124,13 @@ var Note = React.createClass({
   },
 
   renderShowThreadLink : function(){
-    if(this.props.onSelect){
+    if(this.props.onShowThread){
       return (
         /* jshint ignore:start */
         <a
           className='note-comments note-comments-text'
           href=''
-          onClick={this.handleSelect}
+          onClick={this.handleShowThread}
           ref='showMessageThread'>Comments</a>
         /* jshint ignore:end */
       );
@@ -153,7 +156,7 @@ var Note = React.createClass({
     return(
       <MessageForm
         editNote={this.props.theNote}
-        onSubmit={this.props.handleEditSave}
+        onSubmit={this.handleEditSave}
         onCancel={this.handleCancelEdit}
         saveBtnText='Save' />
     );
