@@ -49,7 +49,6 @@ var MessageForm = React.createClass({
     }
   },
   componentDidMount: function () {
-
     if(this.props.editNote){
       //perset all state for an existing not
       this.setState({
@@ -130,6 +129,7 @@ var MessageForm = React.createClass({
         text: this.state.msg,
         timestamp: this.getUtcTimestamp()
       });
+      this.refs.messageText.getDOMNode().rows = 1;
       this.setState(this.initialState());
     }
   },
