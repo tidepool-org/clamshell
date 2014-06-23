@@ -138,7 +138,7 @@ var Note = React.createClass({
 
   renderEditLink : function(){
 
-    if(this.props.onSaveEdit){
+    if(this.props.onSaveEdit && this.state.editing === false ){
       return (
         /* jshint ignore:start */
         <a
@@ -152,54 +152,47 @@ var Note = React.createClass({
   },
 
   renderAsEdit:function(){
-    return(
-      /* jshint ignore:start */
-      <MessageForm
-        editNote={this.props.theNote}
-        onSubmit={this.handleEditSave}
-        onCancel={this.handleCancelEdit}
-        saveBtnText='Save' />
-      /* jshint ignore:end */
-    );
+    if(this.state.editing){
+      return(
+        /* jshint ignore:start */
+        <MessageForm
+          editNote={this.props.theNote}
+          onSubmit={this.handleEditSave}
+          onCancel={this.handleCancelEdit}
+          saveBtnText='Save' />
+        /* jshint ignore:end */
+      );
+    }
   },
 
   renderAsDetail:function(){
-    return(
-      /* jshint ignore:start */
-      <div>
-      <div className='note-header'>
-        <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
-      </div>
-      <div ref='messageText' className='note-text'>{this.state.note}</div>
-      </div>
-      /* jshint ignore:end */
-    );
+    if(this.state.editing === false){
+      return(
+        /* jshint ignore:start */
+        <div>
+        <div className='note-header'>
+          <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
+        </div>
+        <div ref='messageText' className='note-text'>{this.state.note}</div>
+        </div>
+        /* jshint ignore:end */
+      );
+    }
   },
 
   renderNoteContent: function() {
-    var title = this.renderTitle();
-    var editLink;
-    var form;
-    var details;
 
-    if( this.state.editing ){
-      form = this.renderAsEdit();
-    } else {
-      details = this.renderAsDetail();
-      editLink = this.renderEditLink();
-    }
-    var threadLink = this.renderShowThreadLink();
+    var details = this.renderAsDetail() ? this.renderAsDetail() : this.renderAsEdit();
 
     return this.transferPropsTo(
       /* jshint ignore:start */
       <div className='note-content'>
         <div ref='imgColumn' className={'note-picture note-picture-' + this.props.image}></div>
         <div ref='detailColumn' className='note-details'>
-          {editLink}
-          {title}
+          {this.renderTitle()}
+          {this.renderEditLink()}
           {details}
-          {form}
-          {threadLink}
+          {this.renderShowThreadLink()}
         </div>
       </div>
       /* jshint ignore:end */
