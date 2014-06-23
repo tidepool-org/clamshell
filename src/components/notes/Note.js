@@ -178,6 +178,7 @@ var Note = React.createClass({
 
   renderNoteContent: function() {
     var title = this.renderTitle();
+    var editLink;
     var form;
     var details;
 
@@ -185,9 +186,9 @@ var Note = React.createClass({
       form = this.renderAsEdit();
     } else {
       details = this.renderAsDetail();
+      editLink = this.renderEditLink();
     }
     var threadLink = this.renderShowThreadLink();
-    var editLink = this.renderEditLink();
 
     return this.transferPropsTo(
       /* jshint ignore:start */
