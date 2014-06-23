@@ -20,12 +20,13 @@ var Notification = require('../../src/components/notification/Notification');
 
 describe('Notification', function() {
   var component;
+  var handleClose = sinon.spy();
 
   beforeEach(function() {
     component = helpers.mountComponent(
       Notification({
-        notification: {type: 'error', message: 'hello'},
-        onClose: function() {}
+        notification: {info : { type: 'error', message: 'hello', details : 'some details'}},
+        onClose: handleClose
       })
     );
   });
@@ -47,11 +48,6 @@ describe('Notification', function() {
   });
 
   it('should call handler when close link is clicked', function() {
-    var handleClose = sinon.spy();
-    component.setProps({
-      onClose: handleClose
-    });
-
     component.refs.close.props.onClick();
 
     expect(handleClose).to.have.been.called;

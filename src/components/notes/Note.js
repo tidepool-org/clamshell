@@ -66,7 +66,7 @@ var Note = React.createClass({
 
     if (showThread) {
       showThread();
-    };
+    }
   },
 
   handleEditSave:function(edits){
@@ -154,22 +154,26 @@ var Note = React.createClass({
 
   renderAsEdit:function(){
     return(
+      /* jshint ignore:start */
       <MessageForm
         editNote={this.props.theNote}
         onSubmit={this.handleEditSave}
         onCancel={this.handleCancelEdit}
         saveBtnText='Save' />
+      /* jshint ignore:end */
     );
   },
 
   renderAsDetail:function(){
     return(
+      /* jshint ignore:start */
       <div>
       <div className='note-header'>
         <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
       </div>
       <div ref='messageText' className='note-text'>{this.state.note}</div>
       </div>
+      /* jshint ignore:end */
     );
   },
 

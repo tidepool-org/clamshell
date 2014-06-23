@@ -22,42 +22,103 @@ var MessageForm = require('../../src/components/form/MessageForm');
 describe('MessageForm', function() {
   var component;
 
-  beforeEach(function() {
-    component = helpers.mountComponent(MessageForm());
-  });
-
   afterEach(function() {
     helpers.unmountComponent();
   });
 
-  it('should have a send button', function() {
-    var sendBtn = component.refs.sendBtn;
-    expect(sendBtn).to.exist;
-  });
-
-  it('should have a message text input', function() {
-    var messageText = component.refs.messageText;
-    expect(messageText).to.exist;
-  });
-
-  it('should have a message time input', function() {
-    var messageTime = component.refs.messageTime;
-    expect(messageTime).to.exist;
-  });
-
-  it('should pass the submitted message text to the given handler', function() {
-    var myTestMessage = 'should get this message text';
-
-    var handleMessage = sinon.spy();
-    component.setProps({
-      onSubmit: handleMessage
+  describe('by default', function() {
+    beforeEach(function() {
+      component = helpers.mountComponent(MessageForm());
     });
-    component.setState({
-      value: myTestMessage
-    });
-    var clickPost = component.refs.sendBtn.props.onClick;
-    clickPost();
 
-    expect(handleMessage).to.have.been.calledWith({text: myTestMessage});
+    it('does not have a cancel button', function() {
+      expect(component.refs.cancelBtn).to.not.exist;
+    });
+    it('does not have a send button', function() {
+      expect(component.refs.sendBtn).to.not.exist;
+    });
+    it('has text input', function() {
+      expect(component.refs.messageText).to.exist;
+    });
+    it('text input should only be one line when not editing', function() {
+      expect(component.refs.messageText.getDOMNode().rows).to.equal(1);
+    });
+    it('should not show the message time by defaut', function() {
+      expect(component.refs.showDateTime).to.not.exist;
+    });
   });
+
+  describe('when message form has focus', function() {
+    beforeEach(function() {
+      component = helpers.mountComponent(MessageForm());
+      component.refs.messageText.props.onFocus();
+    });
+
+    it('will set it to be in edit mode', function() {
+      expect(component.refs.sendBtn).to.exist;
+    });
+
+    it('will set it to be in edit mode', function() {
+      expect(component.refs.sendBtn).to.exist;
+    });
+
+    it('will show a send button', function() {
+      expect(component.refs.sendBtn).to.exist;
+    });
+    it('will show a cancel button', function() {
+      expect(component.refs.cancelBtn).to.exist;
+    });
+
+  });
+
+  describe('on saving', function() {
+    beforeEach(function() {
+      component = helpers.mountComponent(MessageForm());
+      component.refs.messageText.props.onFocus();
+    });
+
+    it('gives submitted msg and timestamp to handler', function() {
+      var myTestMessage = 'should get this message text';
+      var theTime = new Date().toISOString();
+
+      var handleMessage = sinon.spy();
+      component.setProps({
+        onSubmit: handleMessage
+      });
+
+      component.setState({
+        msg: myTestMessage,
+        whenUtc : theTime
+      });
+      var save = component.refs.sendBtn.props.onClick;
+      save();
+
+      expect(handleMessage).to.have.been.calledWith({text: myTestMessage, timestamp: theTime});
+    });
+
+  });
+
+  describe('on canceling', function() {
+    beforeEach(function() {
+      component = helpers.mountComponent(MessageForm());
+      component.refs.messageText.props.onFocus();
+    });
+
+    it('resets to default state', function() {
+      var cancel = component.refs.cancelBtn.props.onClick;
+      cancel();
+
+      expect(component.refs.sendBtn).to.not.exist;
+      expect(component.refs.cancelBtn).to.not.exist;
+      expect(component.refs.showDateTime).to.not.exist;
+      expect(component.state.msg).to.be.empty;
+      expect(component.state.whenUtc).to.not.exist;
+      expect(component.state.date).to.not.exist;
+      expect(component.state.time).to.not.exist;
+      expect(component.state.editing).to.be.false;
+      expect(component.state.changeDateTime).to.be.false;
+    });
+
+  });
+
 });

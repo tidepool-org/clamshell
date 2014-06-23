@@ -160,6 +160,6 @@ module.exports = function(grunt) {
   grunt.registerTask('run-local', ['build-dev','parse-config','shell:runApp']);
   grunt.registerTask('develop', ['template:parseDev','parse-config','copy:app','shell:watchApp']);
   grunt.registerTask('server', ['shell:runApp']);
-  grunt.registerTask('test', ['jshint','clean:testBuild','copy:test','shell:buildTest','shell:runTest']);
+  grunt.registerTask('test', ['clean:testBuild','copy:test','shell:buildTest','shell:runTest']);
   grunt.registerTask('test-watch', ['jshint','clean:testBuild','copy:test','shell:watchTest']);
 };

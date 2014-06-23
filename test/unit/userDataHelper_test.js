@@ -142,42 +142,44 @@ describe('userDataHelper', function() {
   });
 
   it('createMessage returns message that is for a specified group', function() {
-    var userDetails = {
+    var theUser = {
       userid : '12345678',
       profile : { fullName : 'Sponge Bob' }
     };
 
-    var testMessage = 'whoomp there it is';
-    var testGroupId = 'theId';
+    var theMessage = 'whoomp there it is';
+    var theGroupId = 'theId';
+    var theTimestamp = new Date().toISOString();
 
-    var message = userDataHelper.createMessage(testMessage,userDetails,testGroupId);
+    var message = userDataHelper.createMessage(theMessage, theTimestamp, theUser, theGroupId);
 
-    expect(message.userid).to.equal(userDetails.userid);
+    expect(message.userid).to.equal(theUser.userid);
     expect(message.parentmessage).to.not.exist;
-    expect(message.groupid).to.equal(testGroupId);
-    expect(message.timestamp).to.exist;
-    expect(message.user).to.equal(userDetails.profile);
-    expect(message.messagetext).to.equal(testMessage);
+    expect(message.groupid).to.equal(theGroupId);
+    expect(message.timestamp).to.equal(theTimestamp);
+    expect(message.user).to.equal(theUser.profile);
+    expect(message.messagetext).to.equal(theMessage);
   });
 
   it('createReply returns message that is for a specified group and parent message', function() {
-    var userDetails = {
+    var theUser = {
       userid : '12345678',
       profile : { fullName : 'Sponge Bob' }
     };
 
-    var testReply = 'Tag Team in 1993';
-    var testGroupId = 'theId';
-    var parentMessageId = 'theParentMessage';
+    var theReply = 'Tag Team in 1993';
+    var theGroupId = 'theId';
+    var theParent = 'theParentMessage';
+    var theTimestamp = new Date().toISOString();
 
-    var reply = userDataHelper.createMessage(testReply,userDetails,testGroupId, parentMessageId);
+    var reply = userDataHelper.createMessage(theReply, theTimestamp, theUser, theGroupId, theParent);
 
-    expect(reply.userid).to.equal(userDetails.userid);
-    expect(reply.parentmessage).to.equal(parentMessageId);
-    expect(reply.user).to.equal(userDetails.profile);
-    expect(reply.groupid).to.equal(testGroupId);
-    expect(reply.timestamp).to.exist;
-    expect(reply.messagetext).to.equal(testReply);
+    expect(reply.userid).to.equal(theUser.userid);
+    expect(reply.parentmessage).to.equal(theParent);
+    expect(reply.user).to.equal(theUser.profile);
+    expect(reply.groupid).to.equal(theGroupId);
+    expect(reply.timestamp).to.equal(theTimestamp);
+    expect(reply.messagetext).to.equal(theReply);
   });
 
 });

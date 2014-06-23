@@ -32,7 +32,7 @@ var teamNotes = [
     messagetext: 'Hello'
   },
   {
-    id: '1',
+    id: '3',
     parentmessage: '1',
     userid: '1',
     groupid: '2',
@@ -55,12 +55,15 @@ var teamNotes = [
 
 describe('TeamNotes', function() {
   var component;
+  var handleThreadSelected = sinon.spy();
+  var handleSaveEdited = sinon.spy();
 
   beforeEach(function() {
     component = helpers.mountComponent(
       TeamNotes({
         notes: teamNotes,
-        onThreadSelected: function() {}
+        onThreadSelected : handleThreadSelected,
+        onSaveEdited : handleSaveEdited
       })
     );
   });
@@ -69,14 +72,14 @@ describe('TeamNotes', function() {
     helpers.unmountComponent();
   });
 
-  it('should call handler with message when an item is clicked', function() {
-    var handleThreadSelected = sinon.spy();
-    component.setProps({onThreadSelected: handleThreadSelected});
-
-    // select the first item that is a child of our component
-    component.refs.teamNote.props.onNoteSelected();
-
+  it('should call handler with parent message to show thread for', function() {
+    component.refs.teamNote.props.onShowThread();
     expect(handleThreadSelected).to.have.been.calledWith(teamNotes[0]);
+  });
+
+  it('should call handler to save the edits', function() {
+    component.refs.teamNote.props.onSaveEdit();
+    expect(handleSaveEdited).to.have.been.calledWith();
   });
 
   it('has method to buildViewableNotes', function() {

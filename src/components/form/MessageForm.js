@@ -46,7 +46,7 @@ var MessageForm = React.createClass({
       EDITED_DATE_MASK : 'YYYY-MM-DD HH:mm',
       cancelBtnText : 'Cancel',
       saveBtnText : 'Post'
-    }
+    };
   },
   componentDidMount: function () {
     if(this.props.editNote){
@@ -165,11 +165,13 @@ var MessageForm = React.createClass({
     var displayDate;
     if(this.state.whenUtc){
       displayDate = (
+        /* jshint ignore:start */
         <div ref='showDateTime' onClick={this.showEditDate}>
           <label className='messageform-datetime-label'>
             {sundial.formatForDisplay(this.state.whenUtc)}
           </label>
         </div>
+        /* jshint ignore:end */
       );
     }
     return displayDate;
@@ -179,6 +181,7 @@ var MessageForm = React.createClass({
    */
   renderEditableDate: function(){
     return (
+      /* jshint ignore:start */
       <div ref='editDateTime'>
         <input
           type='date'
@@ -193,10 +196,12 @@ var MessageForm = React.createClass({
           className='messageform-time'
           onChange={this.handleTimeChange}/>
       </div>
+      /* jshint ignore:end */
     );
   },
   renderButtons: function(){
     return (
+      /* jshint ignore:start */
       <div className='messageform-buttons'>
         <button
           type='reset'
@@ -214,10 +219,12 @@ var MessageForm = React.createClass({
           {this.props.saveBtnText}
         </button>
       </div>
+      /* jshint ignore:end */
     );
   },
   renderTextArea: function(){
     return (
+      /* jshint ignore:start */
       <div className='messageform-textarea-wrapper'>
         <textarea
           type='textarea'
@@ -229,6 +236,7 @@ var MessageForm = React.createClass({
           onFocus={this.handleGrow}
           onChange={this.handleMsgChange}/>
       </div>
+      /* jshint ignore:end */
     );
   },
   render: function() {
@@ -247,7 +255,7 @@ var MessageForm = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <form className='messageform'>
+      <form ref='messageForm' className='messageform'>
         {date}
         {textArea}
         {buttons}
