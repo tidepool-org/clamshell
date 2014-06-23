@@ -33,7 +33,6 @@ var Note = React.createClass({
   propTypes: {
     theNote : React.PropTypes.object,
     image : React.PropTypes.string,
-    loggedInId : React.PropTypes.string,
     onShowThread : React.PropTypes.func,
     onSaveEdit : React.PropTypes.func
   },
@@ -139,7 +138,7 @@ var Note = React.createClass({
 
   renderEditLink : function(){
 
-    if(this.props.loggedInId === this.props.theNote.userid){
+    if(this.props.onSaveEdit){
       return (
         /* jshint ignore:start */
         <a
@@ -208,11 +207,15 @@ var Note = React.createClass({
 
   render: function() {
 
+    var noteClasses = 'note';
     var note = this.renderNoteContent();
+    if( this.state.editing ){
+      noteClasses = noteClasses + ' note-editing';
+    }
 
     return (
       /* jshint ignore:start */
-      <div className='note'>
+      <div className={noteClasses}>
         {note}
       </div>
       /* jshint ignore:end */

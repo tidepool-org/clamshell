@@ -42,6 +42,12 @@ var TeamNotes = React.createClass({
   buildViewableNotes:function(rawNotes){
 
     var viewableNotes = _.map(rawNotes, function(note){
+
+      var saveEdit;
+      if(this.allowEdit(note.userid)){
+        saveEdit = this.props.onSaveEdited;
+      }
+
       return (
         /* jshint ignore:start */
         <Note
@@ -49,14 +55,16 @@ var TeamNotes = React.createClass({
           image='large'
           key={note.id}
           theNote={note}
-          loggedInId={this.props.loggedInId}
-          onSaveEdit={this.props.onSaveEdited}
+          onSaveEdit={saveEdit}
           onShowThread={this.props.onThreadSelected.bind(null, note)}/>
         /* jshint ignore:end */
       );
     }.bind(this));
 
     return viewableNotes;
+  },
+  allowEdit:function(noteAuthorId){
+    return noteAuthorId === this.props.loggedInId;
   },
   prepareNotes : function (){
     if(_.isEmpty(this.props.notes)){

@@ -38,30 +38,39 @@ var NoteThread = React.createClass({
   },
 
   renderNote: function(message){
+    var saveEdit;
+    if(this.allowEdit(message.userid)){
+      saveEdit = this.props.onSaveEdited;
+    }
     return (
-      /* jshint ignore:start */
-      <Note
-        ref='rootNote'
-        image='large'
-        key={message.id}
-        loggedInId={this.props.loggedInId}
-        theNote={message}
-        onSaveEdit={this.props.onSaveEdited}/>
-      /* jshint ignore:end */
-      );
+    /* jshint ignore:start */
+    <Note
+      ref='rootNote'
+      image='large'
+      key={message.id}
+      theNote={message}
+      onSaveEdit={saveEdit}/>
+    /* jshint ignore:end */
+    );
   },
   renderCommentOnNote:function(message){
+    var saveEdit;
+    if(this.allowEdit(message.userid)){
+      saveEdit = this.props.onSaveEdited;
+    }
     return (
       /* jshint ignore:start */
       <Note
         ref='commentNote'
         image='small'
         key={message.id}
-        loggedInId={this.props.loggedInId}
         theNote={message}
-        onSaveEdit={this.props.onSaveEdited}/>
+        onSaveEdit={saveEdit}/>
       /* jshint ignore:end */
-      );
+    );
+  },
+  allowEdit:function(noteAuthorId){
+    return noteAuthorId === this.props.loggedInId;
   },
   render: function() {
 
