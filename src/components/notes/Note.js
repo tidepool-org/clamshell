@@ -102,6 +102,7 @@ var Note = React.createClass({
 
   renderTitle : function(){
     var noteTeam;
+    var edit = this.renderEditLink();
     //show if they differ - there is no point in showing My Group > MyGroup
     if(this.state.team && this.state.team !== this.state.author){
       /* jshint ignore:start */
@@ -115,6 +116,7 @@ var Note = React.createClass({
     /* jshint ignore:start */
     return (
       <div ref='messageAuthorAndGroup' className='note-title'>
+        {edit}
         <span className='note-title-author'>{this.state.author}</span>
         {noteTeam}
       </div>
@@ -122,22 +124,19 @@ var Note = React.createClass({
     /* jshint ignore:end */
   },
 
-  renderShowThreadLink : function(){
+  renderComments : function(){
     if(this.props.onShowThread){
       return (
         /* jshint ignore:start */
-        <a
+        <span
           className='note-comments note-comments-text'
-          href=''
-          onClick={this.handleShowThread}
-          ref='showMessageThread'>Comments</a>
+          ref='showMessageThread'>Comments</span>
         /* jshint ignore:end */
       );
     }
   },
 
   renderEditLink : function(){
-
     if(this.props.onSaveEdit && this.state.editing === false ){
       return (
         /* jshint ignore:start */
@@ -169,11 +168,12 @@ var Note = React.createClass({
     if(this.state.editing === false){
       return(
         /* jshint ignore:start */
-        <div>
-        <div className='note-header'>
-          <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
-        </div>
-        <div ref='messageText' className='note-text'>{this.state.note}</div>
+        <div onClick={this.handleShowThread}>
+          <div className='note-header'>
+            <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
+          </div>
+          <div ref='messageText' className='note-text'>{this.state.note}</div>
+            {this.renderComments()}
         </div>
         /* jshint ignore:end */
       );
@@ -190,9 +190,7 @@ var Note = React.createClass({
         <div ref='imgColumn' className={'note-picture note-picture-' + this.props.image}></div>
         <div ref='detailColumn' className='note-details'>
           {this.renderTitle()}
-          {this.renderEditLink()}
           {details}
-          {this.renderShowThreadLink()}
         </div>
       </div>
       /* jshint ignore:end */
@@ -209,7 +207,7 @@ var Note = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <div className={noteClasses}>
+      <div className={noteClasses} >
         {note}
       </div>
       /* jshint ignore:end */
