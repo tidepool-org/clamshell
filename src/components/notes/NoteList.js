@@ -50,6 +50,18 @@ var NoteList = React.createClass({
       parentView : this.showAsThread() === false
     });
   },
+  renderThreadNote: function(note){
+    return (
+      /* jshint ignore:start */
+      <Note
+        ref='rootNote'
+        image='large'
+        key={note.id}
+        theNote={note}
+        onSaveEdit={this.getSaveEdit(note)}/>
+      /* jshint ignore:end */
+    );
+  },
   renderNote: function(note){
     return (
       /* jshint ignore:start */
@@ -59,11 +71,11 @@ var NoteList = React.createClass({
         key={note.id}
         theNote={note}
         onSaveEdit={this.getSaveEdit(note)}
-        onShowThread={this.getShowThread(note)}/>
+        onShowThread={this.props.onShowThread.bind(null, note)}/>
       /* jshint ignore:end */
     );
   },
-  renderComment:function(note){
+  renderThreadComment:function(note){
     return (
       /* jshint ignore:start */
       <Note
@@ -82,42 +94,36 @@ var NoteList = React.createClass({
     }
     return saveEdit;
   },
-  getShowThread:function(note){
-    var showThread;
-    if(this.showAsThread()){
-      showThread = this.props.onShowThread.bind(null, note);
-    }
-    return showThread;
-  },
   showAsThread:function(){
-    return this.props.onShowThread ? true : false;
+    return this.props.onShowThread ? false : true;
   },
   renderThread:function(){
     if(_.isEmpty(this.props.notes) === false){
 
       //Oldest comment first
-      var sorted = dataHelper.sortNotesAscending(this.props.notes);
+      var thread = dataHelper.sortNotesAscending(this.props.notes);
 
-      var thread = _.map(sorted ,function(note) {
+      var notes = _.map(thread ,function(note) {
         if(!note.parentmessage) {
-          return this.renderNote(note);
+          return this.renderThreadNote(note);
         } else if (note.parentmessage) {
-          return this.renderComment(note);
+          return this.renderThreadComment(note);
         }
       }.bind(this));
 
-      return thread;
+      return notes;
     }
   },
-  renderParentNotes:function(){
+  renderParents:function(){
     if(_.isEmpty(this.props.notes) === false){
 
       //Newest note first
-      var parentNotes = dataHelper.filterNotes(this.props.notes);
-      parentNotes = dataHelper.sortNotesDescending(parentNotes);
+      var parents = dataHelper.sortNotesDescending(this.props.notes);
 
-      var notes = _.map(parentNotes, function(note){
-        return this.renderNote(note);
+      var notes = _.map(parents, function(note){
+        if(!note.parentmessage) {
+          return this.renderNote(note);
+        }
       }.bind(this));
 
       return notes;
@@ -129,10 +135,10 @@ var NoteList = React.createClass({
     var listClasses = 'notelist';
     var notes;
 
-    if (this.state.threadView) {
-      notes = this.renderParentNotes();
+    if (this.state.parentView) {
+      notes = this.renderParents();
       listClasses = listClasses +' parents';
-    } else if (this.state.parentView) {
+    } else if (this.state.threadView) {
       notes = this.renderThread();
       listClasses = listClasses +' thread';
     }
