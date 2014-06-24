@@ -53,10 +53,6 @@ var Note = React.createClass({
     });
   },
 
-  getNote : function(){
-    return this.props.theNote;
-  },
-
   handleShowThread : function(e){
     if (e) {
       e.preventDefault();
@@ -168,7 +164,7 @@ var Note = React.createClass({
     if(this.state.editing === false){
       return(
         /* jshint ignore:start */
-        <div onClick={this.handleShowThread}>
+        <div ref='noteDetails' onClick={this.handleShowThread}>
           <div className='note-header'>
             <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
           </div>

@@ -43,8 +43,7 @@ var Login = require('./components/login/Login');
 var LoginFooter = require('./components/login/LoginFooter');
 var TeamPicker = require('./components/menu/TeamPicker');
 var LoggedInAs = require('./components/menu/LoggedInAs');
-var TeamNotes = require('./components/notes/TeamNotes');
-var NoteThread = require('./components/notes/NoteThread');
+var NoteList = require('./components/notes/NoteList');
 /*jshint unused:false */
 
 var app = {
@@ -326,7 +325,7 @@ var ClamShellApp = React.createClass({
           messagePrompt={app.userMessages.NOTE_PROMPT}
           saveBtnText={app.userMessages.POST}
           onSubmit={this.handleStartConversation} />
-        <TeamNotes
+        <NoteList
           notes={this.state.selectedUser.notes}
           loggedInId={this.state.loggedInUser.userid}
           onThreadSelected={this.handleShowConversationThread}
@@ -347,7 +346,7 @@ var ClamShellApp = React.createClass({
     var content = (
       /* jshint ignore:start */
       <div className='messages-all'>
-        <TeamNotes
+        <NoteList
           notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
           loggedInId={this.state.loggedInUser.userid}
           onThreadSelected={this.handleShowConversationThread}
@@ -371,8 +370,8 @@ var ClamShellApp = React.createClass({
     var content = (
       /* jshint ignore:start */
       <div className='messages-thread'>
-        <NoteThread
-          messages={this.state.selectedThread}
+        <NoteList
+          notes={this.state.selectedThread}
           loggedInId={this.state.loggedInUser.userid}
           onSaveEdited={this.handleSaveEdit}/>
         <MessageForm

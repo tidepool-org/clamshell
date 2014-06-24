@@ -18,9 +18,9 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var helpers = require('../lib/helpers');
-var TeamNotes = require('../../src/components/notes/TeamNotes');
+var NoteList = require('../../src/components/notes/NoteList');
 
-var teamNotes = [
+var notes = [
   {
     id: '1',
     parentmessage: null,
@@ -53,15 +53,16 @@ var teamNotes = [
   }
 ];
 
-describe('TeamNotes', function() {
+describe('NoteList', function() {
   var component;
   var handleThreadSelected = sinon.spy();
   var handleSaveEdited = sinon.spy();
 
   beforeEach(function() {
     component = helpers.mountComponent(
-      TeamNotes({
-        notes: teamNotes,
+      NoteList({
+        notes: notes,
+        loggedInId: '1', //As paul
         onThreadSelected : handleThreadSelected,
         onSaveEdited : handleSaveEdited
       })
@@ -73,27 +74,40 @@ describe('TeamNotes', function() {
   });
 
   it('should call handler with parent message to show thread for', function() {
-    component.refs.teamNote.props.onShowThread();
-    expect(handleThreadSelected).to.have.been.calledWith(teamNotes[0]);
+    component.refs.rootNote.props.onShowThread();
+    expect(handleThreadSelected).to.have.been.calledWith(notes[0]);
   });
-
   it('should call handler to save the edits', function() {
-    component.refs.teamNote.props.onSaveEdit();
+    component.refs.rootNote.props.onSaveEdit();
     expect(handleSaveEdited).to.have.been.calledWith();
   });
-
-  it('has method to buildViewableNotes', function() {
-    expect(component.buildViewableNotes).to.exist;
+  it('has method to renderNote', function() {
+    expect(component.renderNote).to.exist;
   });
-
-  it('has method to prepareNotes', function() {
-    expect(component.prepareNotes).to.exist;
+  it('has method to renderComment', function() {
+    expect(component.renderComment).to.exist;
   });
-
-  it('prepareNotes will return all the notes, but not the comments, to be displayed', function() {
-    var notes = component.prepareNotes();
-    expect(notes).to.exist;
-    expect(notes.length).to.equal(2);
+  describe('thread notes', function() {
+    it('are built by a method renderThread', function() {
+      expect(component.renderThread).to.exist;
+    });
+    it('returns related notes', function() {
+      var threadNoteComponents = component.renderThread();
+      expect(threadNoteComponents.length).to.equal(3);
+    });
   });
-
+  describe('parent notes', function() {
+    it('are built by a method renderParents', function() {
+      expect(component.renderParents).to.exist;
+    });
+    it('returns parent notes', function() {
+      var parentNotes = component.renderParents();
+      console.log(parentNotes);
+      parentNotes.forEach(function(note){
+        if(note){
+          expect(note.parentmessage).to.not.exist;
+        }
+      });
+    });
+  });
 });

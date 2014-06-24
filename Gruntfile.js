@@ -72,7 +72,7 @@ module.exports = function(grunt) {
         },
         runTest: {
           command: [
-            './node_modules/.bin/testem ci'
+            './node_modules/.bin/testem'
           ]
         }
       },

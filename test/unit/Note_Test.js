@@ -37,8 +37,7 @@ describe('Note', function() {
     component = helpers.mountComponent(
       Note({
         theNote : note,
-        image : 'css-class',
-        loggedInId : loggedInUserid
+        image : 'css-class'
       })
     );
   });
@@ -75,6 +74,14 @@ describe('Note', function() {
     expect(component.refs.messageAuthorAndGroup).to.exist;
   });
 
+  it('edit link is not shown when handler not set', function() {
+    expect(component.refs.editNote).to.not.exist;
+  });
+
+  it('show link is not shown when handler not set', function() {
+    expect(component.refs.showMessageThread).to.not.exist;
+  });
+
   it('should show link section when it is set', function() {
 
     var handleShow = sinon.spy();
@@ -86,17 +93,17 @@ describe('Note', function() {
 
   });
 
-  describe('when its the logged in users note', function() {
+  describe('when the note has an edit handler attached', function() {
+
+    var handleEdit = sinon.spy();
 
     beforeEach(function() {
-
-      note.userid = loggedInUserid;
 
       component = helpers.mountComponent(
         Note({
           theNote : note,
           image : 'css-class',
-          loggedInId : loggedInUserid
+          onSaveEdit: handleEdit
         })
       );
     });
@@ -106,29 +113,24 @@ describe('Note', function() {
     });
 
     it('when edit link is clicked editing is now true', function() {
-      component.setState({editing:true});
+      component.setState({editing:false});
       var edit = component.refs.editNote.props.onClick;
       edit();
       expect(component.state.editing).to.true;
     });
 
     it('when edit is saved', function() {
-      component.setState({editing:true});
+
+      component.setState({editing:false});
       var edit = component.refs.editNote.props.onClick;
       edit();
 
-      var handleSave = sinon.spy();
-      component.setProps({
-        onSaveEdit: handleSave
-      });
+      var edited = note;
+      edited.messagetext = 'an update';
+      edited.timestamp = new Date().toISOString();
 
-      var editedNote = note;
-      editedNote.text = 'updated';
-      editedNote.timestamp = new Date().toISOString();
-
-      component.handleEditSave(editedNote);
-
-      expect(handleSave).to.have.been.calledWith(editedNote);
+      component.handleEditSave(edited);
+      expect(handleEdit).to.have.been.calledWith(edited);
     });
 
     it('canceling the edit sets edit state to false', function() {
@@ -149,8 +151,7 @@ describe('Note', function() {
       component = helpers.mountComponent(
         Note({
           theNote : note,
-          image : 'css-class',
-          loggedInId : '111-dif-user'
+          image : 'css-class'
         })
       );
     });

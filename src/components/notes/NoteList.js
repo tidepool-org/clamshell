@@ -36,31 +36,7 @@ var NoteList = React.createClass({
     notes: React.PropTypes.array,
     loggedInId: React.PropTypes.string,
     onSaveEdited : React.PropTypes.func,
-    onShowThread : React.PropTypes.func
-  },
-  getInitialState: function() {
-    return {
-      threadView : false,
-      parentView : false
-    };
-  },
-  componentDidMount: function () {
-    this.setState({
-      threadView :  this.showAsThread(),
-      parentView : this.showAsThread() === false
-    });
-  },
-  renderThreadNote: function(note){
-    return (
-      /* jshint ignore:start */
-      <Note
-        ref='rootNote'
-        image='large'
-        key={note.id}
-        theNote={note}
-        onSaveEdit={this.getSaveEdit(note)}/>
-      /* jshint ignore:end */
-    );
+    onThreadSelected : React.PropTypes.func
   },
   renderNote: function(note){
     return (
@@ -71,11 +47,11 @@ var NoteList = React.createClass({
         key={note.id}
         theNote={note}
         onSaveEdit={this.getSaveEdit(note)}
-        onShowThread={this.props.onShowThread.bind(null, note)}/>
+        onShowThread={this.getShowThread(note)}/>
       /* jshint ignore:end */
     );
   },
-  renderThreadComment:function(note){
+  renderComment:function(note){
     return (
       /* jshint ignore:start */
       <Note
@@ -94,8 +70,15 @@ var NoteList = React.createClass({
     }
     return saveEdit;
   },
+  getShowThread:function(note){
+    var showThread;
+    if(this.props.onThreadSelected){
+      showThread = this.props.onThreadSelected.bind(null,note);
+    }
+    return showThread;
+  },
   showAsThread:function(){
-    return this.props.onShowThread ? false : true;
+    return this.props.onThreadSelected ? false : true;
   },
   renderThread:function(){
     if(_.isEmpty(this.props.notes) === false){
@@ -105,9 +88,9 @@ var NoteList = React.createClass({
 
       var notes = _.map(thread ,function(note) {
         if(!note.parentmessage) {
-          return this.renderThreadNote(note);
+          return this.renderNote(note);
         } else if (note.parentmessage) {
-          return this.renderThreadComment(note);
+          return this.renderComment(note);
         }
       }.bind(this));
 
@@ -124,6 +107,7 @@ var NoteList = React.createClass({
         if(!note.parentmessage) {
           return this.renderNote(note);
         }
+        return;
       }.bind(this));
 
       return notes;
@@ -135,12 +119,12 @@ var NoteList = React.createClass({
     var listClasses = 'notelist';
     var notes;
 
-    if (this.state.parentView) {
-      notes = this.renderParents();
-      listClasses = listClasses +' parents';
-    } else if (this.state.threadView) {
+    if (this.showAsThread()) {
       notes = this.renderThread();
       listClasses = listClasses +' thread';
+    } else {
+      notes = this.renderParents();
+      listClasses = listClasses +' parents';
     }
 
     return (
