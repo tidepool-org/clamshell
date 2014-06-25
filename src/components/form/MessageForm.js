@@ -112,9 +112,9 @@ var MessageForm = React.createClass({
     var utcTimestamp = this.state.whenUtc;
 
     if(this.state.date && this.state.time){
+      var offset = sundial.getOffsetFromTime(this.state.whenUtc);
       var editedTimestamp = this.state.date+'T'+this.state.time;
-      var aMoment = sundial.momentInstance();
-      utcTimestamp =  aMoment(editedTimestamp, this.props.EDITED_DATE_MASK).toISOString();
+      utcTimestamp =  sundial.formatForStorage(editedTimestamp,offset);
     }
 
     return utcTimestamp;
