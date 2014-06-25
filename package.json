@@ -17,9 +17,9 @@
     "hakken": "0.1.4",
     "lodash": "2.4.1",
     "react": "0.10.0",
-    "sundial": "0.1.2",
+    "sundial": "tidepool-org/sundial",
     "superagent": "0.18.0",
-    "tidepool-platform-client": "0.5.1"
+    "tidepool-platform-client": "git://github.com/tidepool-org/platform-client#jhbate/cleanup"
   },
   "devDependencies": {
     "chai": "1.8.1",

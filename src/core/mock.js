@@ -132,6 +132,11 @@ module.exports = function(api, userSchema) {
     return callback(null,message);
   };
 
+  api.notes.edit = function(message,callback) {
+    api.log('[mock] editing a message ');
+    return callback(null);
+  };
+
   // ----- Metrics -----
 
   api.metrics.track = function(eventName, properties, cb) {

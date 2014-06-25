@@ -223,7 +223,6 @@ module.exports = function(component,app) {
    */
   component.handleShowForEdit = function(toEdit){
     app.trackMetric('Selected For Edit');
-    console.log('edit ',toEdit);
 
     component.setState({
       selectedForEdit : toEdit,
@@ -238,7 +237,13 @@ module.exports = function(component,app) {
    */
   component.handleSaveEdit = function(edited){
     app.trackMetric('Edit To Save');
-    console.log('save: ',edited);
+
+    app.api.notes.edit(edited,function(error){
+      app.log('edit made');
+      if(error){
+        return component.handleError(error);
+      }
+    });
   };
 
   /**
