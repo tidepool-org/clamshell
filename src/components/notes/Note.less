@@ -17,6 +17,7 @@
 
 // For padding, margins, inside the user "box"
 @note-spacing-unit: 8px;
+@note-background: #fff;
 
 .note {
   // For select icon absolute positioning
@@ -25,11 +26,16 @@
 
   border: 1px solid @gray-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: @note-background
 }
 
 .note.note-editing{
   margin-left: 0px !important;
+}
+
+.note .messageform {
+  padding:0px;
+  background : @note-background;
 }
 
 .note-content {
