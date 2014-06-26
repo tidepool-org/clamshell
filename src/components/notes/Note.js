@@ -22,6 +22,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 /* jshint unused: false */
 
 var React = require('react');
+var _ = require('lodash');
 
 var MessageForm = require('../form/MessageForm');
 var dataHelper = require('../../core/userDataHelper');
@@ -53,6 +54,10 @@ var Note = React.createClass({
     });
   },
 
+  isComment : function(){
+    return _.isEmpty(this.props.theNote.parentmessage) === false;
+  },
+
   handleShowThread : function(e){
     if (e) {
       e.preventDefault();
@@ -69,14 +74,16 @@ var Note = React.createClass({
     var saveEdit = this.props.onSaveEdit;
 
     if(saveEdit){
-      var noteUpdates = this.props.theNote;
-      noteUpdates.messagetext = edits.text;
-      noteUpdates.timestamp = edits.timestamp;
-      saveEdit(noteUpdates);
+      this.props.theNote.messagetext = edits.text;
+      if (edits.timestamp) {
+        this.props.theNote.timestamp = edits.timestamp;
+      }
+      saveEdit(this.props.theNote);
+
       this.setState({
-        note : edits.text,
-        when : dataHelper.formatDisplayDate(edits.timestamp),
-        editing : false
+        editing : false,
+        note : this.props.theNote.messagetext,
+        when : dataHelper.formatDisplayDate(this.props.theNote.timestamp)
       });
     }
 
@@ -148,15 +155,28 @@ var Note = React.createClass({
 
   renderAsEdit:function(){
     if(this.state.editing){
-      return(
-        /* jshint ignore:start */
-        <MessageForm
-          editNote={this.props.theNote}
-          onSubmit={this.handleEditSave}
-          onCancel={this.handleCancelEdit}
-          saveBtnText='Save' />
-        /* jshint ignore:end */
-      );
+      if ( this.isComment() ){
+        //we only allow the editing of the text on a comment
+        return(
+          /* jshint ignore:start */
+          <MessageForm
+            existingNoteFields={{editableText: this.props.theNote.messagetext, displayOnlyTimestamp : this.props.theNote.timestamp }}
+            onSubmit={this.handleEditSave}
+            onCancel={this.handleCancelEdit}
+            saveBtnText='Save' />
+          /* jshint ignore:end */
+        );
+      } else {
+        return(
+          /* jshint ignore:start */
+          <MessageForm
+            existingNoteFields={{editableText: this.props.theNote.messagetext, editableTimestamp: this.props.theNote.timestamp}}
+            onSubmit={this.handleEditSave}
+            onCancel={this.handleCancelEdit}
+            saveBtnText='Save' />
+          /* jshint ignore:end */
+        );
+      }
     }
   },
 
