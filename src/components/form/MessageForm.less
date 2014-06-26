@@ -37,6 +37,20 @@
 
 .messageform-datetime-label {
   &:extend(.form-control all);
+  border: none;
+}
+
+a.messageform-change-datetime {
+  display: block;
+  font-size: @font-size-small;
+  text-align: right;
+  float: right;
+  padding: 5px;
+
+  &:hover,
+  &:focus {
+    color: @gray-text-dark;
+  }
 }
 
 .messageform-date {
