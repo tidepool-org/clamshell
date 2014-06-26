@@ -166,8 +166,8 @@ var MessageForm = React.createClass({
     if(this.state.whenUtc){
       displayDate = (
         /* jshint ignore:start */
-        <div ref='showDateTime' onClick={this.showEditDate}>
-          <a className='messageform-change-datetime' href='' ref='changeDatetime'>Change</a>
+        <div>
+          <a className='messageform-change-datetime' href='' ref='showDateTime' onClick={this.showEditDate}>Change</a>
           <label className='messageform-datetime-label'>
             {sundial.formatForDisplay(this.state.whenUtc)}
           </label>
