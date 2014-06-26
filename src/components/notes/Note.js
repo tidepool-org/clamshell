@@ -164,13 +164,13 @@ var Note = React.createClass({
     if(this.state.editing === false){
       return(
         /* jshint ignore:start */
-        <div ref='noteDetails' onClick={this.handleShowThread}>
+        <a href='' className='note-clickable' ref='noteDetails' onClick={this.handleShowThread}>
           <div className='note-header'>
             <div ref='messageWhen' className='note-timestamp'>{this.state.when}</div>
           </div>
           <div ref='messageText' className='note-text'>{this.state.note}</div>
             {this.renderComments()}
-        </div>
+        </a>
         /* jshint ignore:end */
       );
     }

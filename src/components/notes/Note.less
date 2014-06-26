@@ -32,18 +32,6 @@
   margin-left: 0px !important;
 }
 
-a.note {
-  display: block;
-  color: @gray-text-dark;
-  text-decoration: none;
-
-  &:hover,
-  &:focus {
-    color: @gray-text-dark;
-    text-decoration: none;
-  }
-}
-
 .note-content {
   &:extend(.clearfix all);
 }
@@ -107,9 +95,19 @@ a.note {
 }
 
 .note-comments {
-  font-size: @font-size-small;
   text-align: right;
   float: right;
+}
+
+.note-clickable {
+  text-decoration: none;
+  color: @gray-text-light;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: @gray-text-light;
+  }
 }
 
 .note-edit {
