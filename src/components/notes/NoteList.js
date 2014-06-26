@@ -121,10 +121,10 @@ var NoteList = React.createClass({
 
     if (this.showAsThread()) {
       notes = this.renderThread();
-      listClasses = listClasses +' thread';
+      listClasses = listClasses +' notelist-thread';
     } else {
       notes = this.renderParents();
-      listClasses = listClasses +' parents';
+      listClasses = listClasses +' notelist-parents';
     }
 
     return (
