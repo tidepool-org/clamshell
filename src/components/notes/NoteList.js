@@ -83,8 +83,10 @@ var NoteList = React.createClass({
   renderThread:function(){
     if(_.isEmpty(this.props.notes) === false){
 
-      //Oldest comment first
-      var thread = dataHelper.sortNotesAscending(this.props.notes);
+      //Note first then ordered comments
+      var thread = _.sortBy(this.props.notes, function(note) {
+        return _.isEmpty(note.parentmessage) || new Date(note.timestamp);
+      });
 
       var notes = _.map(thread ,function(note) {
         if(!note.parentmessage) {
