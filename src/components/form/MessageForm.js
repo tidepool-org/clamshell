@@ -25,6 +25,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var React = require('react');
 var sundial = require('sundial');
 
+var _ = require('lodash');
+
 require('./MessageForm.less');
 
 // Form for creating new Notes or adding Comments
@@ -49,33 +51,37 @@ var MessageForm = React.createClass({
     };
   },
   isExistingNoteEdit:function() {
-    return this.props.existingNoteFields && this.props.existingNoteFields.editableText;
+    return _.isEmpty(this.props.existingNoteFields) === false;
+  },
+  hasTextToEdit:function(){
+    return this.isExistingNoteEdit() && _.isEmpty(this.props.existingNoteFields.editableText) === false;
+  },
+  hasTimestampToEdit:function(){
+    return this.isExistingNoteEdit() && _.isEmpty(this.props.existingNoteFields.editableTimestamp) === false;
   },
   allowDateEdit:function() {
-    return this.isExistingNoteEdit() && this.props.existingNoteFields.editableTimestamp || this.isExistingNoteEdit() === false;
+    return this.hasTimestampToEdit() || this.isExistingNoteEdit() === false;
   },
   initEdit:function() {
-    if(this.isExistingNoteEdit()){
-      if( this.props.existingNoteFields.editableTimestamp && this.props.existingNoteFields.editableText ){
-        //allow editing of both the note text and timestamp
-        this.setState({
-          msg : this.props.existingNoteFields.editableText,
-          whenUtc : this.props.existingNoteFields.editableTimestamp ,
-          editing : true,
-          changeDateTime : true,
-          time : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.TIME_MASK),
-          date : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.DATE_MASK)
-        });
-      } else {
-        //allow editing of the note text only
-        this.setState({
-          msg : this.props.existingNoteFields.editableText,
-          whenUtc : this.props.existingNoteFields.displayOnlyTimestamp,
-          editing : true
-        });
-      }
-      this.refs.messageText.getDOMNode().rows = 3;
+    if( this.hasTextToEdit() && this.hasTimestampToEdit() ){
+      //allow editing of both the note text and timestamp
+      this.setState({
+        msg : this.props.existingNoteFields.editableText,
+        whenUtc : this.props.existingNoteFields.editableTimestamp ,
+        editing : true,
+        changeDateTime : true,
+        time : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.TIME_MASK),
+        date : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.DATE_MASK)
+      });
+    } else if(this.hasTextToEdit()) {
+      //allow editing of the note text only
+      this.setState({
+        msg : this.props.existingNoteFields.editableText,
+        whenUtc : this.props.existingNoteFields.displayOnlyTimestamp,
+        editing : true
+      });
     }
+    this.refs.messageText.getDOMNode().rows = 3;
   },
   componentDidMount: function () {
     if( this.isExistingNoteEdit() ){
@@ -165,7 +171,7 @@ var MessageForm = React.createClass({
     }
     this.refs.messageText.getDOMNode().rows = 3;
     if(this.isExistingNoteEdit() === false){
-      this.setState({ whenUtc: sundial.utcDateString() });
+      this.setState({  editing : true, whenUtc: sundial.utcDateString() });
     }
   },
   /*
