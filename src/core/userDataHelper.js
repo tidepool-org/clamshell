@@ -17,7 +17,9 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 'use strict';
 
 var _ = require('lodash');
-var moment = require('moment');
+
+var sundial = require('sundial');
+var moment = sundial.momentInstance();
 
 var userDataHelper = {
   getParentMessageId: function(thread) {
@@ -103,16 +105,14 @@ var userDataHelper = {
 
     return null;
   },
-  createMessage : function(messageText, user, groupId, parentId){
-
-    var d = new Date();
+  createMessage : function(messageText, utcTimestamp, user, groupId, parentId){
 
     var message = {
       parentmessage : parentId,
       userid : user.userid,
       user : user.profile,
       groupid : groupId,
-      timestamp : d.toISOString(),
+      timestamp : utcTimestamp,
       messagetext : messageText
     };
 

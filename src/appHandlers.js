@@ -214,7 +214,36 @@ module.exports = function(component,app) {
         previousRoute : component.state.routeName
       });
     });
+  };
 
+  /**
+   * Show this message and make editable
+   *
+   * @param {Message} toEdit - the message to edit
+   */
+  component.handleShowForEdit = function(toEdit){
+    app.trackMetric('Selected For Edit');
+
+    component.setState({
+      selectedForEdit : toEdit,
+      routeName : app.routes.messageThread
+    });
+  };
+
+  /**
+   * Save the edited message
+   *
+   * @param {Message} edited - the edited message
+   */
+  component.handleSaveEdit = function(edited){
+    app.trackMetric('Edit To Save');
+
+    app.api.notes.edit(edited,function(error){
+      app.log('edit made');
+      if(error){
+        return component.handleError(error);
+      }
+    });
   };
 
   /**
@@ -226,9 +255,10 @@ module.exports = function(component,app) {
     app.trackMetric('Added Note');
     var message = app.dataHelper.createMessage(
       note.text,
+      note.timestamp,
       component.state.loggedInUser,
       component.state.selectedUser.userid
-      );
+    );
 
     app.api.notes.add(message,function(error,addedNote){
       app.log('thread started');
@@ -257,10 +287,11 @@ module.exports = function(component,app) {
     //we set the parentId here
     var comment = app.dataHelper.createMessage(
       note.text,
+      note.timestamp,
       component.state.loggedInUser,
       component.state.selectedUser.userid,
       parentId
-      );
+    );
 
     app.api.notes.reply(comment,function(error, addedComment){
       app.log('reply added');

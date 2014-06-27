@@ -19,10 +19,16 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var helpers = require('../lib/helpers');
 var Note = require('../../src/components/notes/Note');
 
-var testGroupName = 'My Test Group';
-var testAuthor = 'Jamie';
-var testNote = 'A summary of the latest note to my care group conversation thread';
-var testWhenTheLatestNoteOccured = 'Dec 24';
+var loggedInUserid = '123-ur-334';
+
+var note = {
+    id : 'note-123',
+    userid : '999-ur-100',
+    messagetext : 'a note',
+    user : { fullName: 'a user' },
+    team : { fullName: 'a team'},
+    timestamp : new Date().toISOString()
+  };
 
 describe('Note', function() {
   var component;
@@ -30,10 +36,8 @@ describe('Note', function() {
   beforeEach(function() {
     component = helpers.mountComponent(
       Note({
-        name : testGroupName,
-        author : testAuthor,
-        note : testNote,
-        when : testWhenTheLatestNoteOccured
+        theNote : note,
+        image : 'css-class'
       })
     );
   });
@@ -45,49 +49,117 @@ describe('Note', function() {
   it('should have a ref for imgColumn', function() {
     expect(component.refs.imgColumn).to.exist;
   });
-
   it('should have a ref for detailColumn', function() {
     expect(component.refs.detailColumn).to.exist;
   });
-
-  it('should have a property for detailColumn', function() {
-    expect(component.refs.detailColumn).to.exist;
+  it('should show when the message occurred', function() {
+    expect(component.refs.messageWhen).to.exist;
   });
-
+  it('should show the content of the message', function() {
+    expect(component.refs.messageText).to.exist;
+  });
+  it('will not show the thread if the property is not set', function() {
+    expect(component.refs.showMessageThread).to.not.exist;
+  });
   it('should have property for the group name', function() {
-    expect(component.props.name).to.equal(testGroupName);
+    expect(component.state.team).to.equal(note.team.fullName);
   });
-
   it('should have property for the note', function() {
-    expect(component.props.note).to.equal(testNote);
+    expect(component.state.note).to.equal(note.messagetext);
+  });
+  it('should have the author', function() {
+    expect(component.state.author).to.equal(note.user.fullName);
+  });
+  it('should have the author and group', function() {
+    expect(component.refs.messageAuthorAndGroup).to.exist;
   });
 
-  it('should have property for the author', function() {
-    expect(component.props.author).to.equal(testAuthor);
+  it('edit link is not shown when handler not set', function() {
+    expect(component.refs.editNote).to.not.exist;
   });
 
-  it('should have property for when the most recent note occured', function() {
-    expect(component.props.when).to.equal(testWhenTheLatestNoteOccured);
-  });
-
-  it('should have a when section', function() {
-    expect(component.refs.messageWhen).to.not.be.empty;
-  });
-
-  it('should have a message text section', function() {
-    expect(component.refs.messageText).to.not.be.empty;
-  });
-
-  it('should not show link section by default', function() {
+  it('show link is not shown when handler not set', function() {
     expect(component.refs.showMessageThread).to.not.exist;
   });
 
-  it('should show link section when it is set',function(){
+  it('should show link section when it is set', function() {
+
+    var handleShow = sinon.spy();
     component.setProps({
-      showCommentLink : true
+      onShowThread: handleShow
     });
 
     expect(component.refs.showMessageThread).to.exist;
+
+  });
+
+  describe('when the note has an edit handler attached', function() {
+
+    var handleEdit = sinon.spy();
+
+    beforeEach(function() {
+
+      component = helpers.mountComponent(
+        Note({
+          theNote : note,
+          image : 'css-class',
+          onSaveEdit: handleEdit
+        })
+      );
+    });
+
+    it('edit link is shown', function() {
+      expect(component.refs.editNote).to.exist;
+    });
+
+    it('when edit link is clicked editing is now true', function() {
+      component.setState({editing:false});
+      var edit = component.refs.editNote.props.onClick;
+      edit();
+      expect(component.state.editing).to.true;
+    });
+
+    it('when edit is saved', function() {
+
+      component.setState({editing:false});
+      var edit = component.refs.editNote.props.onClick;
+      edit();
+
+      var edited = note;
+      edited.messagetext = 'an update';
+      edited.timestamp = new Date().toISOString();
+
+      component.handleEditSave(edited);
+      expect(handleEdit).to.have.been.calledWith(edited);
+    });
+
+    it('canceling the edit sets edit state to false', function() {
+      var edit = component.refs.editNote.props.onClick;
+      edit();
+
+      expect(component.state.editing).to.true;
+      component.handleCancelEdit();
+      expect(component.state.editing).to.false;
+
+    });
+
+  });
+
+  describe('when its someone elses note', function() {
+
+    beforeEach(function() {
+      component = helpers.mountComponent(
+        Note({
+          theNote : note,
+          image : 'css-class'
+        })
+      );
+    });
+
+    it('edit link is not shown', function() {
+      expect(component.refs.editNote).to.not.exist;
+    });
+
   });
 
 });

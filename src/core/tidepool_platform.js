@@ -246,6 +246,18 @@ module.exports = function(api, userSchema, platform, config) {
     });
   };
 
+  /*
+   * Edit an existing message
+   */
+  api.notes.edit = function(message, callback) {
+    api.log('saving edit on a message ');
+
+    platform.editMessage(message, function(error) {
+      api.log('edited message ... ');
+      return callback(error);
+    });
+  };
+
   // ----- Metrics -----
 
   /*

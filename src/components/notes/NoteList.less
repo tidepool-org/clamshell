@@ -13,9 +13,13 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-// Comments
-.notethread .note:not(:first-of-type) {
+//Applied to thread comments
+.notelist.notelist-thread .note:not(:first-of-type) {
   // Picture size + note padding
   margin-left: (50px + 8px);
   border-top: 0;
+}
+
+.notelist.notelist-parents .note {
+  margin-bottom: 10px;
 }

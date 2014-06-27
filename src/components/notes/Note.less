@@ -17,6 +17,7 @@
 
 // For padding, margins, inside the user "box"
 @note-spacing-unit: 8px;
+@note-background: #fff;
 
 .note {
   // For select icon absolute positioning
@@ -25,19 +26,16 @@
 
   border: 1px solid @gray-border-light;
   border-radius: 2px;
-  background: #fff;
+  background: @note-background
 }
 
-a.note {
-  display: block;
-  color: @gray-text-dark;
-  text-decoration: none;
+.note.note-editing{
+  margin-left: 0px !important;
+}
 
-  &:hover,
-  &:focus {
-    color: @gray-text-dark;
-    text-decoration: none;
-  }
+.note .messageform {
+  padding:0px;
+  background : @note-background;
 }
 
 .note-content {
@@ -76,6 +74,7 @@ a.note {
   display: table-cell;
   // Force element to stretch to width of outer box
   width: 10000px;
+  font-size: @font-size-medium;
 }
 
 .note-title {
@@ -103,6 +102,26 @@ a.note {
 
 .note-comments {
   text-align: right;
+  float: right;
+}
+
+.note-clickable {
+  text-decoration: none;
+  color: @gray-text-light;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+    color: @gray-text-light;
+  }
+}
+
+.note-edit {
+  font-size: @font-size-small;
+  text-align: right;
+  float: right;
+  padding-left: 12px;
+  padding-bottom: 12px;
 }
 
 @note-comments-icon-size: 12px;

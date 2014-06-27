@@ -43,8 +43,7 @@ var Login = require('./components/login/Login');
 var LoginFooter = require('./components/login/LoginFooter');
 var TeamPicker = require('./components/menu/TeamPicker');
 var LoggedInAs = require('./components/menu/LoggedInAs');
-var TeamNotes = require('./components/notes/TeamNotes');
-var NoteThread = require('./components/notes/NoteThread');
+var NoteList = require('./components/notes/NoteList');
 /*jshint unused:false */
 
 var app = {
@@ -77,7 +76,8 @@ var ClamShellApp = React.createClass({
       notification : null,
       showingMenu : false,
       lastNoteAdded: null,
-      lastCommentAdded: null
+      lastCommentAdded: null,
+      selectedForEdit: null
     };
   },
 
@@ -323,10 +323,13 @@ var ClamShellApp = React.createClass({
       <div className='messages-team'>
         <MessageForm
           messagePrompt={app.userMessages.NOTE_PROMPT}
+          saveBtnText={app.userMessages.POST}
           onSubmit={this.handleStartConversation} />
-        <TeamNotes
+        <NoteList
           notes={this.state.selectedUser.notes}
-          onThreadSelected={this.handleShowConversationThread} />
+          loggedInId={this.state.loggedInUser.userid}
+          onThreadSelected={this.handleShowConversationThread}
+          onSaveEdited={this.handleSaveEdit} />
       </div>
       /* jshint ignore:end */
     );
@@ -343,9 +346,11 @@ var ClamShellApp = React.createClass({
     var content = (
       /* jshint ignore:start */
       <div className='messages-all'>
-        <TeamNotes
+        <NoteList
           notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
-          onThreadSelected={this.handleShowConversationThread} />
+          loggedInId={this.state.loggedInUser.userid}
+          onThreadSelected={this.handleShowConversationThread}
+          onSaveEdited={this.handleSaveEdit} />
       </div>
       /* jshint ignore:end */
     );
@@ -355,20 +360,24 @@ var ClamShellApp = React.createClass({
 
   renderMessageThread:function(){
     var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+
     var header = this.renderHeader({
       title: careTeamName,
       leftIcon: 'back',
       onLeftAction: this.handleBack
     });
 
-
     var content = (
       /* jshint ignore:start */
       <div className='messages-thread'>
-        <NoteThread messages={this.state.selectedThread} />
+        <NoteList
+          notes={this.state.selectedThread}
+          loggedInId={this.state.loggedInUser.userid}
+          onSaveEdited={this.handleSaveEdit}/>
         <MessageForm
           messagePrompt={app.userMessages.COMMENT_PROMPT}
-          onSubmit={this.handleAddingToConversation} />
+          saveBtnText={app.userMessages.POST}
+          onSubmit={this.handleAddingToConversation}/>
       </div>
       /* jshint ignore:end */
       );

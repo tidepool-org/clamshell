@@ -24,30 +24,63 @@
   // For button absolute positioning
   position: relative;
   padding: @message-form-spacing-unit;
-
   background: @gray-bg-dark;
-}
-
-.messageform-textarea-wrapper {
-  // Leave room for absolute positioned button
-  padding-right: (@message-form-button-width + @message-form-spacing-unit);
 }
 
 .messageform-textarea {
   &:extend(.form-control all);
 }
 
+.messageform-when {
+  &:extend(.form-control all);
+}
+
+.messageform-datetime-label {
+  &:extend(.form-control all);
+  border: none;
+}
+
+a.messageform-change-datetime {
+  display: block;
+  font-size: @font-size-small;
+  text-align: right;
+  float: right;
+  padding-left: @message-form-spacing-unit*2;
+  padding-bottom: @message-form-spacing-unit*2;
+
+  &:hover,
+  &:focus {
+    color: @gray-text-dark;
+  }
+}
+
+.messageform-date {
+  &:extend(.form-control all);
+  display: inline;
+  width: 60%;
+}
+
+.messageform-time {
+  &:extend(.form-control all);
+  display: inline;
+  width: 40%;
+}
+
 .messageform-button {
   &:extend(.btn all);
   &:extend(.btn-primary all);
 
-  display: block;
-  position: absolute;
-  // Compensate for button height smaller than form control height
-  top: (@message-form-spacing-unit + (@form-control-height - @btn-height)/2);
-  right: @message-form-spacing-unit;
+  margin-top: 5px;
+}
 
-  width: @message-form-button-width;
+.messageform-button-save {
+  padding-left: 5px;
+  padding-right: 5px;
+  float: right;
+}
+
+.messageform-button-cancel {
+  margin-right: 5px;
   padding-left: 5px;
   padding-right: 5px;
 }
