@@ -94,14 +94,14 @@ describe('userDataHelper', function() {
     expect(userDataHelper.formatFullName(profile)).to.not.exist;
   });
 
-  it('formatShortName returns the shortName as a string from the profile', function() {
-    var profile = {shortName:'Foo'};
-    expect(userDataHelper.formatShortName(profile)).to.equal('Foo');
+  it('formatTeamFullName returns the profile fullName if patient is user', function() {
+    var profile = {fullName:'Foo Bar'};
+    expect(userDataHelper.formatTeamFullName(profile)).to.equal('Foo Bar');
   });
 
-  it('formatShortName returns nothing when shortName is not set', function() {
-    var profile = {};
-    expect(userDataHelper.formatShortName(profile)).to.not.exist;
+  it('formatTeamFullName returns the patient fullName if patient is another person', function() {
+    var profile = {fullName:'Foo Bar', patient: {isOtherPerson: true, fullName: 'Bob'}};
+    expect(userDataHelper.formatTeamFullName(profile)).to.equal('Bob');
   });
 
   it('getSelectedUser returns the logged in user when given proper userid', function() {

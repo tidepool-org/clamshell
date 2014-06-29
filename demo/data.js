@@ -30,23 +30,22 @@ function nextUserId() {
 var users = {
 	'Paul': {
 		userid: nextUserId(),
-		profile: {fullName: 'Paul Senter', shortName: 'Paul'}
+		profile: {
+			fullName: 'Paul Senter',
+			patient: {isOtherPerson: true, fullName: 'Anne Senter'}
+		}
 	},
 	'Melissa': {
 		userid: nextUserId(),
-		profile: {fullName: 'Melissa Senter', shortName: 'Melissa'}
-	},
-	'Anne': {
-		userid: nextUserId(),
-		profile: {fullName: 'Anne Senter', shortName: 'Anne'}
+		profile: {fullName: 'Melissa Senter'}
 	},
 	'Dr. Jona': {
 		userid: nextUserId(),
-		profile: {fullName: 'Dr. Jona', shortName: 'Dr. Jona'}
+		profile: {fullName: 'Dr. Jona'}
 	},
 	'Charles': {
 		userid: nextUserId(),
-		profile: {fullName: 'Charles West', shortName: 'Charles'}
+		profile: {fullName: 'Charles West'}
 	}
 };
 
@@ -82,11 +81,11 @@ function newMessage(opts) {
 // Anne
 // ====================================
 
-messages['Anne'] = [];
+messages['Paul'] = [];
 
 note = newMessage({
 	from: 'Paul',
-	to: 'Anne',
+	to: 'Paul',
 	timestamp: '2014-03-24T16:07:00+00:00',
 	messagetext: 'Going to soccer game, 25% temp basal one hour early.'
 });
@@ -95,31 +94,31 @@ comments = [
 	newMessage({
 		parentmessage: note.id,
 		from: 'Melissa',
-		to: 'Anne',
+		to: 'Paul',
 		timestamp: '2014-03-24T16:15:00+00:00',
 		messagetext: 'We tried that last week and she still went hight. Let\'s try 40%?'
 	}),
 	newMessage({
 		parentmessage: note.id,
 		from: 'Paul',
-		to: 'Anne',
+		to: 'Paul',
 		timestamp: '2014-03-24T16:22:00+00:00',
 		messagetext: 'Okay, good idea. -40% set, 45 minutes till game time.'
 	}),
 	newMessage({
 		parentmessage: note.id,
 		from: 'Paul',
-		to: 'Anne',
+		to: 'Paul',
 		timestamp: '2014-03-24T18:45:00+00:00',
 		messagetext: 'She peaked at 190 on CGM but was down to 112 at end of game. Won the game too!'
 	})
 ];
 
-messages['Anne'] = messages['Anne'].concat([note]).concat(comments);
+messages['Paul'] = messages['Paul'].concat([note]).concat(comments);
 
 note = newMessage({
 	from: 'Melissa',
-	to: 'Anne',
+	to: 'Paul',
 	timestamp: '2014-02-15T10:12:00+00:00',
 	messagetext: 'Soy flour, almond meal, eggs, sour cream and Splenda. 14g protein and 6g carbs.'
 });
@@ -128,20 +127,20 @@ comments = [
 	newMessage({
 		parentmessage: note.id,
 		from: 'Dr. Jona',
-		to: 'Anne',
+		to: 'Paul',
 		timestamp: '2014-02-16T15:20:00+00:00',
 		messagetext: 'That\'s an amazing muffin for diabetes and GF. Great food choice for all your kids :)'
 	}),
 	newMessage({
 		parentmessage: note.id,
 		from: 'Melissa',
-		to: 'Anne',
+		to: 'Paul',
 		timestamp: '2014-02-16T15:22:00+00:00',
 		messagetext: 'It also tastes really good. Glycemic index is high but it doesn\'t make a big diff with only 6g carbs!'
 	})
 ];
 
-messages['Anne'] = messages['Anne'].concat([note]).concat(comments);
+messages['Paul'] = messages['Paul'].concat([note]).concat(comments);
 
 // Charles
 // ====================================
@@ -206,13 +205,8 @@ messages['Charles'] = messages['Charles'].concat([note]).concat(comments);
 var data = {};
 
 data.loggedInUser = _.cloneDeep(users['Paul']);
-data.loggedInUser.notes = [];
+data.loggedInUser.notes = messages['Paul'];
 data.loggedInUser.teams = [
-	{
-		userid: users['Anne'].userid,
-		profile: _.clone(users['Anne'].profile),
-		notes: messages['Anne']
-	},
 	{
 		userid: users['Charles'].userid,
 		profile: _.clone(users['Charles'].profile),

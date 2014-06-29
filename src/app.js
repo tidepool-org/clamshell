@@ -301,7 +301,7 @@ var ClamShellApp = React.createClass({
   },
 
   renderMessagesForSelectedTeam:function(){
-    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+    var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
     var header;
 
     if (this.userHasTeams()) {
@@ -359,7 +359,7 @@ var ClamShellApp = React.createClass({
   },
 
   renderMessageThread:function(){
-    var careTeamName = app.dataHelper.formatFullName(this.state.selectedUser.profile);
+    var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
 
     var header = this.renderHeader({
       title: careTeamName,

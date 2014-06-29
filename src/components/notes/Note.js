@@ -47,7 +47,7 @@ var Note = React.createClass({
   componentDidMount: function () {
     this.setState({
       author :  dataHelper.formatFullName(this.props.theNote.user),
-      team : dataHelper.formatFullName(this.props.theNote.team),
+      team : dataHelper.formatTeamFullName(this.props.theNote.team),
       numberOfComments : dataHelper.getComments(this.props.theNote.id),
       note : this.props.theNote.messagetext,
       when : dataHelper.formatDisplayDate(this.props.theNote.timestamp)
