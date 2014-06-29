@@ -121,7 +121,7 @@ var TeamPicker = React.createClass({
 
     return {
       userid : id,
-      name : dataHelper.formatFullName(profile),
+      name : dataHelper.formatTeamFullName(profile),
       latestNote : latestNote
     };
   },

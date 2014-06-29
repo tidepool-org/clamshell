@@ -79,31 +79,21 @@ var userDataHelper = {
     }
     return;
   },
-  formatShortName : function(userProfile){
-    if(userProfile && userProfile.shortName){
-      return userProfile.shortName;
-    }
-
-    if(userProfile && userProfile.firstName){
-      return userProfile.firstName;
-    }
-
-    return null;
-  },
   formatFullName : function(userProfile){
     if(userProfile && userProfile.fullName){
       return userProfile.fullName;
     }
 
-    if(userProfile && userProfile.firstName){
-      var fullname = userProfile.firstName;
-      if(userProfile.lastName){
-        fullname += ' '+userProfile.lastName;
-      }
-      return fullname;
+    return null;
+  },
+  formatTeamFullName : function(userProfile){
+    var patient = userProfile && userProfile.patient;
+
+    if(patient && patient.isOtherPerson){
+      return patient.fullName;
     }
 
-    return null;
+    return this.formatFullName(userProfile);
   },
   createMessage : function(messageText, utcTimestamp, user, groupId, parentId){
 
