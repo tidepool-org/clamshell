@@ -60,7 +60,7 @@ var MessageForm = React.createClass({
     return this.isExistingNoteEdit() && _.isEmpty(this.props.existingNoteFields.editableTimestamp) === false;
   },
   allowDateEdit:function() {
-    return this.hasTimestampToEdit() || this.isExistingNoteEdit() === false;
+    return this.hasTimestampToEdit() || this.isExistingNoteEdit() === false && this.state.changeDateTime;
   },
   initEdit:function() {
     if( this.hasTextToEdit() && this.hasTimestampToEdit() ){
@@ -137,10 +137,9 @@ var MessageForm = React.createClass({
    *
    */
   getUtcTimestamp: function() {
-    var utcTimestamp;
+    var utcTimestamp = this.state.whenUtc;
 
     if( this.allowDateEdit() ){
-      utcTimestamp = this.state.whenUtc;
 
       if(this.state.date && this.state.time){
         var offset = sundial.getOffsetFromTime(this.state.whenUtc);

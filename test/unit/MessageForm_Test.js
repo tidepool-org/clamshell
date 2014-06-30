@@ -19,6 +19,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var helpers = require('../lib/helpers');
 var MessageForm = require('../../src/components/form/MessageForm');
 
+var sundial = require('sundial');
+
 describe('MessageForm', function() {
   var component;
 
@@ -46,6 +48,9 @@ describe('MessageForm', function() {
     it('should not show the message time by defaut', function() {
       expect(component.refs.showDateTime).to.not.exist;
     });
+    it('will NOT allow the date to be edited', function() {
+      expect(component.allowDateEdit()).to.false;
+    });
   });
 
   describe('when message form has focus', function() {
@@ -69,6 +74,11 @@ describe('MessageForm', function() {
       expect(component.refs.cancelBtn).to.exist;
     });
 
+    it('and we have showed the editable date will allow the date to be edited', function() {
+      component.showEditDate();
+      expect(component.allowDateEdit()).to.true;
+    });
+
   });
 
   describe('on saving', function() {
@@ -79,21 +89,47 @@ describe('MessageForm', function() {
 
     it('gives submitted msg and timestamp to handler', function() {
       var myTestMessage = 'should get this message text';
-      var theTime = new Date().toISOString();
+      var theTime = sundial.utcDateString();
+
+      var handleMessage = sinon.spy();
+      component.setProps({
+        onSubmit: handleMessage
+      });
+      //set the message and time
+      component.setState({
+        msg: myTestMessage,
+        whenUtc : theTime
+      });
+      //save it
+      var save = component.refs.sendBtn.props.onClick;
+      save();
+
+      expect(handleMessage).to.have.been.calledWith({text: myTestMessage, timestamp: theTime});
+    });
+
+    it('gives submitted msg and timestamp to handler when we have allowed the editing of the date', function() {
+      var myTestMessage = 'should get this message text 2';
 
       var handleMessage = sinon.spy();
       component.setProps({
         onSubmit: handleMessage
       });
 
+      /*
+       * Allow date editing which will set the date and time components
+       */
+      component.showEditDate();
+      //set the message and time
       component.setState({
         msg: myTestMessage,
-        whenUtc : theTime
+        whenUtc : sundial.utcDateString()
       });
+      var expectedTimestamp = component.getUtcTimestamp();
+      //save it
       var save = component.refs.sendBtn.props.onClick;
       save();
 
-      expect(handleMessage).to.have.been.calledWith({text: myTestMessage, timestamp: theTime});
+      expect(handleMessage).to.have.been.calledWith({text: myTestMessage, timestamp: expectedTimestamp});
     });
 
   });
@@ -117,6 +153,65 @@ describe('MessageForm', function() {
       expect(component.state.time).to.not.exist;
       expect(component.state.editing).to.be.false;
       expect(component.state.changeDateTime).to.be.false;
+    });
+
+  });
+
+  describe('when editing existing note\'s text and timestamp', function(){
+
+    var fields = {editableText: 'existing note text', editableTimestamp: sundial.utcDateString() };
+    //isExistingNoteEdit
+    beforeEach(function() {
+      component = helpers.mountComponent(
+        MessageForm(
+          {existingNoteFields:fields}
+        )
+      );
+    });
+
+    it('the form knows this', function() {
+      expect(component.isExistingNoteEdit()).to.be.true;
+    });
+
+    it('the form knows there is text to edit', function() {
+      expect(component.hasTextToEdit()).to.be.true;
+    });
+
+    it('the form knows there is a timestamp to edit', function() {
+      expect(component.hasTimestampToEdit()).to.be.true;
+    });
+
+    it('the form we are allowing the date to be edited', function() {
+      expect(component.allowDateEdit()).to.be.true;
+    });
+  });
+
+  describe('when editing existing note\'s text only', function(){
+
+    var fields = {editableText: 'existing note text', displayOnlyTimestamp: sundial.utcDateString() };
+    //isExistingNoteEdit
+    beforeEach(function() {
+      component = helpers.mountComponent(
+        MessageForm(
+          {existingNoteFields:fields}
+        )
+      );
+    });
+
+    it('the form knows it is an edit', function() {
+      expect(component.isExistingNoteEdit()).to.be.true;
+    });
+
+    it('the form knows there is text to edit', function() {
+      expect(component.hasTextToEdit()).to.be.true;
+    });
+
+    it('the form knows there is NO timestamp to edit', function() {
+      expect(component.hasTimestampToEdit()).to.be.false;
+    });
+
+    it('the form we are NOT allowing the date to be edited', function() {
+      expect(component.allowDateEdit()).to.be.false;
     });
 
   });
