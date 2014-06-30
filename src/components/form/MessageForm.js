@@ -229,17 +229,17 @@ var MessageForm = React.createClass({
       /* jshint ignore:start */
       <div ref='editDateTime'>
         <input
-          type='date'
-          ref='editMessageDate'
-          value={this.state.date}
-          className='messageform-date'
-          onChange={this.handleDateChange}/>
-        <input
           type='time'
           ref='editMessageTime'
           value={this.state.time}
           className='messageform-time'
           onChange={this.handleTimeChange}/>
+        <input
+          type='date'
+          ref='editMessageDate'
+          value={this.state.date}
+          className='messageform-date'
+          onChange={this.handleDateChange}/>
       </div>
       /* jshint ignore:end */
     );
