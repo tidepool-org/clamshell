@@ -28,7 +28,7 @@ describe('MessageForm', function() {
     helpers.unmountComponent();
   });
 
-  describe('by default', function() {
+  describe('when initialised', function() {
     beforeEach(function() {
       component = helpers.mountComponent(MessageForm());
     });
@@ -48,23 +48,24 @@ describe('MessageForm', function() {
     it('should not show the message time by defaut', function() {
       expect(component.refs.showDateTime).to.not.exist;
     });
-    it('will NOT allow the date to be edited', function() {
-      expect(component.allowDateEdit()).to.false;
-    });
   });
 
-  describe('when message form has focus', function() {
+  describe('when has focus and adding a new message', function() {
     beforeEach(function() {
       component = helpers.mountComponent(MessageForm());
       component.refs.messageText.props.onFocus();
     });
 
-    it('will set it to be in edit mode', function() {
-      expect(component.refs.sendBtn).to.exist;
+    it('text input should be 3 lines', function() {
+      expect(component.refs.messageText.getDOMNode().rows).to.equal(3);
     });
 
-    it('will set it to be in edit mode', function() {
-      expect(component.refs.sendBtn).to.exist;
+    it('the state will be editing', function() {
+      expect(component.state.editing).to.be.true
+    });
+
+    it('the timestamp will be initialised', function() {
+      expect(component.state.whenUtc).to.exist;
     });
 
     it('will show a send button', function() {
@@ -81,7 +82,7 @@ describe('MessageForm', function() {
 
   });
 
-  describe('on saving', function() {
+  describe('when saving a new message', function() {
     beforeEach(function() {
       component = helpers.mountComponent(MessageForm());
       component.refs.messageText.props.onFocus();
@@ -134,7 +135,7 @@ describe('MessageForm', function() {
 
   });
 
-  describe('on canceling', function() {
+  describe('when canceling', function() {
     beforeEach(function() {
       component = helpers.mountComponent(MessageForm());
       component.refs.messageText.props.onFocus();
@@ -157,7 +158,7 @@ describe('MessageForm', function() {
 
   });
 
-  describe('when editing existing note\'s text and timestamp', function(){
+  describe('when editing an existing note\'s text and timestamp', function(){
 
     var fields = {editableText: 'existing note text', editableTimestamp: sundial.utcDateString() };
     //isExistingNoteEdit
@@ -169,7 +170,17 @@ describe('MessageForm', function() {
       );
     });
 
-    it('the form knows this', function() {
+    it('the form is initialised as such', function() {
+
+      expect(component.state.editing).to.be.true;
+      expect(component.state.changeDateTime).to.be.true;
+      expect(component.state.msg).to.equal(fields.editableText);
+      expect(component.state.whenUtc).to.equal(fields.editableTimestamp);
+      expect(component.state.time).to.exist;
+      expect(component.state.date).to.exist;
+    });
+
+    it('the form knows it is an existing edit', function() {
       expect(component.isExistingNoteEdit()).to.be.true;
     });
 
@@ -196,6 +207,16 @@ describe('MessageForm', function() {
           {existingNoteFields:fields}
         )
       );
+    });
+
+    it('the form is initialised as such', function() {
+
+      expect(component.state.editing).to.be.true;
+      expect(component.state.changeDateTime).to.be.false;
+      expect(component.state.msg).to.equal(fields.editableText);
+      expect(component.state.whenUtc).to.equal(fields.displayOnlyTimestamp);
+      expect(component.state.time).to.not.exist;
+      expect(component.state.date).to.not.exist;
     });
 
     it('the form knows it is an edit', function() {
