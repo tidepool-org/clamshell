@@ -33,7 +33,6 @@ module.exports = function(api, userSchema, platform, config) {
    */
   function setLoggedInUser(info){
     if(info && info.userid){
-      //loggedInUser.user = info.user.user;
       loggedInUser.userid = info.userid;
     }
     if(info && info.details){
@@ -207,6 +206,37 @@ module.exports = function(api, userSchema, platform, config) {
         return cb();
       }
     });
+  };
+
+  /*
+   * Refresh the given teams data
+   */
+  api.user.teams.refresh = function(teamId, cb){
+    if(platform.isLoggedIn()){
+      //is it the logged in users team
+      if (loggedInUser.userid === teamId){
+        api.user.refresh(cb);
+      } else {
+        api.log('refreshing given team ...');
+        getUserDetail(teamId, function(userDetailError, userDetail) {
+          if(userDetailError){
+            return cb(userDetailError);
+          }
+          if (userDetail) {
+            api.log('refreshed team data');
+
+            console.log('updated team ',userDetail);
+
+            for (var i = loggedInUser.teams - 1; i >= 0; i--) {
+              if(loggedInUser.teams[i].userid === teamId){
+                loggedInUser.teams[i] = _.cloneDeep(userDetail);
+              }
+            };
+          }
+          return cb();
+        });
+      }
+    }
   };
 
   // ----- Notes -----

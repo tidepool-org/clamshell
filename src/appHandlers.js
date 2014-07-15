@@ -319,11 +319,18 @@ module.exports = function(component,app) {
       component.state.loggedInUser
     );
 
-    component.setState({
-      routeName : app.routes.messagesForSelectedTeam,
-      selectedUser : userToDisplay,
-      previousRoute : component.state.routeName,
-      showingMenu : false
+    //do a refresh of the user data
+    app.api.user.teams.refresh(selectedUserId,function(error){
+      if(error){
+        component.handleError(error);
+        return;
+      }
+      component.setState({
+        routeName : app.routes.messagesForSelectedTeam,
+        selectedUser : userToDisplay,
+        previousRoute : component.state.routeName,
+        showingMenu : false
+      });
     });
   };
 };
