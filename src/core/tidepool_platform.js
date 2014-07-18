@@ -47,10 +47,11 @@ module.exports = function(api, userSchema, platform, config) {
   function getUserDetail(userId, cb) {
 
     var user = { userid : userId };
+    var now = Date.now();
 
     async.parallel({
       userProfile: function(callback) {
-        api.log('getting user profile');
+        api.log('getting user profile ',userId);
 
         platform.findProfile(userId, function(profileError,profile){
           if (profileError) {
@@ -67,7 +68,7 @@ module.exports = function(api, userSchema, platform, config) {
         });
       },
       userNotes: function(callback) {
-        api.log('getting user notes');
+        api.log('getting user notes ',userId);
         platform.getNotesForUser(userId, null, function(notesError, notes) {
           callback(notesError, notes);
         });
@@ -76,6 +77,9 @@ module.exports = function(api, userSchema, platform, config) {
       api.log('return user details');
       user.profile = results.userProfile;
       user.notes = appendTeamToNote(results.userNotes, results.userProfile);
+
+      api.log.info('getUserDetail completed in ' + (Date.now() - now) + ' millis.');
+
       return cb(error, user);
     });
   }
@@ -113,6 +117,7 @@ module.exports = function(api, userSchema, platform, config) {
   api.user.refresh = function(cb){
     if(platform.isLoggedIn()){
       api.log('refreshing logged in user ...');
+      var now = Date.now();
       platform.getCurrentUser(function(currentUserError,currentUser){
         if(currentUserError){
           return cb(currentUserError);
@@ -123,10 +128,32 @@ module.exports = function(api, userSchema, platform, config) {
             return cb(userDetailError);
           }
           if (userDetail) {
-            api.log('refreshing users data');
+            api.log('refreshed users data');
             setLoggedInUser({details : userDetail});
           }
+          api.log.info('refresh completed in ' + (Date.now() - now) + ' millis.');
           return cb();
+        });
+      });
+    }
+  };
+
+  /*
+   * Refresh the current user and the users teams
+   */
+  api.user.refreshAll = function(cb){
+    if(platform.isLoggedIn()){
+      var now = Date.now();
+
+      api.log('refreshing all data ...');
+      api.user.refresh(function(err){
+        if(err){
+          return cb(err);
+        }
+
+        api.user.teams.get(function(err){
+          api.log.info('refreshAll completed in ' + (Date.now() - now) + ' millis.');
+          return cb(err);
         });
       });
     }
@@ -214,6 +241,8 @@ module.exports = function(api, userSchema, platform, config) {
   api.user.teams.refresh = function(teamId, cb){
     if(platform.isLoggedIn()){
       //is it the logged in users team
+      var now = Date.now();
+
       if (loggedInUser.userid === teamId){
         api.user.refresh(cb);
       } else {
@@ -224,8 +253,6 @@ module.exports = function(api, userSchema, platform, config) {
           }
           if (userDetail) {
             api.log('refreshed team data');
-
-            console.log('updated team ',userDetail);
 
             for (var i = loggedInUser.teams - 1; i >= 0; i--) {
               if(loggedInUser.teams[i].userid === teamId){

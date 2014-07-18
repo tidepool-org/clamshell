@@ -84,7 +84,14 @@ module.exports = function(api, userSchema) {
   };
 
   api.user.refresh = function(callback){
-    api.log('[mock] refresh in ...');
+    api.log('[mock] refresh ...');
+    saveSession(demoToken);
+    loadUserData(require('../../demo/data'));
+    return callback();
+  };
+
+  api.user.refreshAll = function(callback){
+    api.log('[mock] refreshAll ...');
     saveSession(demoToken);
     loadUserData(require('../../demo/data'));
     return callback();
@@ -97,10 +104,16 @@ module.exports = function(api, userSchema) {
     return callback(null);
   };
 
+  // ----- Teams -----
   api.user.teams.get = function(callback) {
     // Already attached to `loggedInUser.teams`
     api.log('[mock] successfully got users teams data');
     return callback();
+  };
+
+  api.user.teams.refresh = function(teamId,callback) {
+     api.log('[mock] refresh team data for ',teamId);
+     return callback();
   };
 
   // ----- Messages -----

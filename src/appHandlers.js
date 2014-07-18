@@ -55,7 +55,14 @@ module.exports = function(component,app) {
 
       previousRoute = app.routes.messagesForAllTeams;
     }
-    component.setState({routeName:previousRoute});
+    //refersh all data in the background
+    //i.e. we dont wait
+    app.api.user.refreshAll(function(error){
+      if (error) {
+        component.handleError(error);
+      }
+    });
+    component.setState({routeName:previousRoute})
   };
 
   component.handleOpenMenu = function() {
@@ -319,18 +326,19 @@ module.exports = function(component,app) {
       component.state.loggedInUser
     );
 
-    //do a refresh of the user data
+    //do a refresh of the user data in the background
+    //i.e. we dont wait
     app.api.user.teams.refresh(selectedUserId,function(error){
       if(error){
         component.handleError(error);
         return;
       }
-      component.setState({
-        routeName : app.routes.messagesForSelectedTeam,
-        selectedUser : userToDisplay,
-        previousRoute : component.state.routeName,
-        showingMenu : false
-      });
+    });
+    component.setState({
+      routeName : app.routes.messagesForSelectedTeam,
+      selectedUser : userToDisplay,
+      previousRoute : component.state.routeName,
+      showingMenu : false
     });
   };
 };
