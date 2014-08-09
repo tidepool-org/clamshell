@@ -1,4 +1,4 @@
-/* global rm, mkdir, exec, ls*/
+/* global rm, mkdir, exec, ls, cp*/
 require('shelljs/global');
 var fs = require('fs');
 var ms = require('ms');
@@ -26,6 +26,9 @@ console.log('Copying "index.html"...');
 var indexHtml = fs.readFileSync('index.html', 'utf8');
 indexHtml = indexHtml.replace('bundle.js', getBundleFilename());
 indexHtml.to('dist/index.html');
+
+console.log('Copying "images/*"...');
+cp('images/*', 'dist/');
 
 var end = new Date();
 console.log('App built in ' + ms(end - start));
