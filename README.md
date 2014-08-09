@@ -17,6 +17,7 @@ Table of contents:
     - [Vendor packages](#vendor-packages)
     - [JSHint](#jshint)
 - [Testing](#testing)
+- [Build and deployment](#build-and-deployment)
 
 ## Install
 
@@ -27,38 +28,19 @@ Requirements:
 Clone this repo then install dependencies:
 
 ```bash
-$ npm install .
+$ npm install
 ```
 
 ## Quick start
 
-After having completed the install, first make a copy of the sample config file:
+Start the development server (in "mock mode") with:
 
 ```bash
-$ cp config/sample.sh config/demo.sh
+$ source config/mock.sh
+$ npm start
 ```
 
-In the new config file, edit the environment variable to run in "demo" mode: `DEMO="true"`.
-
-(If instead you're running against a local instance of the Tidepool platform, just make a copy of `sample.sh` named, for example, `local.sh` and use that one in the following instructions.)
-
-In a first terminal, run the following to build the app, as well as watch files for changes and trigger a rebuild when necessary:
-
-```bash
-$ source config/demo.sh
-$ grunt develop
-# Or: $ npm start
-```
-
-In a second terminal, start the app server:
-
-```bash
-$ source config/demo.sh
-$ grunt server
-# Or: $ npm run server
-```
-
-Navigate your browser to `http://localhost:3001/`.
+Open your web browser and navigate to `http://localhost:3001/`.
 
 ## Development
 
@@ -106,11 +88,16 @@ Third-party dependencies are managed via `npm`.
 
 ## JSHint
 
-In a separate terminal, you can watch and lint JS files with:
+In a separate terminal, you can lint JS files with:
 
 ```bash
-$ grunt jshint-watch
-# Or: $ npm run jshint-watch
+$ npm run jshint
+```
+
+You can also watch files and re-run JSHint on changes with:
+
+```bash
+$ npm run jshint-watch
 ```
 
 ## Testing
@@ -119,28 +106,45 @@ We use the following testing tools:
 
 - [Mocha](http://visionmedia.github.io/mocha/)
 - [Chai](http://chaijs.com/)
-- [Testem](https://github.com/airportyh/testem)
+- [Sinon](http://sinonjs.org/)
 
-### Running the tests
-
-To run the tests only once, use:
+To run the unit tests, use:
 
 ```bash
 $ npm test
 ```
 
-To run the tests in "watch mode" (re-run on every file change), in a first terminal run:
+Then open `http://localhost:8080/` in your browser.
+
+## Build and deployment
+
+The app is built as a static site in the `dist/` directory.
+
+We use [Shio](https://github.com/tidepool-org/shio) to deploy, so we separate the build in two.
+
+Shio's `build.sh` script will take care of building the app itself with:
 
 ```bash
-$ npm run test-watch
+$ npm run build-app
 ```
 
-And in a second terminal launch:
+Shio's `start.sh` script then builds the config from environment variables as a separate file with:
 
 ```bash
-$ npm run test-server
-# Or if you have testem installed globally you can simply use:
-$ testem
+$ source config/env.sh
+$ npm run build-config
 ```
 
-These will open and run the tests in Chrome by default. You can also open other browsers and point them to the specified URL.
+After that, the app is ready to be served using the static web included in this repo:
+
+```bash
+$ npm run server
+```
+
+You can also build everything at once locally by simply running:
+
+```bash
+$ source config/mock.sh
+$ npm run build
+$ npm run server
+```
