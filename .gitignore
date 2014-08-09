@@ -1,7 +1,8 @@
 config/*
 !config/sample.sh
-app_build
-test_build
+!config/mock.sh
+dist
+tmp
 
 node_modules
 npm-debug.log
@@ -10,4 +11,3 @@ npm-debug.log
 *~
 .idea
 *.iml
-tmp

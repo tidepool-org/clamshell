@@ -30,7 +30,13 @@ var bows = require('bows');
 require('./core/core.less');
 require('./app.less');
 
-var config = window.appConfig;
+var config = require('./config');
+
+// Eliminate 300ms delay for click events on touch screens
+// Note: FastClick doesn't export as CommonJS first,
+// so disable AMD to fix that
+var attachFastClick = require('imports?define=>false!fastclick');
+attachFastClick(document.body);
 
 var router = require('./appRouter')();
 
@@ -89,11 +95,9 @@ var ClamShellApp = React.createClass({
 
     var userSchema = require('./core/userSchema');
 
-    if(config.demo){
+    if(app.mock){
 
-      var mockApi = require('./core/mock')(
-        app.api, userSchema
-      );
+      var mockApi = app.mock(app.api, userSchema);
 
       mockApi.initialize(function(){
         app.log('Initialized Mock API');
@@ -104,11 +108,11 @@ var ClamShellApp = React.createClass({
     } else {
 
       var tidepoolApi = require('tidepool-platform-client')({
-        host: config.apiHost,
+        host: config.API_HOST,
         log: app.log,
         localStore: window.localStorage,
         metricsSource: 'clamshell',
-        metricsVersion: config.version
+        metricsVersion: config.VERSION
       });
 
       tidepoolApi.initialize(function() {
@@ -502,6 +506,10 @@ var ClamShellApp = React.createClass({
     });
   }
 });
+
+app.useMock = function(mock) {
+  this.mock = mock;
+};
 
 app.start = function() {
 

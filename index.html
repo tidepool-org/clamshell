@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8" />
@@ -37,17 +37,8 @@
   </head>
 
   <body>
-    <div id="app">Loading app...</div>
-
-    <script type="text/javascript" src="appConfig.js"></script>
-    <script type="text/javascript" src="fastclick.min.js"></script>
-
-    <% if (production) { %>
-    <script type="text/javascript" src="superagent.min.js"></script>
-    <script type="text/javascript" src="clamshell.min.js"></script>
-    <% } else { %>
-    <script type="text/javascript" src="superagent.js"></script>
-    <script type="text/javascript" src="clamshell.js"></script>
-    <% }  %>
+    <div id="app"><p>Loading app...</p></div>
+    <!-- config -->
+    <script type="text/javascript" src="bundle.js"></script>
   </body>
 </html>

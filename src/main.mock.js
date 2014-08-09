@@ -20,4 +20,7 @@ window.config = require('../config.app.js');
 
 var app = window.app = require('./app');
 
+var mock = require('../mock');
+app.useMock(mock);
+
 app.start();
