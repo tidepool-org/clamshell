@@ -17,8 +17,7 @@
 
 var globals = {
   chai: require('chai'),
-  // Can't use `require('sinon')` when not in Node because won't load plugins
-  // http://stackoverflow.com/questions/20570301/typeerror-undefined-is-not-a-function-evaluating-sinon-spy
+  // Sinon is not Webpack-friendly, use pre-built version
   sinon: window.sinon
 };
 globals.expect = globals.chai.expect;
