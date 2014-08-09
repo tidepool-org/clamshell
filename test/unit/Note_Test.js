@@ -19,8 +19,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var helpers = require('../lib/helpers');
 var Note = require('../../src/components/notes/Note');
 
-var loggedInUserid = '123-ur-334';
-
 var note = {
     id : 'note-123',
     userid : '999-ur-100',

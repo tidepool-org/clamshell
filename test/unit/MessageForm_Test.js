@@ -61,7 +61,7 @@ describe('MessageForm', function() {
     });
 
     it('the state will be editing', function() {
-      expect(component.state.editing).to.be.true
+      expect(component.state.editing).to.be.true;
     });
 
     it('the timestamp will be initialised', function() {

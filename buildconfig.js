@@ -1,4 +1,4 @@
-/* global rm, mkdir, exec, ls*/
+/* global exec, ls*/
 require('shelljs/global');
 var fs = require('fs');
 var ms = require('ms');
