@@ -140,9 +140,9 @@ module.exports = function(api, userSchema, platform, config) {
     api.log('logging in ...');
 
     //are we using a long term key?
-    if(!_.isEmpty(config.LONG_TERM_KEY)){
+    if(!_.isEmpty(config.LONGTERM_KEY)){
       api.log('set the longterm app key');
-      user.longtermkey = config.LONG_TERM_KEY;
+      user.longtermkey = config.LONGTERM_KEY;
     }
 
     platform.login( user, options, function(error, loginData) {

@@ -31,5 +31,5 @@ module.exports = {
   VERSION: pkg.version,
   MOCK: booleanFromText(process.env.MOCK, false),
   API_HOST: process.env.API_HOST || 'https://devel-api.tidepool.io',
-  LONG_TERM_KEY: process.env.LONG_TERM_KEY || 'abcdefghikjlmnopqrstuvwxyz'
+  LONGTERM_KEY: process.env.LONGTERM_KEY || 'abcdefghikjlmnopqrstuvwxyz'
 };
