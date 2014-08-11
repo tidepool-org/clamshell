@@ -27,8 +27,8 @@ var indexHtml = fs.readFileSync('index.html', 'utf8');
 indexHtml = indexHtml.replace('bundle.js', getBundleFilename());
 indexHtml.to('dist/index.html');
 
-console.log('Copying "images/*"...');
-cp('images/*', 'dist/');
+console.log('Copying "ios"...');
+cp('-Rf', 'ios', 'dist');
 
 var end = new Date();
 console.log('App built in ' + ms(end - start));
