@@ -13,19 +13,11 @@ FOR A PARTICULAR PURPOSE. See the License for more details.
 You should have received a copy of the License along with this program; if
 not, you can obtain one from Tidepool Project at tidepool.org.
 == BSD2 LICENSE ==
- */
+*/
 'use strict';
 
-window.appConfig = {
-  version: '<%= version %>' || '',
-  demo: (function(){
-    var mockValue = '<%= demo %>';
-    if (mockValue === '') {
-      return false;
-    } else {
-      return mockValue === 'true';
-    }
-  })(),
-  apiHost: '<%= api_host %>' || 'https://devel-api.tidepool.io',
-  longtermkey: '<%= longtermkey %>' || 'abcdefghikjlmnopqrstuvwxyz'
-};
+// NOTE: `window.config` is bundled separately
+
+var app = window.app = require('./app');
+
+app.start();

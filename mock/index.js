@@ -17,6 +17,8 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 'use strict';
 
+var mockData = require('./data');
+
 module.exports = function(api, userSchema) {
   var _ = require('lodash');
 
@@ -78,7 +80,7 @@ module.exports = function(api, userSchema) {
       return callback('missing user details');
     }
     saveSession(demoToken);
-    loadUserData(require('../../demo/data'));
+    loadUserData(mockData);
     api.log('[mock] login success');
     return callback();
   };
@@ -86,7 +88,7 @@ module.exports = function(api, userSchema) {
   api.user.refresh = function(callback){
     api.log('[mock] refresh in ...');
     saveSession(demoToken);
-    loadUserData(require('../../demo/data'));
+    loadUserData(mockData);
     return callback();
   };
 

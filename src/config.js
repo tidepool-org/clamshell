@@ -13,18 +13,10 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-'use scrict';
+var config = window.config;
 
-var globals = {
-  chai: require('chai'),
-  // Sinon is not Webpack-friendly, use pre-built version
-  sinon: window.sinon
-};
-globals.expect = globals.chai.expect;
-var sinonChai = require('sinon-chai');
-globals.chai.use(sinonChai);
+if (!config) {
+  throw new Error('Expected `config` on the global `window` object');
+}
 
-// Add to global object for all tests to use
-window.chai = globals.chai;
-window.expect = globals.expect;
-window.sinon = globals.sinon;
+module.exports = config;

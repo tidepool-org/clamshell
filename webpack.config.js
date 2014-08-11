@@ -1,31 +1,25 @@
-/*
-== BSD2 LICENSE ==
-Copyright (c) 2014, Tidepool Project
+var path = require('path');
 
-This program is free software; you can redistribute it and/or modify it under
-the terms of the associated License, which is identical to the BSD 2-Clause
-License as published by the Open Source Initiative at opensource.org.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE. See the License for more details.
-
-You should have received a copy of the License along with this program; if
-not, you can obtain one from Tidepool Project at tidepool.org.
-== BSD2 LICENSE ==
-*/
+var entry = process.env.MOCK ? './src/main.mock.js' : './src/main.js';
 
 module.exports = {
+  entry: entry,
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'bundle.js'
+  },
   module: {
     loaders: [
-      { test: /\.css/, loader: "style-loader!css-loader" },
-      {test: /\.less$/, loader: 'style-loader!css-loader!less-loader'},
-      { test: /\.gif/, loader: "url-loader?limit=10000&minetype=image/gif" },
-      { test: /\.jpg/, loader: "url-loader?limit=10000&minetype=image/jpg" },
-      { test: /\.png/, loader: "url-loader?limit=10000&minetype=image/png" },
-      { test: /\.js$/, loader: "jsx-loader" },
-      { test: /\.json$/, loader: "json-loader" }
-    ],
-    noParse: /parse-latest.js/
+      {test: /\.js$/, loader: 'jsx-loader!envify-loader'},
+      {test: /\.less$/, loader: 'style-loader!css-loader!autoprefixer-loader!less-loader'},
+      {test: /\.gif$/, loader: 'url-loader?limit=10000&mimetype=image/gif'},
+      {test: /\.jpg$/, loader: 'url-loader?limit=10000&mimetype=image/jpg'},
+      {test: /\.png$/, loader: 'url-loader?limit=10000&mimetype=image/png'},
+      {test: /\.svg$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml'},
+      {test: /\.eot$/, loader: 'url-loader?limit=10000&mimetype=application/vnd.ms-fontobject'},
+      {test: /\.woff$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff'},
+      {test: /\.ttf$/, loader: 'url-loader?limit=10000&mimetype=application/x-font-ttf'},
+      {test: /\.json$/, loader: 'json-loader'}
+    ]
   }
 };

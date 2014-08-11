@@ -13,18 +13,23 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-'use scrict';
+var pkg = require('./package.json');
 
-var globals = {
-  chai: require('chai'),
-  // Sinon is not Webpack-friendly, use pre-built version
-  sinon: window.sinon
+function booleanFromText(value, defaultValue) {
+  if (value === 'true') {
+    return true;
+  }
+
+  if (value === 'false') {
+    return false;
+  }
+
+  return defaultValue || false;
+}
+
+module.exports = {
+  VERSION: pkg.version,
+  MOCK: booleanFromText(process.env.MOCK, false),
+  API_HOST: process.env.API_HOST || 'https://devel-api.tidepool.io',
+  LONG_TERM_KEY: process.env.LONG_TERM_KEY || 'abcdefghikjlmnopqrstuvwxyz'
 };
-globals.expect = globals.chai.expect;
-var sinonChai = require('sinon-chai');
-globals.chai.use(sinonChai);
-
-// Add to global object for all tests to use
-window.chai = globals.chai;
-window.expect = globals.expect;
-window.sinon = globals.sinon;
