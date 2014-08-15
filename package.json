@@ -6,8 +6,8 @@
   "repository": "https://github.com/tidepool-org/clamshell.git",
   "author": "Tidepool",
   "scripts": {
-    "test": "webpack-dev-server 'mocha!./test/entry.js' --output-file test.js --devtool source-map --cache --colors --progress",
-    "start": "webpack-dev-server --devtool source-map --cache --colors --progress --port 3001",
+    "test": "webpack-dev-server 'mocha!./test/entry.js' --output-file test.js --devtool eval-source-map --cache --colors --progress",
+    "start": "webpack-dev-server --devtool eval-source-map --cache --colors --progress --port 3001",
     "build": "npm run build-app && npm run build-config",
     "build-app": "node buildapp",
     "build-config": "node buildconfig",
