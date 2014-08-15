@@ -6,7 +6,7 @@
   "repository": "https://github.com/tidepool-org/clamshell.git",
   "author": "Tidepool",
   "scripts": {
-    "test": "webpack-dev-server 'mocha!./test/entry.js' --output-path tmp --output-file _test.js --content-base test --devtool source-map --cache --colors --progress",
+    "test": "webpack-dev-server 'mocha!./test/entry.js' --output-file test.js --devtool source-map --cache --colors --progress",
     "start": "webpack-dev-server --devtool source-map --cache --colors --progress --port 3001",
     "build": "npm run build-app && npm run build-config",
     "build-app": "node buildapp",
@@ -51,6 +51,7 @@
     "jshint-stylish": "0.4.0",
     "mocha": "1.21.4",
     "mocha-loader": "0.6.5",
+    "script-loader": "0.6.0",
     "sinon-chai": "2.5.0",
     "webpack-dev-server": "1.4.9"
   }

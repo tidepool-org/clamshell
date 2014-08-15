@@ -5,7 +5,6 @@ var jshint = require('gulp-jshint');
 var jsFiles = [
   'src/**/*.js',
   'test/**/*.js',
-  '!test/lib/sinon.js',
   '*.js'
 ];
 

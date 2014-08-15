@@ -15,16 +15,12 @@
 
 'use scrict';
 
-var globals = {
-  chai: require('chai'),
-  // Sinon is not Webpack-friendly, use pre-built version
-  sinon: window.sinon
-};
-globals.expect = globals.chai.expect;
-var sinonChai = require('sinon-chai');
-globals.chai.use(sinonChai);
+// Sinon is not Webpack-friendly, use pre-built version
+// Adds `sinon` to the `window` object
+require('script!../../vendor/sinon.js');
 
-// Add to global object for all tests to use
-window.chai = globals.chai;
-window.expect = globals.expect;
-window.sinon = globals.sinon;
+var chai = require('chai');
+var sinonChai = require('sinon-chai');
+chai.use(sinonChai);
+window.chai = chai;
+window.expect = chai.expect;
