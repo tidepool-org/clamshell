@@ -74,6 +74,7 @@ function newMessage(opts) {
 		user: _.clone(from.profile),
 		team: _.clone(to.profile),
 		timestamp: opts.timestamp,
+		createdtime : opts.timestamp,
 		messagetext: opts.messagetext
 	};
 }
@@ -96,6 +97,7 @@ comments = [
 		from: 'Melissa',
 		to: 'Paul',
 		timestamp: '2014-03-24T16:15:00+00:00',
+		createdtime: '2014-03-24T16:15:00+00:00',
 		messagetext: 'We tried that last week and she still went hight. Let\'s try 40%?'
 	}),
 	newMessage({
@@ -103,6 +105,7 @@ comments = [
 		from: 'Paul',
 		to: 'Paul',
 		timestamp: '2014-03-24T16:22:00+00:00',
+		createdtime: '2014-03-24T16:22:00+00:00',
 		messagetext: 'Okay, good idea. -40% set, 45 minutes till game time.'
 	}),
 	newMessage({
@@ -110,6 +113,7 @@ comments = [
 		from: 'Paul',
 		to: 'Paul',
 		timestamp: '2014-03-24T18:45:00+00:00',
+		createdtime: '2014-03-24T18:45:00+00:00',
 		messagetext: 'She peaked at 190 on CGM but was down to 112 at end of game. Won the game too!'
 	})
 ];
@@ -120,6 +124,7 @@ note = newMessage({
 	from: 'Melissa',
 	to: 'Paul',
 	timestamp: '2014-02-15T10:12:00+00:00',
+	createdtime: '2014-02-15T10:12:00+00:00',
 	messagetext: 'Soy flour, almond meal, eggs, sour cream and Splenda. 14g protein and 6g carbs.'
 });
 
@@ -129,6 +134,7 @@ comments = [
 		from: 'Dr. Jona',
 		to: 'Paul',
 		timestamp: '2014-02-16T15:20:00+00:00',
+		createdtime: '2014-02-16T15:20:00+00:00',
 		messagetext: 'That\'s an amazing muffin for diabetes and GF. Great food choice for all your kids :)'
 	}),
 	newMessage({
@@ -136,6 +142,7 @@ comments = [
 		from: 'Melissa',
 		to: 'Paul',
 		timestamp: '2014-02-16T15:22:00+00:00',
+		createdtime: '2014-02-16T15:22:00+00:00',
 		messagetext: 'It also tastes really good. Glycemic index is high but it doesn\'t make a big diff with only 6g carbs!'
 	})
 ];
@@ -150,18 +157,21 @@ messages['Charles'] = [
 		from: 'Charles',
 		to: 'Charles',
 		timestamp: '2014-03-09T15:31:00+00:00',
+		createdtime: '2014-03-09T15:31:00+00:00',
 		messagetext: 'Ripped off insertion set. #ouch Pump off 9am-2:30p. Very long walk 9:40-1pm. #bgnow 74'
 	}),
 	newMessage({
 		from: 'Charles',
 		to: 'Charles',
 		timestamp: '2014-02-05T09:27:00+00:00',
+		createdtime: '2014-02-05T09:27:00+00:00',
 		messagetext: '#sitechange'
 	}),
 	newMessage({
 		from: 'Charles',
 		to: 'Charles',
 		timestamp: '2014-02-05T23:16:00+00:00',
+		createdtime: '2014-02-05T23:16:00+00:00',
 		messagetext: 'Dinner at Fred\'s. Veggie burger.'
 	})
 ];
@@ -170,6 +180,7 @@ note = newMessage({
 	from: 'Charles',
 	to: 'Charles',
 	timestamp: '2013-12-22T23:07:40+00:00',
+	createdtime: '2013-12-22T23:07:40+00:00',
 	messagetext: 'There is a bit of pressure leading up to the holidays, I find that even a small amount of exercise each morning helps with the stress.'
 });
 
@@ -179,6 +190,7 @@ comments = [
 		from: 'Charles',
 		to: 'Charles',
 		timestamp: '2013-12-24T23:07:40+00:00',
+		createdtime: '2013-12-24T23:07:40+00:00',
 		messagetext: 'Will try and apply my stress & life balance measures to xmas day tomorrow and see how it goes.'
 	}),
 	newMessage({
@@ -186,6 +198,7 @@ comments = [
 		from: 'Charles',
 		to: 'Charles',
 		timestamp: '2013-12-25T23:07:40+00:00',
+		createdtime: '2013-12-25T23:07:40+00:00',
 		messagetext: 'I have struggled to resist the temptations of Christmas but did go for a ride early in the day that helped to balance things out.'
 	}),
 	newMessage({
@@ -193,6 +206,7 @@ comments = [
 		from: 'Dr. Jona',
 		to: 'Charles',
 		timestamp: '2014-01-04T23:07:40+00:00',
+		createdtime: '2014-01-04T23:07:40+00:00',
 		messagetext: 'It sounds like you coped well over the Christmas & New Years period given the temptations'
 	})
 ];

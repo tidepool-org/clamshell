@@ -61,7 +61,10 @@ var userDataHelper = {
   },
   sortNotesAscending : function(notesToSort){
     return _.sortBy(notesToSort, function(note) {
-      return new Date(note.timestamp);
+      if (_.isEmpty(note.createdtime)) {
+        return new Date(note.timestamp)
+      }
+      return new Date(note.createdtime)
     });
   },
   getNotesForTeams : function(teams){
