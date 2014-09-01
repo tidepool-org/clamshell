@@ -102,7 +102,8 @@ var NoteList = React.createClass({
   renderParents:function(){
     if(_.isEmpty(this.props.notes) === false){
 
-      //Newest note first
+      //Newest note first, or if there is a new
+      //comment on an existing note bubble it up
       var parents = dataHelper.sortNotesDescending(this.props.notes);
 
       var notes = _.map(parents, function(note){

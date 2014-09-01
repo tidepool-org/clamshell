@@ -61,7 +61,30 @@ var userDataHelper = {
   },
   sortNotesAscending : function(notesToSort){
     return _.sortBy(notesToSort, function(note) {
-      return new Date(note.timestamp);
+      if(_.isEmpty(note.parentmessage)){
+        //has comments?
+        var comments = _.filter(notesToSort, {parentmessage: note.id});
+        //order them
+        if( _.isEmpty(comments) == false ) {
+          //ordered
+          comments = _.sortBy(comments, function(comment) {
+            if(_.isEmpty(comment.createdtime)){
+              return new Date(comment.timestamp);
+            }
+            return new Date(comment.createdtime);
+          });
+          //return note with latest comments position
+          if(_.isEmpty(comments[0].createdtime)){
+            return new Date(comments[0].timestamp);
+          }
+          return new Date(comments[0].createdtime);
+        }
+        //no comments so just the note
+        if(_.isEmpty(note.createdtime)){
+          return new Date(note.timestamp);
+        }
+        return new Date(note.createdtime);
+      }
     });
   },
   getNotesForTeams : function(teams){

@@ -68,8 +68,8 @@ module.exports = function(api, userSchema, platform, config) {
         });
       },
       userNotes: function(callback) {
-        api.log('getting user notes');
-        platform.getNotesForUser(userId, null, function(notesError, notes) {
+        api.log('getting user messages');
+        platform.getAllMessagesForUser(userId, null, function(notesError, notes) {
           callback(notesError, notes);
         });
       }
