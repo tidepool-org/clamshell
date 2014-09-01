@@ -48,8 +48,12 @@ var userDataHelper = {
       return userId === team.userid;
     });
   },
-  getComments: function(parentmessageId) {
-    return 'todo';
+  getCommentsCount: function(noteId, allMessages) {
+    var comments = this.commentsForNote(noteId, allMessages);
+    if(_.isEmpty(comments)){
+      return 0;
+    }
+    return comments.length;
   },
   filterNotes : function(notesToFilter){
     return  _.filter(notesToFilter, function(note) {
@@ -59,31 +63,47 @@ var userDataHelper = {
   sortNotesDescending : function(notesToSort){
     return this.sortNotesAscending(notesToSort).reverse();
   },
+  /*
+   * In the given list find any comments for the given note id
+   */
+  commentsForNote : function(noteId, allMessages){
+    return _.filter(allMessages, {parentmessage: noteId});
+  },
+  /*
+   * Sort any message in an ASC order based on date
+   */
+  sortAscending : function(messages){
+    var self = this;
+    return _.sortBy(messages, function(message) {
+      return self.messageDate(message);
+    });
+  },
+  /*
+   * Return the date for a message to be used
+   * when ordering message lists for display
+   */
+  messageDate : function(message){
+    if(_.isEmpty(message.createdtime)){
+      return new Date(message.timestamp);
+    }
+    return new Date(message.createdtime);
+  },
+  /*
+   * Sort 'Notes' in asc date order but also up
+   * bubble any note that has new comments on them.
+   */
   sortNotesAscending : function(notesToSort){
+
+    var self = this;
     return _.sortBy(notesToSort, function(note) {
       if(_.isEmpty(note.parentmessage)){
-        //has comments?
-        var comments = _.filter(notesToSort, {parentmessage: note.id});
-        //order them
+        //does the not have comments that forces it to bubble up?
+        var comments = self.commentsForNote(note.id, notesToSort);
         if( _.isEmpty(comments) == false ) {
-          //ordered
-          comments = _.sortBy(comments, function(comment) {
-            if(_.isEmpty(comment.createdtime)){
-              return new Date(comment.timestamp);
-            }
-            return new Date(comment.createdtime);
-          });
-          //return note with latest comments position
-          if(_.isEmpty(comments[0].createdtime)){
-            return new Date(comments[0].timestamp);
-          }
-          return new Date(comments[0].createdtime);
+          comments = self.sortAscending(comments);
+          return self.messageDate(comments[0]);
         }
-        //no comments so just the note
-        if(_.isEmpty(note.createdtime)){
-          return new Date(note.timestamp);
-        }
-        return new Date(note.createdtime);
+        return self.messageDate(note);
       }
     });
   },

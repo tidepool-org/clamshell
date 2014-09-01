@@ -46,6 +46,7 @@ var NoteList = React.createClass({
         image='large'
         key={note.id}
         theNote={note}
+        commentCount={dataHelper.getCommentsCount(note.id,this.props.notes)}
         onSaveEdit={this.getSaveEdit(note)}
         onShowThread={this.getShowThread(note)}/>
       /* jshint ignore:end */
