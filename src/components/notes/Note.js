@@ -129,12 +129,19 @@ var Note = React.createClass({
   },
 
   renderComments : function(){
+
+    var commentString = 'Comments';
+
+    if(this.state.numberOfComments === 1){
+      commentString = 'Comment';
+    }
+
     if(this.props.onShowThread){
       return (
         /* jshint ignore:start */
         <span
           className='note-comments note-comments-text'
-          ref='showMessageThread'>{this.state.numberOfComments} Comments</span>
+          ref='showMessageThread'>{this.state.numberOfComments} {commentString}</span>
         /* jshint ignore:end */
       );
     }
