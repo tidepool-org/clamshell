@@ -89,20 +89,22 @@ var userDataHelper = {
     return new Date(message.createdtime);
   },
   /*
-   * Sort 'Notes' in asc date order but also up
-   * bubble any note that has new comments on them.
+   * Sort 'Notes' by the most recent date between the
+   * note itself and the comments attached to it, if any"
    */
   sortNotesAscending : function(notesToSort){
-
     var self = this;
     return _.sortBy(notesToSort, function(note) {
+      //we just want notes
       if(_.isEmpty(note.parentmessage)){
-        //does the not have comments that forces it to bubble up?
         var comments = self.commentsForNote(note.id, notesToSort);
+        //does the note have any comments?
         if( _.isEmpty(comments) == false ) {
           comments = self.sortAscending(comments);
+          //sort using date of newest comment
           return self.messageDate(comments[0]);
         }
+        //sort on notes date
         return self.messageDate(note);
       }
     });
