@@ -48,8 +48,12 @@ var userDataHelper = {
       return userId === team.userid;
     });
   },
-  getComments: function(parentmessageId) {
-    return 'todo';
+  getCommentsCount: function(noteId, allMessages) {
+    var comments = this.commentsForNote(noteId, allMessages);
+    if(_.isEmpty(comments)){
+      return 0;
+    }
+    return comments.length;
   },
   filterNotes : function(notesToFilter){
     return  _.filter(notesToFilter, function(note) {
@@ -59,12 +63,50 @@ var userDataHelper = {
   sortNotesDescending : function(notesToSort){
     return this.sortNotesAscending(notesToSort).reverse();
   },
+  /*
+   * In the given list find any comments for the given note id
+   */
+  commentsForNote : function(noteId, allMessages){
+    return _.filter(allMessages, {parentmessage: noteId});
+  },
+  /*
+   * Sort any message in an ASC order based on date
+   */
+  sortAscending : function(messages){
+    var self = this;
+    return _.sortBy(messages, function(message) {
+      return self.messageDate(message);
+    });
+  },
+  /*
+   * Return the date for a message to be used
+   * when ordering message lists for display
+   */
+  messageDate : function(message){
+    if(_.isEmpty(message.createdtime)){
+      return new Date(message.timestamp);
+    }
+    return new Date(message.createdtime);
+  },
+  /*
+   * Sort 'Notes' by the most recent date between the
+   * note itself and the comments attached to it, if any"
+   */
   sortNotesAscending : function(notesToSort){
+    var self = this;
     return _.sortBy(notesToSort, function(note) {
-      if (_.isEmpty(note.createdtime)) {
-        return new Date(note.timestamp)
+      //we just want notes
+      if(_.isEmpty(note.parentmessage)){
+        var comments = self.commentsForNote(note.id, notesToSort);
+        //does the note have any comments?
+        if( _.isEmpty(comments) == false ) {
+          comments = self.sortAscending(comments);
+          //sort using date of newest comment
+          return self.messageDate(comments[0]);
+        }
+        //sort on notes date
+        return self.messageDate(note);
       }
-      return new Date(note.createdtime)
     });
   },
   getNotesForTeams : function(teams){

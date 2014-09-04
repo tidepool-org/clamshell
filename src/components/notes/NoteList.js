@@ -46,6 +46,7 @@ var NoteList = React.createClass({
         image='large'
         key={note.id}
         theNote={note}
+        commentCount={dataHelper.getCommentsCount(note.id,this.props.notes)}
         onSaveEdit={this.getSaveEdit(note)}
         onShowThread={this.getShowThread(note)}/>
       /* jshint ignore:end */
@@ -102,7 +103,8 @@ var NoteList = React.createClass({
   renderParents:function(){
     if(_.isEmpty(this.props.notes) === false){
 
-      //Newest note first
+      //Newest note first, or if there is a new
+      //comment on an existing note bubble it up
       var parents = dataHelper.sortNotesDescending(this.props.notes);
 
       var notes = _.map(parents, function(note){

@@ -35,6 +35,7 @@ var Note = React.createClass({
     theNote : React.PropTypes.object,
     image : React.PropTypes.string,
     onShowThread : React.PropTypes.func,
+    commentCount : React.PropTypes.number,
     onSaveEdit : React.PropTypes.func
   },
 
@@ -48,7 +49,7 @@ var Note = React.createClass({
     this.setState({
       author :  dataHelper.formatFullName(this.props.theNote.user),
       team : dataHelper.formatTeamFullName(this.props.theNote.team),
-      numberOfComments : dataHelper.getComments(this.props.theNote.id),
+      numberOfComments : this.props.commentCount,
       note : this.props.theNote.messagetext,
       when : dataHelper.formatDisplayDate(this.props.theNote.timestamp)
     });
@@ -128,12 +129,19 @@ var Note = React.createClass({
   },
 
   renderComments : function(){
+
+    var commentString = 'Comments';
+
+    if(this.state.numberOfComments === 1){
+      commentString = 'Comment';
+    }
+
     if(this.props.onShowThread){
       return (
         /* jshint ignore:start */
         <span
           className='note-comments note-comments-text'
-          ref='showMessageThread'>Comments</span>
+          ref='showMessageThread'>{this.state.numberOfComments} {commentString}</span>
         /* jshint ignore:end */
       );
     }
