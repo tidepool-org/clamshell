@@ -41,7 +41,7 @@
     "sundial": "0.1.6",
     "tidepool-platform-client": "0.6.2",
     "url-loader": "0.5.5",
-    "webpack": "1.3.3-beta1"
+    "webpack": "1.4.9"
   },
   "devDependencies": {
     "chai": "1.9.1",
@@ -53,6 +53,6 @@
     "mocha-loader": "0.6.5",
     "script-loader": "0.6.0",
     "sinon-chai": "2.5.0",
-    "webpack-dev-server": "1.4.9"
+    "webpack-dev-server": "1.6.5"
   }
 }
