@@ -144,7 +144,6 @@ module.exports = function(component,app) {
 
     return;
   };
-
   /**
    * Basic handler when a message needs to be shown to the user
    *
@@ -160,7 +159,6 @@ module.exports = function(component,app) {
       notification : { info: info, stateOnClosing : stateOnClosing }
     });
   };
-
   /**
    * Clears the notification and sets any state that is given
    *
@@ -173,7 +171,6 @@ module.exports = function(component,app) {
 
     component.setState(stateOnClosing);
   };
-
   /**
    * Trigger load of user data on successful login
    */
@@ -182,70 +179,6 @@ module.exports = function(component,app) {
     component.setState({ authenticated : true });
     component.loadUserData();
   };
-
-  /**
-   * Load a message thread from the platform
-   *
-   * @param {Message} mostRecentMessageInThread - The most recent message in a thread
-   */
-  component.handleShowConversationThread = function(mostRecentMessageInThread){
-    app.trackMetric('Viewed Note Thread');
-    var messagesId = mostRecentMessageInThread.id;
-
-    if(mostRecentMessageInThread.parentmessage){
-      messagesId = mostRecentMessageInThread.parentmessage;
-    }
-
-    app.api.notes.getThread(messagesId,function(error,thread){
-
-      if(error){
-        return component.handleError(error);
-      }
-
-      var userToDisplay = app.dataHelper.getSelectedUser(
-        mostRecentMessageInThread.groupid,
-        component.state.loggedInUser
-      );
-
-      component.setState({
-        selectedThread : thread,
-        routeName : app.routes.messageThread,
-        selectedUser : userToDisplay,
-        previousRoute : component.state.routeName
-      });
-    });
-  };
-
-  /**
-   * Show this message and make editable
-   *
-   * @param {Message} toEdit - the message to edit
-   */
-  component.handleShowForEdit = function(toEdit){
-    app.trackMetric('Selected For Edit');
-
-    component.setState({
-      selectedForEdit : toEdit,
-      routeName : app.routes.messageThread
-    });
-  };
-
-  /**
-   * Save the edited message
-   *
-   * @param {Message} edited - the edited message
-   */
-  component.handleSaveEdit = function(edited){
-    app.trackMetric('Edit To Save');
-
-    app.api.notes.edit(edited,function(error){
-      app.log('edit made');
-      if(error){
-        return component.handleError(error);
-      }
-    });
-  };
-
   /**
    * Save the given message to the platform
    *
@@ -273,40 +206,6 @@ module.exports = function(component,app) {
       });
     }.bind(this));
   };
-
-  /**
-   * Add a comment to an existing thread
-   *
-   * @param {Object} note - A comment on the thread
-   */
-  component.handleAddingToConversation = function(note){
-    app.trackMetric('Added Comment');
-    var thread = component.state.selectedThread;
-    var parentId = app.dataHelper.getParentMessageId(thread);
-
-    //we set the parentId here
-    var comment = app.dataHelper.createMessage(
-      note.text,
-      note.timestamp,
-      component.state.loggedInUser,
-      component.state.selectedUser.userid,
-      parentId
-    );
-
-    app.api.notes.reply(comment,function(error, addedComment){
-      app.log('reply added');
-      if(error){
-        return component.handleError(error);
-      }
-      thread.push(addedComment);
-      component.setState({
-        selectedThread: thread,
-        lastCommentAdded: addedComment
-      });
-    }.bind(this));
-
-  };
-
   /**
    * Change which user is being displayed
    *

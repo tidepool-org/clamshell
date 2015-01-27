@@ -37,13 +37,13 @@ module.exports = function(api, userSchema, platform, config) {
       loggedInUser.userid = info.userid;
     }
     if(info && info.details){
-      loggedInUser.notes = info.details.notes || [];
+      loggedInUser.notes = [];
       loggedInUser.profile = info.details.profile || {};
     }
   }
 
   /*
-   * For a given user get the profile and notes for that user.
+   * For a given user get the profile for that user.
    */
   function getUserDetail(userId, cb) {
 
@@ -57,7 +57,6 @@ module.exports = function(api, userSchema, platform, config) {
           if (profileError) {
             return callback(profileError);
           }
-
           var migration = migrations.profileFullName;
           if (migration.isRequired(profile)) {
             api.log('Migrating user [' + userId + '] profile to "fullName"');
@@ -66,28 +65,12 @@ module.exports = function(api, userSchema, platform, config) {
 
           callback(profileError,profile);
         });
-      },
-      userNotes: function(callback) {
-        api.log('getting user messages');
-        platform.getAllMessagesForUser(userId, null, function(notesError, notes) {
-          callback(notesError, notes);
-        });
       }
     }, function (error, results) {
       api.log('return user details');
       user.profile = results.userProfile;
-      user.notes = appendTeamToNote(results.userNotes, results.userProfile);
+      user.notes = [];
       return cb(error, user);
-    });
-  }
-
-  /*
-  * Add the team for each note so we can use it later
-  */
-  function appendTeamToNote(notes, team) {
-    return _.map(notes, function(note) {
-      note.team = team;
-      return note;
     });
   }
 
@@ -212,49 +195,14 @@ module.exports = function(api, userSchema, platform, config) {
   // ----- Notes -----
 
   /*
-   * Find a specific message thread
-   */
-  api.notes.getThread = function(messageId, callback) {
-    api.log('getting message thread ... ');
-    platform.getMessageThread(messageId, function(error, messages) {
-      api.log('got message thread');
-      return callback(error, messages);
-    });
-  };
-
-  /*
-   * As the logged in user reply on an existing thread
-   */
-  api.notes.reply = function(comment, callback) {
-    api.log('adding reply to message thread ... ');
-    platform.replyToMessageThread(comment, function(error, id) {
-      api.log('reply added to message thread');
-      comment.id = id;
-      return callback(error, comment);
-    });
-  };
-
-  /*
    * As the logged start a new thread
    */
   api.notes.add = function(message, callback) {
-    api.log('adding new message thread ... ');
+    api.log('adding new note ... ');
     platform.startMessageThread(message, function(error, id) {
-      api.log('added message thread ... ');
+      api.log('added note ... ');
       message.id = id;
       return callback(error, message);
-    });
-  };
-
-  /*
-   * Edit an existing message
-   */
-  api.notes.edit = function(message, callback) {
-    api.log('saving edit on a message ');
-
-    platform.editMessage(message, function(error) {
-      api.log('edited message ... ');
-      return callback(error);
     });
   };
 

@@ -29,9 +29,7 @@ module.exports = function() {
      */
     routes : {
       login : 'login',
-      messagesForAllTeams : 'allTeams',
-      messagesForSelectedTeam : 'usersTeam',
-      messageThread : 'thread'
+      addNote : 'add-note'
     },
     /**
      * Initialize the router for the given component
@@ -43,9 +41,7 @@ module.exports = function() {
 
       var router = new Router({
         '/': appComponent.setState.bind(appComponent, {routeName: this.routes.login}),
-        '/allTeams': appComponent.setState.bind(appComponent, {routeName: this.routes.messagesForAllTeams}),
-        '/usersTeam': appComponent.setState.bind(appComponent, {routeName: this.routes.messagesForSelectedTeam}),
-        '/thread': appComponent.setState.bind(appComponent, {routeName: this.routes.messageThread})
+        '/add-note': appComponent.setState.bind(appComponent, {routeName: this.routes.addNote}),
       });
 
       router.init();

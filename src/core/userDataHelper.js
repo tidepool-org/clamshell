@@ -22,24 +22,6 @@ var sundial = require('sundial');
 var moment = sundial.momentInstance();
 
 var userDataHelper = {
-  getParentMessageId: function(thread) {
-    var parentNote = _.findWhere(thread, function(message) {
-      return message.parentmessage == null;
-    });
-    return parentNote.id;
-  },
-  getThread: function(team, parentmessageId) {
-
-    var notesInThread = _.where(team.notes, {parentmessage: parentmessageId});
-    var parentNote = _.findWhere(team.notes, {id: parentmessageId});
-
-    if(_.isEmpty(notesInThread)){
-      return [parentNote];
-    } else {
-      notesInThread.push(parentNote);
-      return this.sortNotesDescending(notesInThread);
-    }
-  },
   getSelectedUser:function(userId,data){
     if(userId === data.userid){
       return data;
@@ -47,76 +29,6 @@ var userDataHelper = {
     return _.find(data.teams, function(team){
       return userId === team.userid;
     });
-  },
-  getCommentsCount: function(noteId, allMessages) {
-    var comments = this.commentsForNote(noteId, allMessages);
-    if(_.isEmpty(comments)){
-      return 0;
-    }
-    return comments.length;
-  },
-  filterNotes : function(notesToFilter){
-    return  _.filter(notesToFilter, function(note) {
-      return (!note.parentmessage);
-    });
-  },
-  sortNotesDescending : function(notesToSort){
-    return this.sortNotesAscending(notesToSort).reverse();
-  },
-  /*
-   * In the given list find any comments for the given note id
-   */
-  commentsForNote : function(noteId, allMessages){
-    return _.filter(allMessages, {parentmessage: noteId});
-  },
-  /*
-   * Sort any message in an ASC order based on date
-   */
-  sortAscending : function(messages){
-    var self = this;
-    return _.sortBy(messages, function(message) {
-      return self.messageDate(message);
-    });
-  },
-  /*
-   * Return the date for a message to be used
-   * when ordering message lists for display
-   */
-  messageDate : function(message){
-    if(_.isEmpty(message.createdtime)){
-      return new Date(message.timestamp);
-    }
-    return new Date(message.createdtime);
-  },
-  /*
-   * Sort 'Notes' by the most recent date between the
-   * note itself and the comments attached to it, if any"
-   */
-  sortNotesAscending : function(notesToSort){
-    var self = this;
-    return _.sortBy(notesToSort, function(note) {
-      //we just want notes
-      if(_.isEmpty(note.parentmessage)){
-        var comments = self.commentsForNote(note.id, notesToSort);
-        //does the note have any comments?
-        if( _.isEmpty(comments) == false ) {
-          comments = self.sortAscending(comments);
-          //sort using date of newest comment
-          return self.messageDate(comments[0]);
-        }
-        //sort on notes date
-        return self.messageDate(note);
-      }
-    });
-  },
-  getNotesForTeams : function(teams){
-    return _.flatten(teams,'notes');
-  },
-  getAllNotesForLoggedInUser : function(loggedIn){
-    if(_.isEmpty(loggedIn.notes)){
-      return this.getNotesForTeams(loggedIn.teams);
-    }
-    return loggedIn.notes.concat(this.getNotesForTeams(loggedIn.teams));
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
