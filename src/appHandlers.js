@@ -52,8 +52,7 @@ module.exports = function(component,app) {
     var currentRoute = component.state.routeName;
 
     if(!previousRoute || previousRoute === currentRoute){
-
-      previousRoute = app.routes.messagesForAllTeams;
+      previousRoute = app.routes.addNote;
     }
     component.setState({routeName:previousRoute});
   };
@@ -199,9 +198,9 @@ module.exports = function(component,app) {
         return component.handleError(error);
       }
       var userToUpdate = component.state.selectedUser;
-      userToUpdate.notes.unshift(addedNote);
+
       component.setState({
-        selectedUser: userToUpdate,
+        notification : { info: { message: app.userMessages.SAVED_NOTE, type:'alert'}, stateOnClosing : {} },
         lastNoteAdded: addedNote
       });
     }.bind(this));

@@ -26,5 +26,6 @@ module.exports = {
   SELECT_TO_VIEW : 'Select a person to view notes:',
   ALL_NOTES : 'All Notes',
   SAVE : 'Save',
+  SAVED_NOTE : 'Saved',
   POST : 'Post'
 };
