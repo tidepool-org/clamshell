@@ -29,6 +29,10 @@ var _ = require('lodash');
 
 require('./MessageForm.less');
 
+//number of messageText textarea rows that are displayed depending on state
+var EXPANDED_ROWS = 5;
+var COLLAPSED_ROWS = 1;
+
 // Form for creating new Notes or adding Comments
 var MessageForm = React.createClass({
   propTypes: {
@@ -71,7 +75,7 @@ var MessageForm = React.createClass({
       whenUtc : this.props.existingNoteFields.displayOnlyTimestamp,
       editing : true
     });
-    this.refs.messageText.getDOMNode().rows = 3;
+    this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
   /*
    * State as we expect when editing existing message text and timestamp
@@ -85,7 +89,7 @@ var MessageForm = React.createClass({
       time : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.TIME_MASK),
       date : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.DATE_MASK)
     });
-    this.refs.messageText.getDOMNode().rows = 3;
+    this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
   /*
    * State as we expect starting to add a brand new note
@@ -97,7 +101,7 @@ var MessageForm = React.createClass({
         editing : true
       });
     }
-    this.refs.messageText.getDOMNode().rows = 3;
+    this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
   /*
    * Declared so that we can reset them easily
@@ -105,7 +109,7 @@ var MessageForm = React.createClass({
   initDefault: function(){
     //only set if the form has already been created
     if(this.refs.messageText){
-      this.refs.messageText.getDOMNode().rows = 1;
+      this.refs.messageText.getDOMNode().rows = COLLAPSED_ROWS;
     }
     return {
       msg: '',
