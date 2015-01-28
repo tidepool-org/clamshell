@@ -77,11 +77,9 @@ var ClamShellApp = React.createClass({
       authenticated : null,
       loggedInUser : null,
       selectedUser : null,
-      selectedThread : null,
       notification : null,
       showingMenu : false,
       lastNoteAdded: null,
-      lastCommentAdded: null,
       selectedForEdit: null
     };
   },
@@ -179,7 +177,8 @@ var ClamShellApp = React.createClass({
       }
       this.setState({
         loadingData : false,
-        loggedInUser : app.api.user.get()
+        loggedInUser : app.api.user.get(),
+        selectedUser : app.api.user.get()  //default to the selected user
       // Call showUserData only after state has been updated
       }, this.showUserData);
     }.bind(this));
@@ -239,8 +238,7 @@ var ClamShellApp = React.createClass({
   showUserData: function(){
     if (this.hasCompletedLoadingData()) {
       this.setState({
-        selectedUser : this.state.loggedInUser,
-        routeName : app.routes.addNote
+        selectedUser : this.state.loggedInUser
       });
       return;
     }
@@ -249,7 +247,7 @@ var ClamShellApp = React.createClass({
   //---------- Rendering Layouts ----------
   render: function () {
     var routeName = this.state.routeName;
-    if(this.state.authenticated){
+    if(this.state.authenticated && this.hasCompletedLoadingData()){
       return this.renderAddNote();
     }
     if(app.routes.login === routeName && this.state.setupComplete){
@@ -259,20 +257,20 @@ var ClamShellApp = React.createClass({
   },
   renderAddNote:function(){
 
-    //var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
+    var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
 
     var header = this.renderHeader({
-      title: 'test-jhb',
+      title: careTeamName,
       leftIcon: 'logout',
       onLeftAction: this.handleLogout
     });
 
     var content = (
       /* jshint ignore:start */
-      <div className='messages-thread'>
+      <div className='note'>
         <MessageForm
-          messagePrompt={app.userMessages.COMMENT_PROMPT}
-          saveBtnText={app.userMessages.POST}
+          messagePrompt={app.userMessages.NOTE_PROMPT}
+          saveBtnText={app.userMessages.SAVE}
           onSubmit={this.handleStartConversation}/>
       </div>
       /* jshint ignore:end */
@@ -361,7 +359,6 @@ var ClamShellApp = React.createClass({
 
     return Header(props);
   },
-
   renderMenu: function() {
     if (!this.state.showingMenu) {
       return null;
@@ -380,7 +377,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
     );
   },
-
   renderMenuFooter: function() {
     if (!this.state.showingMenu) {
       return null;
