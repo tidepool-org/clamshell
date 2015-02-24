@@ -49,6 +49,7 @@ var Login = require('./components/login/Login');
 var LoginFooter = require('./components/login/LoginFooter');
 var TeamPicker = require('./components/menu/TeamPicker');
 var LoggedInAs = require('./components/menu/LoggedInAs');
+var Wordbank = require('./components/wordbank/Wordbank');
 /*jshint unused:false */
 
 var app = {
@@ -268,6 +269,9 @@ var ClamShellApp = React.createClass({
     var content = (
       /* jshint ignore:start */
       <div className='note'>
+        <Wordbank
+          notes={this.state.selectedUser.notes}
+          userid={this.state.selectedUser.userid}/>
         <MessageForm
           messagePrompt={app.userMessages.NOTE_PROMPT}
           saveBtnText={app.userMessages.SAVE}

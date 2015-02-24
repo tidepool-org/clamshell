@@ -21,6 +21,9 @@ var _ = require('lodash');
 var sundial = require('sundial');
 var moment = sundial.momentInstance();
 
+var HASHTAG_REGEX = /#\w+/g;
+var wordBankMemo = {};
+
 var userDataHelper = {
   getSelectedUser:function(userId,data){
     if(userId === data.userid){
@@ -29,6 +32,35 @@ var userDataHelper = {
     return _.find(data.teams, function(team){
       return userId === team.userid;
     });
+  },
+  /**
+   * Get the list of tagged words for a user's notes. Memoize result.
+   * @param userid
+   * @param notes
+   * @returns {Array}
+   */
+  getWordbankWords: function(userid, notes) {
+    // return memoized list if note count is unchanged
+    if (wordBankMemo[userid] && wordBankMemo[userid].numMessages === notes.length) {
+      return Object.keys(wordBankMemo[userid].wordFreqs);
+    }
+
+    wordBankMemo[userid] = {
+      numMessages: notes.length,
+      wordFreqs: {}
+    };
+    var memo = wordBankMemo[userid].wordFreqs;
+
+    notes.forEach(function(note) {
+      var matches = note.messagetext.match(HASHTAG_REGEX);
+      if (matches) {
+        matches.forEach(function(match) {
+          memo[match] = memo[match] ? memo[match] + 1 : 1;
+        });
+      }
+    });
+
+    return Object.keys(memo);
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
