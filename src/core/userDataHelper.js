@@ -21,8 +21,12 @@ var _ = require('lodash');
 var sundial = require('sundial');
 var moment = sundial.momentInstance();
 
+// Wordbank vars
 var HASHTAG_REGEX = /#\w+/g;
-var wordBankMemo = {};
+var PREDEF_TAGS = ['#juicebox', '#BGnow', '#dessert', '#wopw', '#pizza',
+  '#bailey', '#hypo', '#goawaydad', '#biking', '#100woot!'];
+var MAX_DISPLAY_TAGS = 10;
+var wordbankMemo = {};
 
 var userDataHelper = {
   getSelectedUser:function(userId,data){
@@ -41,15 +45,19 @@ var userDataHelper = {
    */
   getWordbankWords: function(userid, notes) {
     // return memoized list if note count is unchanged
-    if (wordBankMemo[userid] && wordBankMemo[userid].numMessages === notes.length) {
-      return Object.keys(wordBankMemo[userid].wordFreqs);
+    if (wordbankMemo[userid] && wordbankMemo[userid].numMessages === notes.length) {
+      return wordbankMemo[userid].topWords;
     }
 
-    wordBankMemo[userid] = {
+    wordbankMemo[userid] = {
       numMessages: notes.length,
       wordFreqs: {}
     };
-    var memo = wordBankMemo[userid].wordFreqs;
+    var memo = wordbankMemo[userid].wordFreqs;
+
+    PREDEF_TAGS.forEach(function(tag) {
+      memo[tag] = 0;
+    });
 
     notes.forEach(function(note) {
       var matches = note.messagetext.match(HASHTAG_REGEX);
@@ -60,7 +68,15 @@ var userDataHelper = {
       }
     });
 
-    return Object.keys(memo);
+    // TODO: don't sort the entire list to take the top n
+    var topWords = Object.keys(memo).sort(function(a, b) {
+      // descending sort. values are non-negative, so this won't overflow
+      return memo[b] - memo[a];
+    }).slice(0, MAX_DISPLAY_TAGS);
+
+    wordbankMemo[userid].topWords = topWords;
+
+    return topWords;
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
