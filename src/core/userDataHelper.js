@@ -25,7 +25,6 @@ var moment = sundial.momentInstance();
 var HASHTAG_REGEX = /#\w+/g;
 var PREDEF_TAGS = ['#juicebox', '#BGnow', '#dessert', '#wopw', '#pizza',
   '#bailey', '#hypo', '#goawaydad', '#biking', '#100woot!'];
-var MAX_DISPLAY_TAGS = 10;
 var wordbankMemo = {};
 
 var userDataHelper = {
@@ -38,15 +37,16 @@ var userDataHelper = {
     });
   },
   /**
-   * Get the list of tagged words for a user's notes. Memoize result.
+   * Get the list of most tagged words for a user's notes. Memoize result.
    * @param userid
    * @param notes
    * @returns {Array}
    */
   getWordbankWords: function(userid, notes) {
+    // TODO: refactor into tidepool_platform, update memo as notes come in
     // return memoized list if note count is unchanged
     if (wordbankMemo[userid] && wordbankMemo[userid].numMessages === notes.length) {
-      return wordbankMemo[userid].topWords;
+      return wordbankMemo[userid].sortedWords;
     }
 
     wordbankMemo[userid] = {
@@ -68,15 +68,14 @@ var userDataHelper = {
       }
     });
 
-    // TODO: don't sort the entire list to take the top n
-    var topWords = Object.keys(memo).sort(function(a, b) {
-      // descending sort. values are non-negative, so this won't overflow
+    var sortedWords = Object.keys(memo).sort(function(a, b) {
+      // descending sort. values are non-negative, so this won't overflow.
       return memo[b] - memo[a];
-    }).slice(0, MAX_DISPLAY_TAGS);
+    })
 
-    wordbankMemo[userid].topWords = topWords;
+    wordbankMemo[userid].sortedWords = sortedWords;
 
-    return topWords;
+    return sortedWords;
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){

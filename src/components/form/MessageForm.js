@@ -24,8 +24,9 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var sundial = require('sundial');
-
 var _ = require('lodash');
+
+var dataHelper = require('../../core/userDataHelper');
 
 require('./MessageForm.less');
 
@@ -311,10 +312,39 @@ var MessageForm = React.createClass({
       /* jshint ignore:end */
     );
   },
+  insertTag: function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    var tag = e.target.value;
+    this.state.msg += tag + ' ';
+    this.refs.messageText.getDOMNode().value = this.state.msg;
+  },
+  renderWord: function(tag, index) {
+    return (
+      /* jshint ignore:start */
+      <input
+        className='wordbank-word'
+        type='button'
+        key={tag}
+        value={tag}
+        onClick={this.insertTag} />
+      /* jshint ignore:end */
+    );
+  },
+  renderWords: function() {
+    var wordbank = this.props.words;
+    var words = _.map(wordbank, function(word, index) {
+      return this.renderWord(word, index);
+    }.bind(this));
+
+    return words;
+  },
   render: function() {
 
     var date = this.renderDisplayDate(this.allowDateEdit());
     var textArea = this.renderTextArea();
+    var words = this.renderWords();
     var buttons;
 
     if(this.state.editing){
@@ -327,11 +357,16 @@ var MessageForm = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <form ref='messageForm' className='messageform'>
-        {date}
-        {textArea}
-        {buttons}
-      </form>
+      <div>
+        <div ref='wordbank' className='wordbank'>
+          {words}
+        </div>
+        <form ref='messageForm' className='messageform'>
+          {date}
+          {textArea}
+          {buttons}
+        </form>
+      </div>
       /* jshint ignore:end */
     );
   }

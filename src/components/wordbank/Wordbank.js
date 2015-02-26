@@ -28,14 +28,24 @@ var dataHelper = require('../../core/userDataHelper');
 require('./Wordbank.less');
 
 var Wordbank = React.createClass({
+  insertTag: function(e) {
+    if (e) {
+      e.preventDefault();
+    }
+    var tag = event.target.value;
+    console.log("REFS", this.refs);
+    this.refs.messageText.getDOMNode().value = tag;
+    $('.messageform-textarea').value += tag
+  },
   renderWord: function(tag, index) {
     return (
       /* jshint ignore:start */
-      <button
+      <input
         className='wordbank-word'
-        key={index}>
-        {tag}
-      </button>
+        type='button'
+        key={tag}
+        value={tag}
+        onClick={this.insertTag} />
       /* jshint ignore:end */
     );
   },

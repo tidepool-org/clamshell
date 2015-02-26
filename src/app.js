@@ -257,8 +257,9 @@ var ClamShellApp = React.createClass({
     return this.renderStartup();
   },
   renderAddNote:function(){
+    var selectedUser = this.state.selectedUser;
 
-    var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
+    var careTeamName = app.dataHelper.formatTeamFullName(selectedUser.profile);
 
     var header = this.renderHeader({
       title: careTeamName,
@@ -266,15 +267,15 @@ var ClamShellApp = React.createClass({
       onLeftAction: this.handleLogout
     });
 
+    var wordBankWords = app.dataHelper.getWordbankWords(selectedUser.userid, selectedUser.notes);
+
     var content = (
       /* jshint ignore:start */
       <div className='note'>
-        <Wordbank
-          notes={this.state.selectedUser.notes}
-          userid={this.state.selectedUser.userid}/>
         <MessageForm
           messagePrompt={app.userMessages.NOTE_PROMPT}
           saveBtnText={app.userMessages.SAVE}
+          words={wordBankWords}
           onSubmit={this.handleStartConversation}/>
       </div>
       /* jshint ignore:end */
