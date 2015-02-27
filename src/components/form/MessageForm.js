@@ -315,10 +315,24 @@ var MessageForm = React.createClass({
   insertTag: function(e) {
     if (e) {
       e.preventDefault();
+      var tag = e.target.value;
+      var pos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      this.state.msg = msg.substring(0, pos) + tag + ' ' + msg.substring(pos, msg.length);
+      this.refs.messageText.getDOMNode().value = this.state.msg;
     }
-    var tag = e.target.value;
-    this.state.msg += tag + ' ';
-    this.refs.messageText.getDOMNode().value = this.state.msg;
+  },
+  completeTag: function(e) {
+    // redundant with insertTag, but might be replaced with a library
+    if (e) {
+      e.preventDefault();
+      var tag = e.target.text;
+      var caretPos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      var hashPos = msg.substring(0, caretPos).lastIndexOf('#');
+      this.state.msg = msg.substring(0, hashPos) + tag + ' ' + msg.substring(caretPos, msg.length);
+      this.refs.messageText.getDOMNode().value = this.state.msg;
+    }
   },
   renderWord: function(tag, index) {
     return (
@@ -340,11 +354,62 @@ var MessageForm = React.createClass({
 
     return words;
   },
-  render: function() {
+  getWordAt: function(str, pos) {
+    // utility function taken from http://stackoverflow.com/questions/5173316/
 
+    // Search for the word's beginning and end.
+    var left = str.slice(0, pos).search(/\S+$/);
+    var right = str.slice(pos).search(/\s/);
+
+    // The last word in the string is a special case.
+    if (right < 0) {
+      return str.slice(left);
+    }
+
+    // Return the word, using the located bounds to extract it from the string.
+    return str.slice(left, right + pos);
+  },
+  renderHashtagList: function() {
+    if (this.refs.messageText) {
+      var messageTextNode = this.refs.messageText.getDOMNode();
+      var currentWord = this.getWordAt(messageTextNode.value, messageTextNode.selectionStart);
+      if (currentWord[0] === '#') {
+        var matches = _.filter(this.props.words, function(word) {
+          return word.toLowerCase().substring(0, currentWord.length) === currentWord;
+        });
+        if (matches.length > 0) {
+          var listItems = _.map(matches, function(match, index) {
+            return this.renderHashtagListItem(match, index);
+          }.bind(this));
+          return (
+            /* jshint ignore:start */
+            <ul>
+              {listItems}
+            </ul>
+            /* jshint ignore:end */
+          );
+        }
+      }
+    }
+  },
+  renderHashtagListItem: function(tag, index) {
+    return (
+      /* jshint ignore:start */
+      <li
+        key={tag}
+        onClick={this.completeTag}>
+        <a href='#'>
+          {tag}
+        </a>
+      </li>
+      /* jshint ignore:end */
+    );
+  },
+  render: function() {
     var date = this.renderDisplayDate(this.allowDateEdit());
     var textArea = this.renderTextArea();
     var words = this.renderWords();
+    var hashtagList = this.renderHashtagList();
     var buttons;
 
     if(this.state.editing){
@@ -358,14 +423,20 @@ var MessageForm = React.createClass({
     return (
       /* jshint ignore:start */
       <div>
-        <div ref='wordbank' className='wordbank'>
+        <div ref='wordbank'
+          className='wordbank'>
           {words}
         </div>
-        <form ref='messageForm' className='messageform'>
+        <form ref='messageForm'
+          className='messageform'>
           {date}
           {textArea}
           {buttons}
         </form>
+        <div ref='hashtagAutocomplete'
+          className='hashtag-autocomplete'>
+          {hashtagList}
+        </div>
       </div>
       /* jshint ignore:end */
     );
