@@ -49,7 +49,6 @@ var Login = require('./components/login/Login');
 var LoginFooter = require('./components/login/LoginFooter');
 var TeamPicker = require('./components/menu/TeamPicker');
 var LoggedInAs = require('./components/menu/LoggedInAs');
-var Wordbank = require('./components/wordbank/Wordbank');
 /*jshint unused:false */
 
 var app = {
@@ -257,9 +256,8 @@ var ClamShellApp = React.createClass({
     return this.renderStartup();
   },
   renderAddNote:function(){
-    var selectedUser = this.state.selectedUser;
 
-    var careTeamName = app.dataHelper.formatTeamFullName(selectedUser.profile);
+    var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
 
     var header = this.renderHeader({
       title: careTeamName,
@@ -267,15 +265,13 @@ var ClamShellApp = React.createClass({
       onLeftAction: this.handleLogout
     });
 
-    var wordBankWords = app.dataHelper.getWordbankWords(selectedUser.userid, selectedUser.notes);
-
     var content = (
       /* jshint ignore:start */
       <div className='note'>
         <MessageForm
           messagePrompt={app.userMessages.NOTE_PROMPT}
           saveBtnText={app.userMessages.SAVE}
-          words={wordBankWords}
+          words={app.api.user.getWordbankWords()}
           onSubmit={this.handleStartConversation}/>
       </div>
       /* jshint ignore:end */

@@ -23,20 +23,10 @@
 
 var React = require('react');
 var _ = require('lodash');
-var dataHelper = require('../../core/userDataHelper');
 
 require('./Wordbank.less');
 
 var Wordbank = React.createClass({
-  insertTag: function(e) {
-    if (e) {
-      e.preventDefault();
-    }
-    var tag = event.target.value;
-    console.log("REFS", this.refs);
-    this.refs.messageText.getDOMNode().value = tag;
-    $('.messageform-textarea').value += tag
-  },
   renderWord: function(tag, index) {
     return (
       /* jshint ignore:start */
@@ -44,18 +34,14 @@ var Wordbank = React.createClass({
         className='wordbank-word'
         type='button'
         key={tag}
-        value={tag}
-        onClick={this.insertTag} />
+        value={tag} />
       /* jshint ignore:end */
     );
   },
   renderWords: function() {
-    var wordbank = dataHelper.getWordbankWords(this.props.userid, this.props.notes);
-    var words = _.map(wordbank, function(word, index) {
+    return _.map(this.props.words, function(word, index) {
       return this.renderWord(word, index);
     }.bind(this));
-
-    return words;
   },
   render: function() {
     var words = this.renderWords();
@@ -63,7 +49,7 @@ var Wordbank = React.createClass({
     return (
       /* jshint ignore:start */
       <div ref='wordbank' className='wordbank'>
-      {words}
+        {words}
       </div>
       /* jshint ignore:end */
     );

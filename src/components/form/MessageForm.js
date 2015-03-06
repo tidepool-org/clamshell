@@ -24,9 +24,11 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var sundial = require('sundial');
+
 var _ = require('lodash');
 
-var dataHelper = require('../../core/userDataHelper');
+var Autocomplete = require('../autocomplete/Autocomplete');
+var Wordbank = require('../wordbank/Wordbank');
 
 require('./MessageForm.less');
 
@@ -312,104 +314,49 @@ var MessageForm = React.createClass({
       /* jshint ignore:end */
     );
   },
-  insertTag: function(e) {
-    if (e) {
-      e.preventDefault();
-      var tag = e.target.value;
-      var pos = this.refs.messageText.getDOMNode().selectionStart;
-      var msg = this.state.msg;
-      this.state.msg = msg.substring(0, pos) + tag + ' ' + msg.substring(pos, msg.length);
-      this.refs.messageText.getDOMNode().value = this.state.msg;
-    }
+  renderWordbank: function() {
+    return (
+      /* jshint ignore:start */
+      <Wordbank
+        words={this.props.words} />
+      /* jshint ignore:end */
+    );
   },
-  completeTag: function(e) {
-    // redundant with insertTag, but might be replaced with a library
-    if (e) {
-      e.preventDefault();
-      var tag = e.target.text;
+  renderAutocomplete: function() {
+    return (
+      /* jshint ignore:start */
+      <Autocomplete
+        messageText={this.refs.messageText}
+        words={this.props.words} />
+      /* jshint ignore:end */
+    );
+  },
+  completeTag: function(event) {
+    if (event && event.target) {
+      event.preventDefault();
+      var tag = event.target.text;
       var caretPos = this.refs.messageText.getDOMNode().selectionStart;
       var msg = this.state.msg;
       var hashPos = msg.substring(0, caretPos).lastIndexOf('#');
-      this.state.msg = msg.substring(0, hashPos) + tag + ' ' + msg.substring(caretPos, msg.length);
-      this.refs.messageText.getDOMNode().value = this.state.msg;
+      this.refs.messageText.getDOMNode().value = this.state.msg = msg.substring(0, hashPos) + tag + ' ' +
+        msg.substring(caretPos, msg.length);
     }
   },
-  renderWord: function(tag, index) {
-    return (
-      /* jshint ignore:start */
-      <input
-        className='wordbank-word'
-        type='button'
-        key={tag}
-        value={tag}
-        onClick={this.insertTag} />
-      /* jshint ignore:end */
-    );
-  },
-  renderWords: function() {
-    var wordbank = this.props.words;
-    var words = _.map(wordbank, function(word, index) {
-      return this.renderWord(word, index);
-    }.bind(this));
-
-    return words;
-  },
-  getWordAt: function(str, pos) {
-    // utility function taken from http://stackoverflow.com/questions/5173316/
-
-    // Search for the word's beginning and end.
-    var left = str.slice(0, pos).search(/\S+$/);
-    var right = str.slice(pos).search(/\s/);
-
-    // The last word in the string is a special case.
-    if (right < 0) {
-      return str.slice(left);
+  insertTag: function(event) {
+    if (event && event.target) {
+      event.preventDefault();
+      var tag = event.target.value;
+      var caretPos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      this.refs.messageText.getDOMNode().value = this.state.msg = msg.substring(0, caretPos) + tag + ' ' +
+        msg.substring(caretPos, msg.length);
     }
-
-    // Return the word, using the located bounds to extract it from the string.
-    return str.slice(left, right + pos);
-  },
-  renderHashtagList: function() {
-    if (this.refs.messageText) {
-      var messageTextNode = this.refs.messageText.getDOMNode();
-      var currentWord = this.getWordAt(messageTextNode.value, messageTextNode.selectionStart);
-      if (currentWord[0] === '#') {
-        var matches = _.filter(this.props.words, function(word) {
-          return word.toLowerCase().substring(0, currentWord.length) === currentWord;
-        });
-        if (matches.length > 0) {
-          var listItems = _.map(matches, function(match, index) {
-            return this.renderHashtagListItem(match, index);
-          }.bind(this));
-          return (
-            /* jshint ignore:start */
-            <ul>
-              {listItems}
-            </ul>
-            /* jshint ignore:end */
-          );
-        }
-      }
-    }
-  },
-  renderHashtagListItem: function(tag, index) {
-    return (
-      /* jshint ignore:start */
-      <li
-        key={tag}
-        onClick={this.completeTag}>
-        <a href='#'>
-          {tag}
-        </a>
-      </li>
-      /* jshint ignore:end */
-    );
   },
   render: function() {
     var date = this.renderDisplayDate(this.allowDateEdit());
     var textArea = this.renderTextArea();
-    var words = this.renderWords();
-    var hashtagList = this.renderHashtagList();
+    var words = this.renderWordbank();
+    var autocomplete = this.renderAutocomplete();
     var buttons;
 
     if(this.state.editing){
@@ -424,7 +371,8 @@ var MessageForm = React.createClass({
       /* jshint ignore:start */
       <div>
         <div ref='wordbank'
-          className='wordbank'>
+          className='wordbank'
+          onClick={this.insertTag}>
           {words}
         </div>
         <form ref='messageForm'
@@ -433,9 +381,10 @@ var MessageForm = React.createClass({
           {textArea}
           {buttons}
         </form>
-        <div ref='hashtagAutocomplete'
-          className='hashtag-autocomplete'>
-          {hashtagList}
+        <div ref='autocomplete'
+          className='autocomplete'
+          onClick={this.completeTag}>
+          {autocomplete}
         </div>
       </div>
       /* jshint ignore:end */

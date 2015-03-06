@@ -21,12 +21,6 @@ var _ = require('lodash');
 var sundial = require('sundial');
 var moment = sundial.momentInstance();
 
-// Wordbank vars
-var HASHTAG_REGEX = /#\w+/g;
-var PREDEF_TAGS = ['#juicebox', '#BGnow', '#dessert', '#wopw', '#pizza',
-  '#bailey', '#hypo', '#goawaydad', '#biking', '#100woot!'];
-var wordbankMemo = {};
-
 var userDataHelper = {
   getSelectedUser:function(userId,data){
     if(userId === data.userid){
@@ -35,47 +29,6 @@ var userDataHelper = {
     return _.find(data.teams, function(team){
       return userId === team.userid;
     });
-  },
-  /**
-   * Get the list of most tagged words for a user's notes. Memoize result.
-   * @param userid
-   * @param notes
-   * @returns {Array}
-   */
-  getWordbankWords: function(userid, notes) {
-    // TODO: refactor into tidepool_platform, update memo as notes come in
-    // return memoized list if note count is unchanged
-    if (wordbankMemo[userid] && wordbankMemo[userid].numMessages === notes.length) {
-      return wordbankMemo[userid].sortedWords;
-    }
-
-    wordbankMemo[userid] = {
-      numMessages: notes.length,
-      wordFreqs: {}
-    };
-    var memo = wordbankMemo[userid].wordFreqs;
-
-    PREDEF_TAGS.forEach(function(tag) {
-      memo[tag] = 0;
-    });
-
-    notes.forEach(function(note) {
-      var matches = note.messagetext.match(HASHTAG_REGEX);
-      if (matches) {
-        matches.forEach(function(match) {
-          memo[match] = memo[match] ? memo[match] + 1 : 1;
-        });
-      }
-    });
-
-    var sortedWords = Object.keys(memo).sort(function(a, b) {
-      // descending sort. values are non-negative, so this won't overflow.
-      return memo[b] - memo[a];
-    })
-
-    wordbankMemo[userid].sortedWords = sortedWords;
-
-    return sortedWords;
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
