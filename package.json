@@ -51,7 +51,7 @@
     "jshint-stylish": "1.0.1",
     "mocha": "2.2.1",
     "mocha-loader": "0.6.5",
-    "script-loader": "0.6.0",
+    "script-loader": "0.6.1",
     "sinon-chai": "2.5.0",
     "webpack-dev-server": "1.7.0"
   }
