@@ -22,7 +22,7 @@
     "connect": "3.3.4",
     "css-loader": "0.7.0",
     "director": "1.2.3",
-    "envify": "1.2.1",
+    "envify": "3.3.0",
     "envify-loader": "0.1.0",
     "fastclick": "1.0.3",
     "file-loader": "0.8.1",
