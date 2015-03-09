@@ -44,7 +44,7 @@
     "webpack": "1.4.9"
   },
   "devDependencies": {
-    "chai": "1.9.1",
+    "chai": "2.1.1",
     "gulp": "3.8.7",
     "gulp-jshint": "1.9.2",
     "gulp-react": "3.0.0",
