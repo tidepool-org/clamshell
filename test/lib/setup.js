@@ -13,11 +13,9 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-'use scrict';
+'use strict';
 
-// Sinon is not Webpack-friendly, use pre-built version
-// Adds `sinon` to the `window` object
-require('script!../../vendor/sinon.js');
+require('sinon');
 
 var chai = require('chai');
 var sinonChai = require('sinon-chai');
