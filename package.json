@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "chai": "2.1.1",
-    "gulp": "3.8.7",
+    "gulp": "3.8.11",
     "gulp-jshint": "1.9.2",
     "gulp-react": "3.0.0",
     "jshint-stylish": "1.0.1",
