@@ -27,6 +27,9 @@ var sundial = require('sundial');
 
 var _ = require('lodash');
 
+var Autocomplete = require('../autocomplete/Autocomplete');
+var Wordbank = require('../wordbank/Wordbank');
+
 require('./MessageForm.less');
 
 //number of messageText textarea rows that are displayed depending on state
@@ -311,10 +314,49 @@ var MessageForm = React.createClass({
       /* jshint ignore:end */
     );
   },
+  renderWordbank: function() {
+    return (
+      /* jshint ignore:start */
+      <Wordbank
+        words={this.props.words} />
+      /* jshint ignore:end */
+    );
+  },
+  renderAutocomplete: function() {
+    return (
+      /* jshint ignore:start */
+      <Autocomplete
+        messageText={this.refs.messageText}
+        words={this.props.words} />
+      /* jshint ignore:end */
+    );
+  },
+  completeTag: function(event) {
+    if (event && event.target) {
+      event.preventDefault();
+      var tag = event.target.text;
+      var caretPos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      var hashPos = msg.substring(0, caretPos).lastIndexOf('#');
+      this.refs.messageText.getDOMNode().value = this.state.msg = msg.substring(0, hashPos) + tag + ' ' +
+        msg.substring(caretPos, msg.length);
+    }
+  },
+  insertTag: function(event) {
+    if (event && event.target) {
+      event.preventDefault();
+      var tag = event.target.value;
+      var caretPos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      this.refs.messageText.getDOMNode().value = this.state.msg = msg.substring(0, caretPos) + tag + ' ' +
+        msg.substring(caretPos, msg.length);
+    }
+  },
   render: function() {
-
     var date = this.renderDisplayDate(this.allowDateEdit());
     var textArea = this.renderTextArea();
+    var words = this.renderWordbank();
+    var autocomplete = this.renderAutocomplete();
     var buttons;
 
     if(this.state.editing){
@@ -327,11 +369,24 @@ var MessageForm = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <form ref='messageForm' className='messageform'>
-        {date}
-        {textArea}
-        {buttons}
-      </form>
+      <div>
+        <div ref='wordbank'
+          className='wordbank'
+          onClick={this.insertTag}>
+          {words}
+        </div>
+        <form ref='messageForm'
+          className='messageform'>
+          {date}
+          {textArea}
+          {buttons}
+        </form>
+        <div ref='autocomplete'
+          className='autocomplete'
+          onClick={this.completeTag}>
+          {autocomplete}
+        </div>
+      </div>
       /* jshint ignore:end */
     );
   }

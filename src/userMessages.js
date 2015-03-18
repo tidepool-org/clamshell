@@ -20,7 +20,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 module.exports = {
   AUTH_ERROR: 'Looks like you have been logged out! When you close this you will be taken back to the login screen.',
   PLATFORM_ERROR : 'Sorry! Something wrong happened. It\'s our fault, not yours. We\'ll be looking into it.',
-  NOTE_PROMPT : 'Type a new note here...',
+  NOTE_PROMPT : 'Type a new note here. Use hashtags (#) to mark keywords.',
   COMMENT_PROMPT : 'Type a comment here...',
   MENU : 'Menu',
   SELECT_TO_VIEW : 'Select a person to view notes:',

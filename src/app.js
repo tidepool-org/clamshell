@@ -271,6 +271,7 @@ var ClamShellApp = React.createClass({
         <MessageForm
           messagePrompt={app.userMessages.NOTE_PROMPT}
           saveBtnText={app.userMessages.SAVE}
+          words={app.api.user.getWordbankWords()}
           onSubmit={this.handleStartConversation}/>
       </div>
       /* jshint ignore:end */

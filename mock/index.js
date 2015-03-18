@@ -28,6 +28,12 @@ module.exports = function(api, userSchema) {
   var token = null;
   var demoToken = '123456..99..100';
 
+  // Wordbank vars
+  var HASHTAG_REGEX = /#\w+/g;
+  var PREDEF_TAGS = ['#juicebox', '#BGnow', '#dessert', '#wopw', '#pizza',
+    '#bailey', '#hypo', '#goawaydad', '#biking', '#100woot!'];
+  var wordbankMemo = {};
+
   function loadSession() {
     var localStorage = window.localStorage;
     if (localStorage && localStorage.getItem) {
@@ -60,6 +66,45 @@ module.exports = function(api, userSchema) {
     allMessages = loggedInUser.notes.concat(_.flatten(loggedInUser.teams, 'notes'));
   }
 
+  function getWordbankWords(user) {
+    var userid = user.userid;
+    var notes = user.notes;
+    var memo, sortedWords;
+
+    // return memoized list if note count is unchanged
+    if (wordbankMemo[userid] && wordbankMemo[userid].numMessages === notes.length) {
+      return wordbankMemo[userid].sortedWords;
+    }
+
+    wordbankMemo[userid] = {
+      numMessages: notes.length,
+      wordFreqs: {}
+    };
+    memo = wordbankMemo[userid].wordFreqs;
+
+    PREDEF_TAGS.forEach(function(tag) {
+      memo[tag] = 0;
+    });
+
+    notes.forEach(function(note) {
+      var matches = note.messagetext.match(HASHTAG_REGEX);
+      if (matches) {
+        matches.forEach(function(match) {
+          memo[match] = memo[match] ? memo[match] + 1 : 1;
+        });
+      }
+    });
+
+    sortedWords = Object.keys(memo).sort(function(a, b) {
+      // descending sort. values are non-negative, so this won't overflow.
+      return memo[b] - memo[a];
+    });
+
+    wordbankMemo[userid].sortedWords = sortedWords;
+
+    return sortedWords;
+  }
+
   // ----- User -----
 
   api.user.isAuthenticated = function(callback) {
@@ -72,6 +117,15 @@ module.exports = function(api, userSchema) {
       return loggedInUser;
     }
     return false;
+  };
+
+  api.user.getWordbankWords = function(callback) {
+    api.log('[mock] getting wordbank of logged in user');
+    var loggedInUser = api.user.get();
+    if (loggedInUser) {
+      return getWordbankWords(loggedInUser);
+    }
+    return [];
   };
 
   api.user.login = function(user, options, callback) {

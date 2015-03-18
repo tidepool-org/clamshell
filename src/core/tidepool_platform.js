@@ -28,6 +28,17 @@ module.exports = function(api, userSchema, platform, config) {
    */
   var loggedInUser = _.cloneDeep(userSchema);
 
+  // Wordbank vars
+  var HASHTAG_REGEX = /#\w+/g;
+  var PREDEF_TAGS = ['#juicebox', '#BGnow', '#dessert', '#wopw', '#pizza',
+    '#bailey', '#hypo', '#goawaydad', '#biking', '#100woot!'];
+
+  // wordbank memo is keyed by userid to objects. the object interface is:
+  //  numMessages: number
+  //  wordFreqs: object (words to frequencies)
+  //  sortedWords: array<string> (words in descending order by frequency)
+  var wordbankMemo = {};
+
   /*
    * Set info for the logged in user
    */
@@ -74,6 +85,52 @@ module.exports = function(api, userSchema, platform, config) {
     });
   }
 
+  /**
+   * Get the list of most tagged words for a user's notes. Memoize result.
+   * @param userid
+   * @param notes
+   * @returns {Array}
+   */
+  function getWordbankWords(user) {
+    // TODO: update (rather than recalculate) memo as notes come in
+    var userid = user.userid;
+    var notes = user.notes;
+    var memo, sortedWords;
+
+    // return memoized list if note count is unchanged
+    if (wordbankMemo[userid] && wordbankMemo[userid].numMessages === notes.length) {
+      return wordbankMemo[userid].sortedWords;
+    }
+
+    wordbankMemo[userid] = {
+      numMessages: notes.length,
+      wordFreqs: {}
+    };
+    memo = wordbankMemo[userid].wordFreqs;
+
+    PREDEF_TAGS.forEach(function(tag) {
+      memo[tag] = 0;
+    });
+
+    notes.forEach(function(note) {
+      var matches = note.messagetext.match(HASHTAG_REGEX);
+      if (matches) {
+        matches.forEach(function(match) {
+          memo[match] = memo[match] ? memo[match] + 1 : 1;
+        });
+      }
+    });
+
+    sortedWords = Object.keys(memo).sort(function(a, b) {
+      // descending sort. values are non-negative, so this won't overflow.
+      return memo[b] - memo[a];
+    });
+
+    wordbankMemo[userid].sortedWords = sortedWords;
+
+    return sortedWords;
+  }
+
   api.user.isAuthenticated = function(callback) {
     return callback(platform.isLoggedIn());
   };
@@ -89,6 +146,18 @@ module.exports = function(api, userSchema, platform, config) {
       return loggedInUser;
     }
     return false;
+  };
+
+  /*
+   * Return the words in the logged in user's wordbank in descending order by frequency
+   */
+  api.user.getWordbankWords = function(cb) {
+    api.log('getting wordbank of logged in user');
+    var loggedInUser = api.user.get();
+    if (loggedInUser) {
+      return getWordbankWords(loggedInUser);
+    }
+    return [];
   };
 
   /*
