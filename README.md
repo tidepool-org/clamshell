@@ -2,17 +2,6 @@
 
 [Blip](https://github.com/tidepool-org/blip)'s companion mobile web app, used for messaging.
 
-Tech stack:
-
-- [React](http://facebook.github.io/react)
-
-Table of contents:
-
-- [Install](#install)
-- [Quick start](#quick-start)
-- [Testing](#testing)
-- [Build and deployment](#build-and-deployment)
-
 ## Install
 
 Requirements:
