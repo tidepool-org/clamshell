@@ -20,7 +20,7 @@
     "autoprefixer-loader": "1.2.0",
     "bows": "1.4.2",
     "connect": "3.3.5",
-    "css-loader": "0.7.0",
+    "css-loader": "0.9.1",
     "director": "1.2.3",
     "envify": "3.4.0",
     "envify-loader": "0.1.0",
