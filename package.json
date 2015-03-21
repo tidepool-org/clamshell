@@ -37,7 +37,7 @@
     "react": "0.11.1",
     "serve-static": "1.9.2",
     "shelljs": "0.3.0",
-    "style-loader": "0.6.4",
+    "style-loader": "0.8.3",
     "sundial": "1.1.7",
     "tidepool-platform-client": "0.16.5",
     "url-loader": "0.5.5",
