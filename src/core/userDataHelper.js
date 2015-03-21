@@ -19,7 +19,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var _ = require('lodash');
 
 var sundial = require('sundial');
-var moment = sundial.momentInstance();
 
 var userDataHelper = {
   getSelectedUser:function(userId,data){
@@ -32,7 +31,9 @@ var userDataHelper = {
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
-      return moment(timestamp).format('MMMM D [at] h:mm a');
+      return sundial.formatInTimezone(timestamp,
+        'America/Los_Angeles', // TODO: Don't hardcode time zone
+        'MMMM D [at] h:mm a');
     }
     return;
   },
