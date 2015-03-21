@@ -89,8 +89,8 @@ var MessageForm = React.createClass({
       whenUtc : this.props.existingNoteFields.editableTimestamp ,
       editing : true,
       changeDateTime : true,
-      time : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.TIME_MASK),
-      date : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.DATE_MASK)
+      time : sundial.formatInTimezone(this.props.existingNoteFields.editableTimestamp, 'America/Los_Angeles', this.props.TIME_MASK),
+      date : sundial.formatInTimezone(this.props.existingNoteFields.editableTimestamp, 'America/Los_Angeles', this.props.DATE_MASK)
     });
     this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
@@ -214,8 +214,8 @@ var MessageForm = React.createClass({
     }
     this.setState({
       changeDateTime : true,
-      time : sundial.formatForDisplay(this.state.whenUtc,this.props.TIME_MASK),
-      date : sundial.formatForDisplay(this.state.whenUtc,this.props.DATE_MASK)
+      time : sundial.formatInTimezone(this.state.whenUtc, 'America/Los_Angeles', this.props.TIME_MASK),
+      date : sundial.formatInTimezone(this.state.whenUtc, 'America/Los_Angeles', this.props.DATE_MASK)
     });
   },
   isButtonDisabled: function() {
@@ -243,7 +243,7 @@ var MessageForm = React.createClass({
         <div>
           {editLink}
           <label className='messageform-datetime-label'>
-            {sundial.formatForDisplay(this.state.whenUtc)}
+            {sundial.formatInTimezone(this.state.whenUtc, 'America/Los_Angeles')}
           </label>
         </div>
         /* jshint ignore:end */
