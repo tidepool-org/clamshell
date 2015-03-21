@@ -1,6 +1,6 @@
 {
   "name": "clamshell",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Blip's mobile companion app for messaging",
   "private": true,
   "repository": "https://github.com/tidepool-org/clamshell.git",
