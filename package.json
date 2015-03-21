@@ -22,7 +22,7 @@
     "connect": "3.3.5",
     "css-loader": "0.9.1",
     "director": "1.2.8",
-    "envify": "3.3.0",
+    "envify": "3.4.0",
     "fastclick": "1.0.6",
     "file-loader": "0.8.1",
     "hakken": "0.1.7",
