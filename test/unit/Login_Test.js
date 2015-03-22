@@ -56,8 +56,7 @@ describe('Login', function() {
   });
 
   it('should have remember-me set as false by default', function() {
-    var rememberMe = component.refs.rememberMe;
-    expect(rememberMe.state.checked).to.be.false;
+    expect(component.refs.rememberMe.state.initialChecked).to.be.false;
   });
 
   it('should call login handler with field values when submit clicked', function() {
