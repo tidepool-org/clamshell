@@ -27,7 +27,14 @@ var sundial = require('sundial');
 
 var _ = require('lodash');
 
+var Autocomplete = require('../autocomplete/Autocomplete');
+var Wordbank = require('../wordbank/Wordbank');
+
 require('./MessageForm.less');
+
+//number of messageText textarea rows that are displayed depending on state
+var EXPANDED_ROWS = 5;
+var COLLAPSED_ROWS = 1;
 
 // Form for creating new Notes or adding Comments
 var MessageForm = React.createClass({
@@ -71,21 +78,24 @@ var MessageForm = React.createClass({
       whenUtc : this.props.existingNoteFields.displayOnlyTimestamp,
       editing : true
     });
-    this.refs.messageText.getDOMNode().rows = 3;
+    this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
   /*
    * State as we expect when editing existing message text and timestamp
    */
   initMessageAndTimestampEdit:function() {
+
+    var offset = sundial.getOffsetFromTime(this.props.existingNoteFields.editableTimestamp) || sundial.getOffset();
+
     this.setState({
       msg : this.props.existingNoteFields.editableText,
       whenUtc : this.props.existingNoteFields.editableTimestamp ,
       editing : true,
       changeDateTime : true,
-      time : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.TIME_MASK),
-      date : sundial.formatForDisplay(this.props.existingNoteFields.editableTimestamp,this.props.DATE_MASK)
+      time : sundial.formatFromOffset(this.props.existingNoteFields.editableTimestamp, offset, this.props.TIME_MASK),
+      date : sundial.formatFromOffset(this.props.existingNoteFields.editableTimestamp, offset, this.props.DATE_MASK)
     });
-    this.refs.messageText.getDOMNode().rows = 3;
+    this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
   /*
    * State as we expect starting to add a brand new note
@@ -97,7 +107,7 @@ var MessageForm = React.createClass({
         editing : true
       });
     }
-    this.refs.messageText.getDOMNode().rows = 3;
+    this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
   /*
    * Declared so that we can reset them easily
@@ -105,7 +115,7 @@ var MessageForm = React.createClass({
   initDefault: function(){
     //only set if the form has already been created
     if(this.refs.messageText){
-      this.refs.messageText.getDOMNode().rows = 1;
+      this.refs.messageText.getDOMNode().rows = COLLAPSED_ROWS;
     }
     return {
       msg: '',
@@ -172,7 +182,7 @@ var MessageForm = React.createClass({
       if(this.state.date && this.state.time){
         var offset = sundial.getOffsetFromTime(this.state.whenUtc);
         var editedTimestamp = this.state.date+'T'+this.state.time;
-        utcTimestamp =  sundial.formatForStorage(editedTimestamp,offset);
+        utcTimestamp =  sundial.formatForStorage(editedTimestamp, offset);
       }
     }
 
@@ -205,10 +215,13 @@ var MessageForm = React.createClass({
     if (e) {
       e.preventDefault();
     }
+
+    var offset = sundial.getOffsetFromTime(this.state.whenUtc) || sundial.getOffset();
+
     this.setState({
       changeDateTime : true,
-      time : sundial.formatForDisplay(this.state.whenUtc,this.props.TIME_MASK),
-      date : sundial.formatForDisplay(this.state.whenUtc,this.props.DATE_MASK)
+      time : sundial.formatFromOffset(this.state.whenUtc, offset, this.props.TIME_MASK),
+      date : sundial.formatFromOffset(this.state.whenUtc, offset, this.props.DATE_MASK)
     });
   },
   isButtonDisabled: function() {
@@ -222,6 +235,7 @@ var MessageForm = React.createClass({
     var displayDate;
     if(this.state.whenUtc){
       var editLink;
+      var offset = sundial.getOffsetFromTime(this.state.whenUtc) || sundial.getOffset();
 
       if(isExistingNoteEditable){
         editLink = (
@@ -236,7 +250,7 @@ var MessageForm = React.createClass({
         <div>
           {editLink}
           <label className='messageform-datetime-label'>
-            {sundial.formatForDisplay(this.state.whenUtc)}
+            {sundial.formatFromOffset(this.state.whenUtc, offset)}
           </label>
         </div>
         /* jshint ignore:end */
@@ -307,10 +321,49 @@ var MessageForm = React.createClass({
       /* jshint ignore:end */
     );
   },
+  renderWordbank: function() {
+    return (
+      /* jshint ignore:start */
+      <Wordbank
+        words={this.props.words} />
+      /* jshint ignore:end */
+    );
+  },
+  renderAutocomplete: function() {
+    return (
+      /* jshint ignore:start */
+      <Autocomplete
+        messageText={this.refs.messageText}
+        words={this.props.words} />
+      /* jshint ignore:end */
+    );
+  },
+  completeTag: function(event) {
+    if (event && event.target) {
+      event.preventDefault();
+      var tag = event.target.text;
+      var caretPos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      var hashPos = msg.substring(0, caretPos).lastIndexOf('#');
+      this.refs.messageText.getDOMNode().value = this.state.msg = msg.substring(0, hashPos) + tag + ' ' +
+        msg.substring(caretPos, msg.length);
+    }
+  },
+  insertTag: function(event) {
+    if (event && event.target) {
+      event.preventDefault();
+      var tag = event.target.value;
+      var caretPos = this.refs.messageText.getDOMNode().selectionStart;
+      var msg = this.state.msg;
+      this.refs.messageText.getDOMNode().value = this.state.msg = msg.substring(0, caretPos) + tag + ' ' +
+        msg.substring(caretPos, msg.length);
+    }
+  },
   render: function() {
-
     var date = this.renderDisplayDate(this.allowDateEdit());
     var textArea = this.renderTextArea();
+    var words = this.renderWordbank();
+    var autocomplete = this.renderAutocomplete();
     var buttons;
 
     if(this.state.editing){
@@ -323,11 +376,24 @@ var MessageForm = React.createClass({
 
     return (
       /* jshint ignore:start */
-      <form ref='messageForm' className='messageform'>
-        {date}
-        {textArea}
-        {buttons}
-      </form>
+      <div>
+        <div ref='wordbank'
+          className='wordbank'
+          onClick={this.insertTag}>
+          {words}
+        </div>
+        <form ref='messageForm'
+          className='messageform'>
+          {date}
+          {textArea}
+          {buttons}
+        </form>
+        <div ref='autocomplete'
+          className='autocomplete'
+          onClick={this.completeTag}>
+          {autocomplete}
+        </div>
+      </div>
       /* jshint ignore:end */
     );
   }

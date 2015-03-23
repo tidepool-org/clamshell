@@ -28,6 +28,17 @@ module.exports = function(api, userSchema, platform, config) {
    */
   var loggedInUser = _.cloneDeep(userSchema);
 
+  // Wordbank vars
+  var HASHTAG_REGEX = /#\w+/g;
+  var PREDEF_TAGS = ['#juicebox', '#BGnow', '#dessert', '#wopw', '#pizza',
+    '#bailey', '#hypo', '#goawaydad', '#biking', '#100woot!'];
+
+  // wordbank memo is keyed by userid to objects. the object interface is:
+  //  numMessages: number
+  //  wordFreqs: object (words to frequencies)
+  //  sortedWords: array<string> (words in descending order by frequency)
+  var wordbankMemo = {};
+
   /*
    * Set info for the logged in user
    */
@@ -37,13 +48,13 @@ module.exports = function(api, userSchema, platform, config) {
       loggedInUser.userid = info.userid;
     }
     if(info && info.details){
-      loggedInUser.notes = info.details.notes || [];
+      loggedInUser.notes = [];
       loggedInUser.profile = info.details.profile || {};
     }
   }
 
   /*
-   * For a given user get the profile and notes for that user.
+   * For a given user get the profile for that user.
    */
   function getUserDetail(userId, cb) {
 
@@ -57,7 +68,6 @@ module.exports = function(api, userSchema, platform, config) {
           if (profileError) {
             return callback(profileError);
           }
-
           var migration = migrations.profileFullName;
           if (migration.isRequired(profile)) {
             api.log('Migrating user [' + userId + '] profile to "fullName"');
@@ -66,29 +76,59 @@ module.exports = function(api, userSchema, platform, config) {
 
           callback(profileError,profile);
         });
-      },
-      userNotes: function(callback) {
-        api.log('getting user messages');
-        platform.getAllMessagesForUser(userId, null, function(notesError, notes) {
-          callback(notesError, notes);
-        });
       }
     }, function (error, results) {
       api.log('return user details');
       user.profile = results.userProfile;
-      user.notes = appendTeamToNote(results.userNotes, results.userProfile);
+      user.notes = [];
       return cb(error, user);
     });
   }
 
-  /*
-  * Add the team for each note so we can use it later
-  */
-  function appendTeamToNote(notes, team) {
-    return _.map(notes, function(note) {
-      note.team = team;
-      return note;
+  /**
+   * Get the list of most tagged words for a user's notes. Memoize result.
+   * @param userid
+   * @param notes
+   * @returns {Array}
+   */
+  function getWordbankWords(user) {
+    // TODO: update (rather than recalculate) memo as notes come in
+    var userid = user.userid;
+    var notes = user.notes;
+    var memo, sortedWords;
+
+    // return memoized list if note count is unchanged
+    if (wordbankMemo[userid] && wordbankMemo[userid].numMessages === notes.length) {
+      return wordbankMemo[userid].sortedWords;
+    }
+
+    wordbankMemo[userid] = {
+      numMessages: notes.length,
+      wordFreqs: {}
+    };
+    memo = wordbankMemo[userid].wordFreqs;
+
+    PREDEF_TAGS.forEach(function(tag) {
+      memo[tag] = 0;
     });
+
+    notes.forEach(function(note) {
+      var matches = note.messagetext.match(HASHTAG_REGEX);
+      if (matches) {
+        matches.forEach(function(match) {
+          memo[match] = memo[match] ? memo[match] + 1 : 1;
+        });
+      }
+    });
+
+    sortedWords = Object.keys(memo).sort(function(a, b) {
+      // descending sort. values are non-negative, so this won't overflow.
+      return memo[b] - memo[a];
+    });
+
+    wordbankMemo[userid].sortedWords = sortedWords;
+
+    return sortedWords;
   }
 
   api.user.isAuthenticated = function(callback) {
@@ -106,6 +146,18 @@ module.exports = function(api, userSchema, platform, config) {
       return loggedInUser;
     }
     return false;
+  };
+
+  /*
+   * Return the words in the logged in user's wordbank in descending order by frequency
+   */
+  api.user.getWordbankWords = function(cb) {
+    api.log('getting wordbank of logged in user');
+    var loggedInUser = api.user.get();
+    if (loggedInUser) {
+      return getWordbankWords(loggedInUser);
+    }
+    return [];
   };
 
   /*
@@ -212,49 +264,14 @@ module.exports = function(api, userSchema, platform, config) {
   // ----- Notes -----
 
   /*
-   * Find a specific message thread
-   */
-  api.notes.getThread = function(messageId, callback) {
-    api.log('getting message thread ... ');
-    platform.getMessageThread(messageId, function(error, messages) {
-      api.log('got message thread');
-      return callback(error, messages);
-    });
-  };
-
-  /*
-   * As the logged in user reply on an existing thread
-   */
-  api.notes.reply = function(comment, callback) {
-    api.log('adding reply to message thread ... ');
-    platform.replyToMessageThread(comment, function(error, id) {
-      api.log('reply added to message thread');
-      comment.id = id;
-      return callback(error, comment);
-    });
-  };
-
-  /*
    * As the logged start a new thread
    */
   api.notes.add = function(message, callback) {
-    api.log('adding new message thread ... ');
+    api.log('adding new note ... ');
     platform.startMessageThread(message, function(error, id) {
-      api.log('added message thread ... ');
+      api.log('added note ... ');
       message.id = id;
       return callback(error, message);
-    });
-  };
-
-  /*
-   * Edit an existing message
-   */
-  api.notes.edit = function(message, callback) {
-    api.log('saving edit on a message ');
-
-    platform.editMessage(message, function(error) {
-      api.log('edited message ... ');
-      return callback(error);
     });
   };
 

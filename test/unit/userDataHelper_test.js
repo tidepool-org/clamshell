@@ -21,69 +21,6 @@ var userDataHelper = require('../../src/core/userDataHelper');
 
 describe('userDataHelper', function() {
 
-  it('getParentMessageId returns parent message id of a thread', function() {
-    var thread = [
-      {id: '1', parentmessage: null},
-      {id: '2', parentmessage: '1'},
-      {id: '3', parentmessage: '1'}
-    ];
-    var foundParentId = userDataHelper.getParentMessageId(thread);
-    expect(foundParentId).to.equal('1');
-  });
-
-  it('getThread returns messages belonging to a thread', function() {
-    var team = {
-      notes: [
-        {id: '1', parentmessage: null},
-        {id: '2', parentmessage: '1'},
-        {id: '3', parentmessage: null}
-      ]
-    };
-    var thread = userDataHelper.getThread(team,'1');
-    expect(thread).to.exist;
-    expect(thread).to.be.a('array');
-    expect(thread.length).to.equal(2);
-  });
-
-  it('filterNotes returns only notes from a list of messages', function() {
-    var messages = [
-      {id: '1', parentmessage: null},
-      {id: '2', parentmessage: '1'}
-    ];
-    var notes = userDataHelper.filterNotes(messages);
-    expect(notes.length).to.equal(1);
-  });
-
-  it('sortNotesDescending returns newest note first', function() {
-    var messages = [
-      {timestamp: '2013-01-01T00:00:00+00:00'},
-      {timestamp: '2014-01-01T00:00:00+00:00'}
-    ];
-    var notes = userDataHelper.sortNotesDescending(messages);
-    var firstNote = notes[0];
-    expect(firstNote.timestamp).to.equal('2014-01-01T00:00:00+00:00');
-  });
-
-  it('sortNotesAscending returns oldest note first', function() {
-    var messages = [
-      {timestamp: '2014-01-01T00:00:00+00:00'},
-      {timestamp: '2013-01-01T00:00:00+00:00'}
-    ];
-    var notes = userDataHelper.sortNotesAscending(messages);
-    var firstNote = notes[0];
-    expect(firstNote.timestamp).to.equal('2013-01-01T00:00:00+00:00');
-  });
-
-  it('getNotesForTeams returns all notes for all teams', function() {
-    var teams = [
-      {notes: [{id: '1'}, {id: '2'}]},
-      {notes: [{id: '3'}]}
-    ];
-
-    var allNotes = userDataHelper.getNotesForTeams(teams);
-    expect(allNotes.length).to.equal(3);
-  });
-
   it('formatFullName returns the fullName as a string from the profile', function() {
     var profile = {fullName:'Foo Bar'};
     expect(userDataHelper.formatFullName(profile)).to.equal('Foo Bar');
@@ -118,29 +55,6 @@ describe('userDataHelper', function() {
     };
     expect(userDataHelper.getSelectedUser('2',loggedInUser)).to.deep.equal(loggedInUser.teams[0]);
   });
-
-  it('getAllNotesForLoggedInUser returns team notes when user has no notes', function() {
-    var loggedInUser = {
-      notes: [],
-      teams: [
-        {notes: [{id: '1'}]},
-        {notes: [{id: '2'}]}
-      ]
-    };
-    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUser).length).to.equal(2);
-  });
-
-  it('getAllNotesForLoggedInUser returns user and team notes when both exist', function() {
-    var loggedInUser = {
-      notes: [{id: '1'}],
-      teams: [
-        {notes: [{id: '2'}]},
-        {notes: [{id: '3'}]}
-      ]
-    };
-    expect(userDataHelper.getAllNotesForLoggedInUser(loggedInUser).length).to.equal(3);
-  });
-
   it('createMessage returns message that is for a specified group', function() {
     var theUser = {
       userid : '12345678',
@@ -160,7 +74,6 @@ describe('userDataHelper', function() {
     expect(message.user).to.equal(theUser.profile);
     expect(message.messagetext).to.equal(theMessage);
   });
-
   it('createReply returns message that is for a specified group and parent message', function() {
     var theUser = {
       userid : '12345678',

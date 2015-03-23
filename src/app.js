@@ -49,7 +49,6 @@ var Login = require('./components/login/Login');
 var LoginFooter = require('./components/login/LoginFooter');
 var TeamPicker = require('./components/menu/TeamPicker');
 var LoggedInAs = require('./components/menu/LoggedInAs');
-var NoteList = require('./components/notes/NoteList');
 /*jshint unused:false */
 
 var app = {
@@ -78,11 +77,9 @@ var ClamShellApp = React.createClass({
       authenticated : null,
       loggedInUser : null,
       selectedUser : null,
-      selectedThread : null,
       notification : null,
       showingMenu : false,
       lastNoteAdded: null,
-      lastCommentAdded: null,
       selectedForEdit: null
     };
   },
@@ -128,7 +125,6 @@ var ClamShellApp = React.createClass({
       });
     }
   },
-
   /**
    * Handlers for the app
    */
@@ -136,7 +132,6 @@ var ClamShellApp = React.createClass({
     app.log('attaching handlers ...');
     require('./appHandlers')(this,app);
   },
-
   /**
    * Router for the app
    */
@@ -144,7 +139,6 @@ var ClamShellApp = React.createClass({
     app.log('attaching router ...');
     router.init(this);
   },
-
   componentDidMount: function () {
     app.log('setup ...');
 
@@ -169,7 +163,6 @@ var ClamShellApp = React.createClass({
       }.bind(this));
     }.bind(this));
   },
-
   /**
    * Load the logged in users data for all the teams that are a part of
    */
@@ -184,13 +177,12 @@ var ClamShellApp = React.createClass({
       }
       this.setState({
         loadingData : false,
-        loggedInUser : app.api.user.get()
+        loggedInUser : app.api.user.get(),
+        selectedUser : app.api.user.get()  //default to the selected user
       // Call showUserData only after state has been updated
       }, this.showUserData);
     }.bind(this));
-
   },
-
   componentDidUpdate: function(prevProps, prevState) {
     var state = this.state;
 
@@ -204,27 +196,19 @@ var ClamShellApp = React.createClass({
       this.scrollToContentTop();
     }
 
-    if (this.newCommentAdded(prevState, state)) {
-      app.log('new comment added, scroll to bottom');
-      this.scrollToContentBottom();
-    }
   },
-
   scrollToContentTop: function() {
     // HACK: on iOS Safari, keyboard needs to disappear for scroll positioning
     // to work as expected, so use `setTimeout` to not call this immediately
     // (timeout value can be very small, just need to postpone in JS event loop)
     setTimeout(this.refs.layout.scrollToContentTop, 10);
   },
-
   scrollToContentBottom: function() {
     setTimeout(this.refs.layout.scrollToContentBottom, 10);
   },
-
   changedRoute: function(prevState, state) {
     return (state.routeName !== prevState.routeName);
   },
-
   newNoteAdded: function(prevState, state) {
     var prevAddedNote = prevState.lastNoteAdded  || {};
     var addedNote = state.lastNoteAdded  || {};
@@ -235,18 +219,6 @@ var ClamShellApp = React.createClass({
 
     return false;
   },
-
-  newCommentAdded: function(prevState, state) {
-    var prevAddedComment = prevState.lastCommentAdded || {};
-    var addedComment = state.lastCommentAdded  || {};
-
-    if (addedComment.id !== prevAddedComment.id) {
-      return true;
-    }
-
-    return false;
-  },
-
   /**
    * Do we have other teams the logged in user is part of?
    */
@@ -254,29 +226,19 @@ var ClamShellApp = React.createClass({
     var teams = this.state.loggedInUser && this.state.loggedInUser.teams;
     return (teams && teams.length > 0);
   },
-
   /**
    * Have we finished loading data?
    */
   hasCompletedLoadingData:function(){
     return !this.state.loadingData;
   },
-
   /**
    * Show the logged in users data for all the teams that are a part of
    */
   showUserData: function(){
-    if (this.hasCompletedLoadingData() && this.userHasTeams()) {
-      app.log('user has other teams also');
+    if (this.hasCompletedLoadingData()) {
       this.setState({
-        routeName : app.routes.messagesForAllTeams
-      });
-      return;
-    } else if(this.hasCompletedLoadingData()){
-      app.log('just users team');
-      this.setState({
-        selectedUser : this.state.loggedInUser,
-        routeName : app.routes.messagesForSelectedTeam
+        selectedUser : this.state.loggedInUser
       });
       return;
     }
@@ -285,110 +247,37 @@ var ClamShellApp = React.createClass({
   //---------- Rendering Layouts ----------
   render: function () {
     var routeName = this.state.routeName;
-
-    if(this.state.authenticated){
-
-      if (app.routes.messagesForAllTeams === routeName) {
-        return this.renderMessagesForAllTeams();
-      }
-      else if (app.routes.messagesForSelectedTeam === routeName) {
-        return this.renderMessagesForSelectedTeam();
-      }
-      else if(app.routes.messageThread === routeName){
-        return this.renderMessageThread();
-      }
+    if(this.state.authenticated && this.hasCompletedLoadingData()){
+      return this.renderAddNote();
     }
     if(app.routes.login === routeName && this.state.setupComplete){
       return this.renderLogin();
     }
     return this.renderStartup();
   },
+  renderAddNote:function(){
 
-  renderMessagesForSelectedTeam:function(){
-    var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
-    var header;
-
-    if (this.userHasTeams()) {
-      header = this.renderHeader({
-        title: careTeamName,
-        leftIcon: 'back',
-        onLeftAction: this.handleBack
-      });
-    }
-    else {
-      header = this.renderHeader({
-        title: careTeamName,
-        leftIcon: 'logo'
-      });
-    }
-
-    var content = (
-      /* jshint ignore:start */
-      <div className='messages-team'>
-        <MessageForm
-          messagePrompt={app.userMessages.NOTE_PROMPT}
-          saveBtnText={app.userMessages.POST}
-          onSubmit={this.handleStartConversation} />
-        <NoteList
-          notes={this.state.selectedUser.notes}
-          loggedInId={this.state.loggedInUser.userid}
-          onThreadSelected={this.handleShowConversationThread}
-          onSaveEdited={this.handleSaveEdit} />
-      </div>
-      /* jshint ignore:end */
-    );
-
-    return this.renderLayout(content, {header: header});
-  },
-
-  renderMessagesForAllTeams:function(){
-    var header = this.renderHeader({
-      title: app.userMessages.ALL_NOTES,
-      leftIcon: 'logo'
-    });
-
-    var content = (
-      /* jshint ignore:start */
-      <div className='messages-all'>
-        <NoteList
-          notes={app.dataHelper.getAllNotesForLoggedInUser(this.state.loggedInUser)}
-          loggedInId={this.state.loggedInUser.userid}
-          onThreadSelected={this.handleShowConversationThread}
-          onSaveEdited={this.handleSaveEdit} />
-      </div>
-      /* jshint ignore:end */
-    );
-
-    return this.renderLayout(content, {header: header});
-  },
-
-  renderMessageThread:function(){
     var careTeamName = app.dataHelper.formatTeamFullName(this.state.selectedUser.profile);
 
     var header = this.renderHeader({
       title: careTeamName,
-      leftIcon: 'back',
-      onLeftAction: this.handleBack
+      leftIcon: 'logout',
+      onLeftAction: this.handleLogout
     });
 
     var content = (
       /* jshint ignore:start */
-      <div className='messages-thread'>
-        <NoteList
-          notes={this.state.selectedThread}
-          loggedInId={this.state.loggedInUser.userid}
-          onSaveEdited={this.handleSaveEdit}/>
+      <div className='note'>
         <MessageForm
-          messagePrompt={app.userMessages.COMMENT_PROMPT}
-          saveBtnText={app.userMessages.POST}
-          onSubmit={this.handleAddingToConversation}/>
+          messagePrompt={app.userMessages.NOTE_PROMPT}
+          saveBtnText={app.userMessages.SAVE}
+          words={app.api.user.getWordbankWords()}
+          onSubmit={this.handleStartConversation}/>
       </div>
       /* jshint ignore:end */
       );
-
     return this.renderLayout(content, {header: header});
   },
-
   renderLogin:function(){
     var footer = LoginFooter();
 
@@ -405,7 +294,6 @@ var ClamShellApp = React.createClass({
 
     return this.renderLayout(content, {footer: footer});
   },
-
   renderStartup:function(){
     var content;
     /* jshint ignore:start */
@@ -418,7 +306,6 @@ var ClamShellApp = React.createClass({
 
     return this.renderLayout(content);
   },
-
   renderLayout:function(content, options){
     options = options || {};
     var header = options.header;
@@ -439,7 +326,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
     );
   },
-
   renderNotification: function() {
     if (!this.state.notification) {
       return null;
@@ -450,7 +336,6 @@ var ClamShellApp = React.createClass({
       onClose: this.handleNotificationDismissed
     });
   },
-
   renderHeader: function(props) {
     props = props || {};
 
@@ -475,7 +360,6 @@ var ClamShellApp = React.createClass({
 
     return Header(props);
   },
-
   renderMenu: function() {
     if (!this.state.showingMenu) {
       return null;
@@ -494,7 +378,6 @@ var ClamShellApp = React.createClass({
       /* jshint ignore:end */
     );
   },
-
   renderMenuFooter: function() {
     if (!this.state.showingMenu) {
       return null;

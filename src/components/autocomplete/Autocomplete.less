@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014, Tidepool Project
+ * Copyright (c) 2015, Tidepool Project
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the associated License, which is identical to the BSD 2-Clause
@@ -13,15 +13,18 @@
  * not, you can obtain one from Tidepool Project at tidepool.org.
  */
 
-require('./lib/setup');
+@import (reference) "../../core/core.less";
 
-require('./unit/Header_Test');
-require('./unit/Layout_Test');
-require('./unit/LoggedInAs_Test');
-require('./unit/Login_Test');
-require('./unit/LoginFooter_Test');
-require('./unit/MessageForm_Test');
-require('./unit/Note_Test');
-require('./unit/Notification_Test');
-require('./unit/TeamPicker_Test');
-require('./unit/userDataHelper_Test');
+// For padding, margins, inside the user "box"
+@note-spacing-unit: 8px;
+@note-background: #fff;
+
+.autocomplete {
+  // For select icon absolute positioning
+  position: relative;
+  padding: @note-spacing-unit;
+
+  border: 1px solid @gray-border-light;
+  border-radius: 2px;
+  background: @note-background
+}
