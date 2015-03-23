@@ -56,8 +56,8 @@ describe('MessageForm', function() {
       component.refs.messageText.props.onFocus();
     });
 
-    it('text input should be 3 lines', function() {
-      expect(component.refs.messageText.getDOMNode().rows).to.equal(3);
+    it('text input should be 5 lines', function() {
+      expect(component.refs.messageText.getDOMNode().rows).to.equal(5);
     });
 
     it('the state will be editing', function() {

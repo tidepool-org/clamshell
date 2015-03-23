@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 var entry = (process.env.MOCK === 'true') ? './src/main.mock.js' : './src/main.js';
 
@@ -10,7 +11,8 @@ module.exports = {
   },
   module: {
     loaders: [
-      {test: /\.js$/, loader: 'jsx-loader!envify-loader'},
+      {test: /sinon\.js$/, loader: "imports?define=>false"},
+      {test: /\.js$/, loader: 'jsx-loader'},
       {test: /\.less$/, loader: 'style-loader!css-loader!autoprefixer-loader!less-loader'},
       {test: /\.gif$/, loader: 'url-loader?limit=10000&mimetype=image/gif'},
       {test: /\.jpg$/, loader: 'url-loader?limit=10000&mimetype=image/jpg'},
@@ -21,5 +23,13 @@ module.exports = {
       {test: /\.ttf$/, loader: 'url-loader?limit=10000&mimetype=application/x-font-ttf'},
       {test: /\.json$/, loader: 'json-loader'}
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': Object.keys(process.env).reduce(function(o, k) {
+        o[k] = JSON.stringify(process.env[k]);
+        return o;
+      }, {})
+    }),
+  ]
 };

@@ -23,6 +23,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var _ = require('lodash');
+var sundial = require('sundial');
 
 var MessageForm = require('../form/MessageForm');
 var dataHelper = require('../../core/userDataHelper');
@@ -46,12 +47,15 @@ var Note = React.createClass({
   },
 
   componentDidMount: function () {
+
+    var offset = sundial.getOffsetFromTime(this.props.theNote.timestamp) || sundial.getOffset();
+
     this.setState({
       author :  dataHelper.formatFullName(this.props.theNote.user),
       team : dataHelper.formatTeamFullName(this.props.theNote.team),
       numberOfComments : this.props.commentCount,
       note : this.props.theNote.messagetext,
-      when : dataHelper.formatDisplayDate(this.props.theNote.timestamp)
+      when : sundial.formatFromOffset(this.props.theNote.timestamp,offset)
     });
   },
 
@@ -74,7 +78,10 @@ var Note = React.createClass({
 
     var saveEdit = this.props.onSaveEdit;
 
+
     if(saveEdit){
+      var offset = sundial.getOffsetFromTime(this.props.theNote.timestamp) || sundial.getOffset();
+
       this.props.theNote.messagetext = edits.text;
       if (edits.timestamp) {
         this.props.theNote.timestamp = edits.timestamp;
@@ -84,7 +91,7 @@ var Note = React.createClass({
       this.setState({
         editing : false,
         note : this.props.theNote.messagetext,
-        when : dataHelper.formatDisplayDate(this.props.theNote.timestamp)
+        when : sundial.formatFromOffset(this.props.theNote.timestamp,offset)
       });
     }
 

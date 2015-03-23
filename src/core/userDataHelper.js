@@ -18,9 +18,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var _ = require('lodash');
 
-var sundial = require('sundial');
-var moment = sundial.momentInstance();
-
 var userDataHelper = {
   getSelectedUser:function(userId,data){
     if(userId === data.userid){
@@ -29,12 +26,6 @@ var userDataHelper = {
     return _.find(data.teams, function(team){
       return userId === team.userid;
     });
-  },
-  formatDisplayDate : function(timestamp){
-    if(timestamp){
-      return moment(timestamp).format('MMMM D [at] h:mm a');
-    }
-    return;
   },
   formatFullName : function(userProfile){
     if(userProfile && userProfile.fullName){
