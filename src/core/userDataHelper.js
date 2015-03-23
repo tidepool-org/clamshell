@@ -31,8 +31,12 @@ var userDataHelper = {
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
-      return sundial.formatInTimezone(timestamp,
-        'America/Los_Angeles', // TODO: Don't hardcode time zone
+
+      var offset = sundial.getOffsetFromTime(timestamp);
+
+      return sundial.formatFromOffset(
+        timestamp,
+        offset,
         'MMMM D [at] h:mm a');
     }
     return;
