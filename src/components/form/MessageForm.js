@@ -235,6 +235,7 @@ var MessageForm = React.createClass({
     var displayDate;
     if(this.state.whenUtc){
       var editLink;
+      var offset = sundial.getOffsetFromTime(this.state.whenUtc) || sundial.getOffset();
 
       if(isExistingNoteEditable){
         editLink = (
@@ -249,7 +250,7 @@ var MessageForm = React.createClass({
         <div>
           {editLink}
           <label className='messageform-datetime-label'>
-            {sundial.formatInTimezone(this.state.whenUtc, 'America/Los_Angeles')}
+            {sundial.formatFromOffset(this.state.whenUtc, offset)}
           </label>
         </div>
         /* jshint ignore:end */

@@ -24,6 +24,7 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 
 var React = require('react');
 var _ = require('lodash');
+var sundial = require('sundial');
 
 require('./TeamPicker.less');
 
@@ -114,8 +115,8 @@ var TeamPicker = React.createClass({
 
   buildUserDetails: function(id, profile, latestNote) {
     if (latestNote && latestNote.timestamp) {
-      latestNote = 'Last note '+ dataHelper.formatDisplayDate(latestNote.timestamp);
-    } else {
+      var offset = sundial.getOffsetFromTime(latestNote.timestamp) || sundial.getOffset();
+      latestNote = 'Last note '+  sundial.formatFromOffset(latestNote.timestamp, offset);
       latestNote = 'No notes';
     }
 
