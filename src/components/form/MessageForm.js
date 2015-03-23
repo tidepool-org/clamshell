@@ -84,13 +84,16 @@ var MessageForm = React.createClass({
    * State as we expect when editing existing message text and timestamp
    */
   initMessageAndTimestampEdit:function() {
+
+    var offset = sundial.getOffsetFromTime(this.props.existingNoteFields.editableTimestamp) || sundial.getOffset();
+
     this.setState({
       msg : this.props.existingNoteFields.editableText,
       whenUtc : this.props.existingNoteFields.editableTimestamp ,
       editing : true,
       changeDateTime : true,
-      time : sundial.formatInTimezone(this.props.existingNoteFields.editableTimestamp, 'America/Los_Angeles', this.props.TIME_MASK),
-      date : sundial.formatInTimezone(this.props.existingNoteFields.editableTimestamp, 'America/Los_Angeles', this.props.DATE_MASK)
+      time : sundial.formatFromOffset(this.props.existingNoteFields.editableTimestamp, offset, this.props.TIME_MASK),
+      date : sundial.formatFromOffset(this.props.existingNoteFields.editableTimestamp, offset, this.props.DATE_MASK)
     });
     this.refs.messageText.getDOMNode().rows = EXPANDED_ROWS;
   },
@@ -179,7 +182,7 @@ var MessageForm = React.createClass({
       if(this.state.date && this.state.time){
         var offset = sundial.getOffsetFromTime(this.state.whenUtc);
         var editedTimestamp = this.state.date+'T'+this.state.time;
-        utcTimestamp =  sundial.formatForStorage(editedTimestamp,offset);
+        utcTimestamp =  sundial.formatForStorage(editedTimestamp, offset);
       }
     }
 
@@ -212,10 +215,13 @@ var MessageForm = React.createClass({
     if (e) {
       e.preventDefault();
     }
+
+    var offset = sundial.getOffsetFromTime(this.state.whenUtc) || sundial.getOffset();
+
     this.setState({
       changeDateTime : true,
-      time : sundial.formatInTimezone(this.state.whenUtc, 'America/Los_Angeles', this.props.TIME_MASK),
-      date : sundial.formatInTimezone(this.state.whenUtc, 'America/Los_Angeles', this.props.DATE_MASK)
+      time : sundial.formatFromOffset(this.state.whenUtc, offset, this.props.TIME_MASK),
+      date : sundial.formatFromOffset(this.state.whenUtc, offset, this.props.DATE_MASK)
     });
   },
   isButtonDisabled: function() {
