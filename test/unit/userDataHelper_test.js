@@ -81,6 +81,7 @@ describe('userDataHelper', function() {
     ];
 
     var allNotes = userDataHelper.getNotesForTeams(teams);
+    console.log('all notes ',allNotes);
     expect(allNotes.length).to.equal(3);
   });
 

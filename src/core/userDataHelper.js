@@ -19,7 +19,6 @@ not, you can obtain one from Tidepool Project at tidepool.org.
 var _ = require('lodash');
 
 var sundial = require('sundial');
-var moment = sundial.momentInstance();
 
 var userDataHelper = {
   getParentMessageId: function(thread) {
@@ -110,7 +109,7 @@ var userDataHelper = {
     });
   },
   getNotesForTeams : function(teams){
-    return _.flatten(teams,'notes');
+    return  _.flatten(_.map(teams, 'notes'));
   },
   getAllNotesForLoggedInUser : function(loggedIn){
     if(_.isEmpty(loggedIn.notes)){
@@ -120,7 +119,8 @@ var userDataHelper = {
   },
   formatDisplayDate : function(timestamp){
     if(timestamp){
-      return moment(timestamp).format('MMMM D [at] h:mm a');
+      var offset = sundial.getOffsetFromTime(timestamp);
+      return sundial.formatFromOffset(timestamp, offset);
     }
     return;
   },
