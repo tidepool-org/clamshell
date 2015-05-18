@@ -26,6 +26,9 @@ $ npm start
 
 Open your web browser and navigate to `http://localhost:3001/`.
 
+## Config object
+
+The `config.app.js` file will have some magic constants that look like ```__FOO__``` statements replaced by the value of the corresponding environment variable when the build or development server is run. If you need to add new environment variables, you should also update `webpack.config.js` with definitions for them, as well as .jshintrc.
 
 ## Build and deployment
 

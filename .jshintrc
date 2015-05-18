@@ -11,5 +11,8 @@
   "unused": "vars",
   "newcap" : false,
   "eqeqeq": true,
-  "eqnull": true
+  "eqnull": true,
+  "__API_HOST__" : true,
+  "__MOCK__" : true,
+  "__LONGTERM_KEY__" : true
 }

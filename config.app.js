@@ -29,7 +29,7 @@ function booleanFromText(value, defaultValue) {
 
 module.exports = {
   VERSION: pkg.version,
-  MOCK: booleanFromText(process.env.MOCK, false),
-  API_HOST: process.env.API_HOST || 'https://devel-api.tidepool.io',
-  LONGTERM_KEY: process.env.LONGTERM_KEY || 'abcdefghikjlmnopqrstuvwxyz'
+  MOCK: booleanFromText(__MOCK__, false),
+  API_HOST: __API_HOST__ || 'https://devel-api.tidepool.io',
+  LONGTERM_KEY: __LONGTERM_KEY__ || 'abcdefghikjlmnopqrstuvwxyz'
 };
