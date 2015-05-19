@@ -18,7 +18,6 @@ module.exports = {
     path: path.join(__dirname, '/dist'),
     filename: 'bundle.js'
   },
-
   module: {
     loaders: [
       {test: /sinon\.js$/, loader: "imports?define=>false"},
