@@ -3,6 +3,15 @@ var webpack = require('webpack');
 
 var entry = (process.env.MOCK === 'true') ? './src/main.mock.js' : './src/main.js';
 
+// these values are required in the config.app.js file -- we can't use
+// process.env with webpack, we have to create these magic constants
+// individually.
+var defineEnvPlugin = new webpack.DefinePlugin({
+  __MOCK__: JSON.stringify(process.env.MOCK || null),
+  __API_HOST__: JSON.stringify(process.env.API_HOST || null),
+  __LONGTERM_KEY__: JSON.stringify(process.env.LONGTERM_KEY || null)
+});
+
 module.exports = {
   entry: entry,
   output: {
@@ -25,14 +34,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': Object.keys(process.env).reduce(function(o, k) {
-        o[k] = JSON.stringify(process.env[k]);
-        return o;
-      }, {})
-    }),
-  ],
-  // to fix the 'broken by design' issue with npm link-ing modules
-  resolve: { fallback: path.join(__dirname, 'node_modules') },
-  resolveLoader: { fallback: path.join(__dirname, 'node_modules') }
+    defineEnvPlugin
+  ]
 };

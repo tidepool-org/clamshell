@@ -1,6 +1,6 @@
 {
   "name": "clamshell",
-  "version": "0.4.2",
+  "version": "0.4.2-v3",
   "description": "Blip's mobile companion app for messaging",
   "private": true,
   "repository": "https://github.com/tidepool-org/clamshell.git",
@@ -22,7 +22,6 @@
     "connect": "3.3.5",
     "css-loader": "0.9.1",
     "director": "1.2.8",
-    "envify": "3.4.0",
     "fastclick": "1.0.6",
     "file-loader": "0.8.1",
     "hakken": "0.1.7",
