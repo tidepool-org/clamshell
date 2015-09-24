@@ -24,7 +24,7 @@
     "director": "1.2.8",
     "fastclick": "1.0.6",
     "file-loader": "0.8.1",
-    "hakken": "0.1.7",
+    "hakken": "0.1.8",
     "imports-loader": "0.6.3",
     "json-loader": "0.5.1",
     "jsx-loader": "0.12.2",
