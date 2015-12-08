@@ -30,6 +30,6 @@ function booleanFromText(value, defaultValue) {
 module.exports = {
   VERSION: pkg.version,
   MOCK: booleanFromText(__MOCK__, false),
-  API_HOST: __API_HOST__ || 'https://devel-api.tidepool.io',
+  API_HOST: __API_HOST__ || 'https://dev-api.tidepool.org',
   LONGTERM_KEY: __LONGTERM_KEY__ || 'abcdefghikjlmnopqrstuvwxyz'
 };
