@@ -1,4 +1,6 @@
-# Clamshell
+*Note: The Blip Notes website was retired on 1/28/2016 in favor of the Blip Notes mobile apps for iOS and Android. For more information about the Blip Notes mobile apps please visit http://tidepool.org/products/blip-notes/.*
+
+# [DEPRECATED] Clamshell
 
 [Blip](https://github.com/tidepool-org/blip)'s companion mobile web app, used for messaging.
 
